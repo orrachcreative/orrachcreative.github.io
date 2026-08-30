@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Portfolio site — MVP vs full wireframe</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #f4f4f2; margin: 0; padding: 24px 16px 80px; color: #222; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .version-header { text-align: center; margin: 40px 0 20px; }
+  .version-header h1 { font-size: 20px; margin: 0 0 4px; }
+  .version-header p { font-size: 12px; color: #888; margin: 0; }
+  .page-block { background: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 18px; }
+  .page-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #888; margin: 0 0 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+  .nav-row { display: flex; gap: 10px; font-size: 11px; color: #555; margin-bottom: 12px; }
+  .nav-item { background: #eee; padding: 3px 9px; border-radius: 4px; }
+  .placeholder { background: #e4e4e0; border: 1px dashed #999; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 11px; text-align: center; margin-bottom: 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .card { background: #f0f0ed; border: 1px solid #ddd; border-radius: 6px; padding: 8px; font-size: 10px; color: #666; text-align: center; }
+  .card-active { background: #dcdcd6; border-color: #aaa; color: #444; font-weight: 500; }
+  .note { font-size: 10px; color: #999; margin: 4px 0 0; font-style: italic; }
+  .divider { text-align: center; color: #999; font-size: 11px; margin: 48px 0 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .divider::before, .divider::after { content: ""; display: inline-block; width: 60px; height: 1px; background: #ccc; vertical-align: middle; margin: 0 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="version-header">
+    <h1>MVP version</h1>
+    <p>enough to share with recruiters now</p>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">home</p>
+    <div class="nav-row"><span class="nav-item">work</span><span class="nav-item">about</span></div>
+    <div class="placeholder" style="height:50px;">one-line intro — who you are, what you do</div>
+    <div class="card card-active" style="padding:16px; margin-bottom:6px;">Afordal — full case study</div>
+    <div class="grid2">
+      <div class="card">more work — coming soon</div>
+      <div class="card">more work — coming soon</div>
+    </div>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">work — case study page</p>
+    <div class="placeholder" style="height:60px;">Afordal case study — the full structure already built: sticky summary, jump nav, decisions, outcome</div>
+    <p class="note">same page we already designed in detail</p>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">about</p>
+    <div class="placeholder" style="height:50px;">photo + name + role</div>
+    <div class="placeholder" style="height:50px;">short bio paragraph</div>
+    <div class="grid2">
+      <div class="card">download resume</div>
+      <div class="card">email / linkedin</div>
+    </div>
+  </div>
+
+  <div class="divider">full version</div>
+
+  <div class="version-header" style="margin-top:0;">
+    <h1>Full version</h1>
+    <p>fleshed out once more projects are ready</p>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">home</p>
+    <div class="nav-row"><span class="nav-item">work</span><span class="nav-item">brand</span><span class="nav-item">about</span></div>
+    <div class="placeholder" style="height:50px;">one-line intro</div>
+    <div class="grid3">
+      <div class="card card-active">Afordal</div>
+      <div class="card card-active">Eagle Quality</div>
+      <div class="card card-active">HomeASAP work</div>
+    </div>
+    <div class="placeholder" style="height:36px; margin-top:8px;">link to brand identity page</div>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">work — case study pages (one per project)</p>
+    <div class="grid3">
+      <div class="placeholder" style="height:60px;">Afordal</div>
+      <div class="placeholder" style="height:60px;">Eagle Quality</div>
+      <div class="placeholder" style="height:60px;">HomeASAP</div>
+    </div>
+    <p class="note">each follows the same structure, filled with real content per project</p>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">brand — identity showcase</p>
+    <div class="placeholder" style="height:60px;">intro + optional team credit</div>
+    <div class="placeholder" style="height:80px;">continuous image sequence — logo, applications, real-world mockups, landing page</div>
+    <p class="note">the Peters-style page we already wireframed</p>
+  </div>
+
+  <div class="page-block">
+    <p class="page-label">about</p>
+    <div class="placeholder" style="height:50px;">photo + name + role</div>
+    <div class="placeholder" style="height:50px;">fuller bio — background, approach, what you look for in a role</div>
+    <div class="grid2">
+      <div class="card">download resume</div>
+      <div class="card">email / linkedin</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
