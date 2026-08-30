@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Brand identity page — wireframe</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #f4f4f2; margin: 0; padding: 24px 16px 80px; color: #222; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .box { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 16px; margin-bottom: 14px; }
+  .placeholder { background: #e4e4e0; border: 1px dashed #999; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 12px; text-align: center; }
+  .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: #888; margin: 0 0 6px; }
+  .copy { font-size: 13px; color: #444; margin: 0; line-height: 1.5; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 0 0 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+  .swatch { height: 60px; border-radius: 4px; display: flex; align-items: flex-end; padding: 4px; font-size: 10px; color: #555; }
+  .divider { text-align: center; color: #999; font-size: 11px; margin: 28px 0 16px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .divider::before, .divider::after { content: ""; display: inline-block; width: 60px; height: 1px; background: #ccc; vertical-align: middle; margin: 0 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="box">
+    <p class="label">page header</p>
+    <h1>Brand identity</h1>
+    <p class="copy">One or two sentences introducing this page — what kind of work lives here and how it differs from the product/UX case studies.</p>
+  </div>
+
+  <div class="divider">project 1</div>
+
+  <div class="box">
+    <p class="label">project intro</p>
+    <h2>[Project name]</h2>
+    <p class="copy">Short paragraph: who the brand is, the problem the identity needed to solve, and the direction taken to solve it. Two to three sentences, plain language, this is the only dense text block on the page.</p>
+  </div>
+
+  <div class="box">
+    <p class="label">logo suite</p>
+    <div class="grid4">
+      <div class="placeholder" style="height:70px;">primary mark</div>
+      <div class="placeholder" style="height:70px;">alt lockup</div>
+      <div class="placeholder" style="height:70px;">icon only</div>
+      <div class="placeholder" style="height:70px;">reversed / mono</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <p class="label">color palette</p>
+    <div class="grid4">
+      <div class="swatch" style="background:#d8d5cd;">primary</div>
+      <div class="swatch" style="background:#c9c4b8;">accent</div>
+      <div class="swatch" style="background:#e6e4de;">neutral</div>
+      <div class="swatch" style="background:#b8b3a5;">neutral 2</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <p class="label">typography</p>
+    <div class="placeholder" style="height:80px;">headline + body specimen</div>
+  </div>
+
+  <div class="box">
+    <p class="label">pattern / graphic elements (optional)</p>
+    <div class="placeholder" style="height:60px;">repeating motif or texture, if applicable</div>
+  </div>
+
+  <div class="box">
+    <p class="label">the system in the world</p>
+    <div class="grid2" style="margin-bottom:10px;">
+      <div class="placeholder" style="height:110px;">signage, in context (e.g. building facade)</div>
+      <div class="placeholder" style="height:110px;">apparel — hats / uniforms, being worn</div>
+    </div>
+    <div class="grid2">
+      <div class="placeholder" style="height:110px;">packaging</div>
+      <div class="placeholder" style="height:110px;">vehicle wrap — truck / van</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <p class="label">digital application</p>
+    <div class="placeholder" style="height:140px;">landing page / website design, full screen</div>
+  </div>
+
+  <div class="divider">project 2 (repeat block above)</div>
+
+  <div class="box">
+    <p class="label" style="text-align:center;">same structure repeats for each additional brand project</p>
+  </div>
+
+</div>
+</body>
+</html>
