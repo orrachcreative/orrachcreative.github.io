@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
+  {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% if page.layout contains 'case-study' %}
+  <link rel="stylesheet" href="{{ '/assets/css/case-study.css' | relative_url }}">
+  {% endif %}
+</head>
+<body class="layout-{{ page.layout }}">
+  {% include nav.html %}
+  <main>
+    {{ content }}
+  </main>
+  {% include footer.html %}
+  {% if page.layout contains 'case-study' %}
+  <script src="{{ '/assets/js/comparison.js' | relative_url }}" defer></script>
+  {% endif %}
+  {% if page.layout == 'case-study-jumpnav' or page.layout == 'case-study-hybrid' %}
+  <script src="{{ '/assets/js/toc.js' | relative_url }}" defer></script>
+  {% endif %}
+</body>
+</html>

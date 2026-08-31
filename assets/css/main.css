@@ -1,0 +1,198 @@
+/* ---------------------------------------------------------------
+   Design tokens
+--------------------------------------------------------------- */
+:root {
+  --bg: #f6f3ed;
+  --bg-raised: #ffffff;
+  --ink: #1c1913;
+  --ink-soft: #5c564c;
+  --ink-faint: #8a8377;
+  --line: #ddd6c8;
+  --line-strong: #c7bfad;
+  --accent: #bf4c28;
+  --accent-ink: #fff8f2;
+  --reject: #a8a196;
+  --ship: #2f6b52;
+
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --content-width: 46rem;
+  --wide-width: 72rem;
+  --radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16140f;
+    --bg-raised: #1f1c15;
+    --ink: #f3efe6;
+    --ink-soft: #c3bcac;
+    --ink-faint: #857f70;
+    --line: #332e23;
+    --line-strong: #4a4331;
+    --accent: #e1704a;
+    --accent-ink: #16140f;
+    --reject: #6b6558;
+    --ship: #5da486;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+.wrap {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.wrap--wide {
+  max-width: var(--wide-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ---------------------------------------------------------------
+   Site header / footer
+--------------------------------------------------------------- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  padding: 1.25rem 0;
+}
+
+.site-header .wrap--wide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-logo {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.site-nav a {
+  text-decoration: none;
+  color: var(--ink-soft);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 5rem;
+  padding: 2rem 0 3rem;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------------
+   Home / index
+--------------------------------------------------------------- */
+.home-hero {
+  padding: 4.5rem 0 3rem;
+}
+
+.home-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+  max-width: 20ch;
+}
+
+.home-hero p {
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  max-width: 40ch;
+}
+
+.template-note {
+  margin: 0 auto 3rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.template-note strong { color: var(--ink); }
+
+.work-grid {
+  display: grid;
+  gap: 1.25rem;
+  padding-bottom: 4rem;
+}
+
+.work-card {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  background: var(--bg-raised);
+  transition: border-color 0.15s ease;
+}
+
+.work-card:hover { border-color: var(--accent); }
+
+.work-card .eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.work-card h2 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  margin: 0 0 0.5rem;
+}
+
+.work-card p {
+  color: var(--ink-soft);
+  margin: 0;
+  font-size: 0.95rem;
+}

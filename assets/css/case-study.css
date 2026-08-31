@@ -1,0 +1,377 @@
+/* ---------------------------------------------------------------
+   Hero + meta bar (shared by all three case study layouts)
+--------------------------------------------------------------- */
+.cs-hero {
+  padding: 3rem 0 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.cs-hero .eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.cs-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  line-height: 1.15;
+  margin: 0 0 0.9rem;
+  max-width: 22ch;
+}
+
+.cs-hero .dek {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin: 0 0 2rem;
+}
+
+.cs-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem 2.5rem;
+}
+
+.cs-meta dt {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-faint);
+  margin: 0 0 0.3rem;
+}
+
+.cs-meta dd {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.cs-hero-image {
+  margin-top: 2.5rem;
+  aspect-ratio: 16 / 9;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* ---------------------------------------------------------------
+   Page shell — plain (narrative) vs sidebar (jumpnav / hybrid)
+--------------------------------------------------------------- */
+.cs-shell {
+  padding: 3rem 0 5rem;
+}
+
+.cs-shell--split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 900px) {
+  .cs-shell--split {
+    max-width: var(--wide-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    grid-template-columns: 200px 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+  .cs-shell--split .cs-content { padding: 3rem 0 5rem; }
+  .cs-shell--split .cs-toc-wrap { padding-top: 3rem; }
+}
+
+/* ---------------------------------------------------------------
+   Jump nav / table of contents
+--------------------------------------------------------------- */
+.cs-toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.cs-toc a {
+  display: block;
+  text-decoration: none;
+  color: var(--ink-soft);
+  padding: 0.4rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.75rem;
+}
+
+.cs-toc a:hover,
+.cs-toc a.is-active {
+  color: var(--ink);
+  border-left-color: var(--accent);
+}
+
+@media (min-width: 900px) {
+  .cs-toc-wrap { position: sticky; top: 1.5rem; }
+}
+
+/* Mobile: horizontal scrolling chip strip instead of a vertical list */
+@media (max-width: 899px) {
+  .cs-toc-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .cs-toc {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.85rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cs-toc li { flex: 0 0 auto; }
+  .cs-toc a {
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    white-space: nowrap;
+  }
+  .cs-toc a.is-active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Sections
+--------------------------------------------------------------- */
+.cs-section {
+  scroll-margin-top: 4.5rem;
+  padding: 2.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.cs-shell:not(.cs-shell--split) .cs-section:first-of-type { padding-top: 0; }
+
+.cs-section:last-of-type { border-bottom: none; }
+
+.cs-section h2 {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  margin: 0 0 1rem;
+}
+
+.cs-section h3 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+
+.cs-section p { margin: 0 0 1rem; }
+.cs-section p:last-child { margin-bottom: 0; }
+
+.cs-section ul { padding-left: 1.2rem; }
+
+/* Instructional placeholder copy — replace before publishing */
+.placeholder {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: 0.9rem 1.1rem;
+  margin: 0 0 1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.placeholder strong { color: var(--ink); }
+
+/* ---------------------------------------------------------------
+   Decision blocks (native <details> — collapsible, expanded by default)
+--------------------------------------------------------------- */
+.cs-decision {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-raised);
+}
+
+.cs-decision:last-child { margin-bottom: 0; }
+
+.cs-decision > summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cs-decision > summary::-webkit-details-marker { display: none; }
+
+.cs-decision > summary::before {
+  content: "\2013";
+  font-family: var(--mono);
+  color: var(--accent);
+}
+
+.cs-decision[open] > summary { margin-bottom: 1.25rem; }
+
+.cs-decision-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .cs-decision-grid--two { grid-template-columns: 1fr 1fr; }
+}
+
+.cs-decision-grid h4 {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin: 0 0 0.4rem;
+}
+
+.cs-decision-grid p { margin: 0; font-size: 0.95rem; }
+
+/* ---------------------------------------------------------------
+   Reject / ship comparison
+--------------------------------------------------------------- */
+.compare {
+  margin: 1.5rem 0;
+}
+
+.compare-frame {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .compare-frame { grid-template-columns: 1fr; }
+}
+
+.compare-pane {
+  margin: 0;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.compare-media {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg);
+}
+
+.compare-pane--reject .compare-media { background: color-mix(in srgb, var(--reject) 12%, var(--bg)); }
+.compare-pane--ship .compare-media { background: color-mix(in srgb, var(--ship) 12%, var(--bg)); }
+
+.compare-pane figcaption {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.6rem 0.85rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.compare-pane--reject figcaption { color: var(--reject); }
+.compare-pane--ship figcaption { color: var(--ship); }
+
+.compare-toggle {
+  margin-top: 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.compare-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.compare-toggle[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.compare-slider {
+  display: none;
+  width: 100%;
+  margin-top: 0.85rem;
+  accent-color: var(--accent);
+}
+
+/* Sliding (overlay) mode — progressive enhancement, JS-driven */
+.compare.is-sliding .compare-frame {
+  display: block;
+  aspect-ratio: 4 / 3;
+}
+
+.compare.is-sliding .compare-pane {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line-strong);
+}
+
+.compare.is-sliding .compare-pane--ship {
+  clip-path: inset(0 50% 0 0);
+}
+
+.compare.is-sliding .compare-media { height: 100%; aspect-ratio: auto; }
+.compare.is-sliding .compare-slider { display: block; }
+
+/* Hybrid layout: full-width comparison treatment, the visual anchor of each decision */
+.layout-case-study-hybrid .compare-frame { gap: 0.5rem; }
+.layout-case-study-hybrid .compare-media { aspect-ratio: 16 / 9; }
+
+/* ---------------------------------------------------------------
+   Ecosystem / system grid
+--------------------------------------------------------------- */
+.cs-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.cs-grid-item {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.cs-grid-item .compare-media { margin-bottom: 0.75rem; aspect-ratio: 1 / 1; }
+
+.cs-grid-item h4 { margin: 0 0 0.25rem; font-size: 0.95rem; }
+.cs-grid-item p { margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
+
+/* Respect reduced motion for any future transitions */
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}

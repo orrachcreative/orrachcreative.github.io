@@ -1,0 +1,22 @@
+<header class="cs-hero">
+  <div class="wrap--wide">
+    <span class="eyebrow">Case study{% if page.role %} · {{ page.role }}{% endif %}</span>
+    <h1>{{ page.title }}</h1>
+    <p class="dek">{{ page.dek | default: "[Replace with one sentence: what this is and why it mattered. This line alone should tell a skimming reader whether to keep reading.]" }}</p>
+    <dl class="cs-meta">
+      <div>
+        <dt>Role</dt>
+        <dd>{{ page.role | default: "[Your role]" }}</dd>
+      </div>
+      <div>
+        <dt>Timeline</dt>
+        <dd>{{ page.timeline | default: "[Timeframe]" }}</dd>
+      </div>
+      <div>
+        <dt>Outcome</dt>
+        <dd>{{ page.outcome_stat | default: "[One real signal it worked]" }}</dd>
+      </div>
+    </dl>
+    <div class="cs-hero-image">[IMAGE: the finished product at a glance — the shot that best represents it in one frame]</div>
+  </div>
+</header>
