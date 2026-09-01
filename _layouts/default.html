@@ -9,6 +9,9 @@
   {% if page.layout contains 'case-study' %}
   <link rel="stylesheet" href="{{ '/assets/css/case-study.css' | relative_url }}">
   {% endif %}
+  {% if page.layout == 'project' %}
+  <link rel="stylesheet" href="{{ '/assets/css/project.css' | relative_url }}">
+  {% endif %}
 </head>
 <body class="layout-{{ page.layout }}">
   {% include nav.html %}

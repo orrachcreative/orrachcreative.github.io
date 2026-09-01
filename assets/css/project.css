@@ -1,0 +1,89 @@
+.proj-hero {
+  padding: 3rem 0 2.5rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 3rem;
+}
+
+.proj-hero .eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.proj-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  line-height: 1.15;
+  margin: 0 0 0.9rem;
+  max-width: 22ch;
+}
+
+.proj-hero .dek {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  max-width: 52ch;
+  margin: 0;
+}
+
+.proj-credit {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin: 1rem 0 0;
+}
+
+/* Full-bleed image stream — the sequence carries the story, minimal labels */
+.proj-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding-bottom: 5rem;
+}
+
+.proj-stream > * {
+  /* flex items default to a content-based hypothetical size, which starves a
+     nested grid's auto-fit tracks down to one narrow column; force full width */
+  width: 100%;
+  min-width: 0;
+}
+
+.proj-frame {
+  aspect-ratio: 16 / 10;
+  border-top: 1px dashed var(--line-strong);
+  border-bottom: 1px dashed var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-raised);
+}
+
+.proj-frame--tall { aspect-ratio: 4 / 5; max-width: 34rem; margin: 0 auto; }
+.proj-frame--wide { aspect-ratio: 21 / 9; }
+
+.proj-caption {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  text-align: center;
+  margin: -2rem 0 0;
+}
+
+/* Gallery grid — for Logos / Illustrations style pages */
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.proj-grid .proj-frame { aspect-ratio: 1 / 1; }

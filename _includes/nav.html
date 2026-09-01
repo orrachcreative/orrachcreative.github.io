@@ -2,9 +2,9 @@
   <div class="wrap--wide">
     <a class="site-logo" href="{{ '/' | relative_url }}">Orrach</a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Work</a>
-      <a href="{{ '/about/' | relative_url }}">About</a>
-      <a href="mailto:hello@orrachcreative.com">Contact</a>
+      <a href="{{ '/work/' | relative_url }}"{% if page.url contains '/work/' or page.url contains '/case-studies/' %} aria-current="page"{% endif %}>Work</a>
+      <a href="{{ '/projects/' | relative_url }}"{% if page.url contains '/projects/' %} aria-current="page"{% endif %}>Projects</a>
+      <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about/' %} aria-current="page"{% endif %}>About</a>
     </nav>
   </div>
 </header>
