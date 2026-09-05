@@ -1,49 +1,59 @@
 ---
 layout: case-study-hybrid
 title: "Afordal"
-role: "Brand & product design"
-timeline: "January 2025"
-outcome_stat: "[Replace: one real signal it worked — still live, adopted, reused]"
-dek: "[Replace: one sentence — what Afordal is and why it mattered.]"
+role: "Solo Product Designer"
+timeline: "6 months (Jan 2025 – present)"
+outcome_stat: "Live today; UI foundation reused for a separate CRE SaaS joint venture"
+dek: "A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture."
 ---
 <section class="cs-section" id="the-ask">
   <h2>The ask</h2>
-  <p>The brief was a phone call. No deck, no written spec, just someone talking through what they wanted.</p>
-  <p>I had full control over the design, but no one to bounce ideas off. Nobody was pushing back or challenging a direction, so every call was mine to make, and mine alone to catch if it was wrong.</p>
+  <p>A stakeholder had a rough idea and a set of wireframes that were three years old and never finished. No user flows, no content strategy, no design system.</p>
+  <p>No spec, no research, no existing patterns, no stakeholder clarity on who the product was really for. My job was to figure out what this product actually needed to be before I could design a single real screen.</p>
+  <div class="cs-decision-grid cs-decision-grid--two" style="margin-top:1.5rem;">
+    <div>
+      <h4>Where it started</h4>
+      <div class="compare-media" style="aspect-ratio:4/3;">[PLACEHOLDER: thumbnail of the original 3-year-old unfinished wireframe, low fidelity]</div>
+    </div>
+    <div>
+      <h4>Where it landed</h4>
+      <div class="compare-media" style="aspect-ratio:4/3;">[PLACEHOLDER: finished hero screen, buyer/seller dashboard, mobile]</div>
+    </div>
+  </div>
 </section>
 
 <section class="cs-section" id="the-real-problem">
   <h2>The real problem</h2>
-  <p>Afordal had to work for two different people: agents and loan officers, each wanting different things out of the same system.</p>
-  <p>Agents needed a CRM for their leads and clients, a consumer-facing dashboard where buyers and sellers could see their home's value and get AI-assisted product recommendations tied back to the agent's IDX home search, and an IDX search that put the agent forward as the biggest brand on the page.</p>
-  <p>Loan officers needed their own CRM, plus a way to show up as the branded loan officer connected to a specific agent or brokerage. [Replace: was there more to what loan officers needed? The list cut off.]</p>
-  <p>[Replace: where did these requirements come from — a compliance/MLS rule, a business relationship structure, something else? And what made juggling these two user types genuinely hard to figure out, not just hard to build?]</p>
+  <p>Afordal wasn't one user with one journey. Buyers, sellers, agents, and loan officers all crossed paths, each arriving under different circumstances. A buyer might already have an agent, or might not. A seller might be working with a loan officer, or might not need one yet.</p>
+  <p>On top of that, IDX and MLS compliance rules put hard limits on what listing data I could show and how it could be displayed and attributed outside the source system.</p>
+  <p>I couldn't design a single screen until I understood how these people and these rules intersected. The hard part wasn't the UI, it was untangling who the product was for and what rules it had to obey.</p>
+  <div class="cs-hero-image">[PLACEHOLDER: simple boxes-and-arrows diagram — buyer, seller, agent, loan officer, and how they connect]</div>
 </section>
 
 <section class="cs-section" id="working-it-out">
   <h2>Working it out</h2>
 
   <details class="cs-decision" open>
-    <summary>Decision 1: [name a brand or visual system call with no obvious right answer]</summary>
+    <summary>Decision 1: Buyers arrive three different ways. One onboarding flow doesn't fit all three.</summary>
     <div class="cs-decision-grid cs-decision-grid--two">
       <div>
         <h4>First attempt</h4>
-        <p>[Replace: what you tried first for Afordal's brand/visual direction, and specifically why it didn't hold up.]</p>
+        <p>A single linear onboarding form, same questions for everyone. It was simple to build, but it either asked people things they'd already answered, or left gaps for people who needed more guidance.</p>
       </div>
       <div>
-        <h4>What you landed on</h4>
-        <p>[Replace: what shipped instead.]</p>
+        <h4>What I landed on</h4>
+        <p>Branching onboarding that adapts based on how someone entered the product. An agent-invited buyer skips straight past agent-matching. Someone with no agent gets that step built in. Same core form, different path through it.</p>
       </div>
     </div>
-    <p>[Replace: the tradeoff you accepted, stated plainly. "This kept X simple but cost us Y."]</p>
+    <p>This kept one system instead of three separate products, but respected that people were arriving in genuinely different situations.</p>
     <div class="compare" data-compare>
       <div class="compare-frame">
         <figure class="compare-pane compare-pane--reject">
-          <div class="compare-media">[IMAGE: rejected direction]</div>
+          <div class="compare-media">[PLACEHOLDER: single linear onboarding form, same questions for every user type]</div>
           <figcaption>Rejected</figcaption>
         </figure>
         <figure class="compare-pane compare-pane--ship">
-          <div class="compare-media">[IMAGE: shipped direction]</div>
+          <div class="compare-media">[PLACEHOLDER: branching onboarding flow diagram or screen, entry-point aware]</div>
           <figcaption>Shipped</figcaption>
         </figure>
       </div>
@@ -53,26 +63,26 @@ dek: "[Replace: one sentence — what Afordal is and why it mattered.]"
   </details>
 
   <details class="cs-decision" open>
-    <summary>Decision 2: [name a product/flow decision shaped by the constraints above]</summary>
+    <summary>Decision 2: IDX/MLS rules restrict how listing data can be shown outside the source system.</summary>
     <div class="cs-decision-grid cs-decision-grid--two">
       <div>
         <h4>First attempt</h4>
-        <p>[Replace: what you tried first, and specifically why it didn't work given the flow requirements.]</p>
+        <p>Full listing detail shown directly inline in the buyer/seller dashboard.</p>
       </div>
       <div>
-        <h4>What you landed on</h4>
-        <p>[Replace: what shipped instead.]</p>
+        <h4>What I landed on</h4>
+        <p>A compliant summary view with a clear path to the full listing.</p>
       </div>
     </div>
-    <p>[Replace: the tradeoff you accepted, stated plainly.]</p>
+    <p>The constraint wasn't a limitation to work around quietly, it shaped the information architecture. I designed the dashboard to summarize and route, not duplicate, which kept us compliant and actually made the dashboard less cluttered.</p>
     <div class="compare" data-compare>
       <div class="compare-frame">
         <figure class="compare-pane compare-pane--reject">
-          <div class="compare-media">[IMAGE: rejected direction]</div>
+          <div class="compare-media">[PLACEHOLDER: full listing detail shown inline in dashboard]</div>
           <figcaption>Rejected</figcaption>
         </figure>
         <figure class="compare-pane compare-pane--ship">
-          <div class="compare-media">[IMAGE: shipped direction]</div>
+          <div class="compare-media">[PLACEHOLDER: compliant listing summary card with link to full listing]</div>
           <figcaption>Shipped</figcaption>
         </figure>
       </div>
@@ -82,26 +92,26 @@ dek: "[Replace: one sentence — what Afordal is and why it mattered.]"
   </details>
 
   <details class="cs-decision" open>
-    <summary>Decision 3: [name a third decision — e.g. onboarding, an edge case, a late-added feature]</summary>
+    <summary>Decision 3: Financing options were added late, meant to be a differentiator.</summary>
     <div class="cs-decision-grid cs-decision-grid--two">
       <div>
         <h4>First attempt</h4>
-        <p>[Replace: what you tried first, and specifically why it didn't work.]</p>
+        <p>A financing CTA placed only at the final financing step. The easy move, but by then the decision path was mostly already set.</p>
       </div>
       <div>
-        <h4>What you landed on</h4>
-        <p>[Replace: what shipped instead.]</p>
+        <h4>What I landed on</h4>
+        <p>Financing education surfaced earlier, woven into the decision path rather than tacked on at the end.</p>
       </div>
     </div>
-    <p>[Replace: the tradeoff you accepted, stated plainly.]</p>
+    <p>The goal wasn't just to mention financing options, it was to help people make better decisions earlier. That meant treating financing education as part of the core journey, not a late add-on, so users had the full picture before they were already locked into a direction.</p>
     <div class="compare" data-compare>
       <div class="compare-frame">
         <figure class="compare-pane compare-pane--reject">
-          <div class="compare-media">[IMAGE: rejected direction]</div>
+          <div class="compare-media">[PLACEHOLDER: financing CTA placed only at final financing step]</div>
           <figcaption>Rejected</figcaption>
         </figure>
         <figure class="compare-pane compare-pane--ship">
-          <div class="compare-media">[IMAGE: shipped direction]</div>
+          <div class="compare-media">[PLACEHOLDER: financing education woven earlier into the decision path]</div>
           <figcaption>Shipped</figcaption>
         </figure>
       </div>
@@ -113,46 +123,57 @@ dek: "[Replace: one sentence — what Afordal is and why it mattered.]"
 
 <section class="cs-section" id="the-system">
   <h2>The system</h2>
-  <p>[Replace: describe the design system / component set you built or extended. You own the brand and visual style decisions here, so this is where the brand identity work lives — logo, color, type, patterns — as supporting evidence for the product decisions above, not the headline of the page.]</p>
+  <p>Because there was no existing system, I built one from scratch: a component library, type and color rules, and a brand asset library. This wasn't just for the buyer/seller app. It's the same system that carried into the agent and loan officer CRM and the marketing site, which meant every new screen after this point got faster and more consistent to design and build.</p>
   <div class="cs-grid">
     <div class="cs-grid-item">
-      <div class="compare-media">[IMAGE: logo suite — primary mark, alternates, icon-only]</div>
-      <h4>Mark</h4>
-      <p>[One or two sentences: why this mark, tied to something concrete about Afordal's audience or positioning.]</p>
+      <div class="compare-media">[PLACEHOLDER: component library sheet — buttons, cards, form fields, nav]</div>
+      <h4>Components</h4>
+      <p>Built once, reused across the buyer/seller app, CRM, and marketing site.</p>
     </div>
     <div class="cs-grid-item">
-      <div class="compare-media">[IMAGE: color palette with usage notes]</div>
-      <h4>Color</h4>
-      <p>[Primary vs accent vs neutral, and why.]</p>
+      <div class="compare-media">[PLACEHOLDER: type scale and color palette with usage notes]</div>
+      <h4>Type &amp; color</h4>
+      <p>Rules for hierarchy and brand consistency across every surface.</p>
     </div>
     <div class="cs-grid-item">
-      <div class="compare-media">[IMAGE: type hierarchy]</div>
-      <h4>Type</h4>
-      <p>[Headline/body pairing and why.]</p>
+      <div class="compare-media">[PLACEHOLDER: brand asset library — logo, icons, imagery style]</div>
+      <h4>Brand assets</h4>
+      <p>Logo, icon set, and imagery direction, built from nothing.</p>
     </div>
   </div>
-  <div class="cs-hero-image">[IMAGE: the system applied — a real screen or surface showing the components in use, not an isolated style guide]</div>
+  <div class="cs-hero-image">[PLACEHOLDER: the system applied — a real dashboard screen showing the components in use, not an isolated style guide]</div>
 </section>
 
 <section class="cs-section" id="the-ecosystem">
   <h2>The ecosystem</h2>
-  <p>[Replace: is Afordal more than one surface — marketing site, product, internal tools? If it's a single product, delete this section. If not, list each surface, who it's for, and flag honestly if any surface was a reskin/reuse rather than an original decision.]</p>
+  <p>Afordal isn't a single app. It's four connected pieces built on one design system, which meant a consistent brand and interaction language across every audience, without separate design efforts for each piece.</p>
   <div class="cs-grid">
     <div class="cs-grid-item">
-      <div class="compare-media">[IMAGE: surface 1]</div>
-      <h4>[Surface name]</h4>
-      <p>[Who it's for, and whether it was original work or a reskin/reuse.]</p>
+      <div class="compare-media">[PLACEHOLDER: buyer/seller app, mobile, dashboard view]</div>
+      <h4>Buyer/seller app</h4>
+      <p>Home value stats, an AI-assisted dashboard steering buyers and sellers toward the right product offerings, linked back to the agent's IDX home search.</p>
     </div>
     <div class="cs-grid-item">
-      <div class="compare-media">[IMAGE: surface 2]</div>
-      <h4>[Surface name]</h4>
-      <p>[Who it's for, and whether it was original work or a reskin/reuse.]</p>
+      <div class="compare-media">[PLACEHOLDER: CRM pipeline view for agents and loan officers]</div>
+      <h4>CRM</h4>
+      <p>For agents and loan officers to manage their leads and clients. Loan officers show up branded to the specific agent or brokerage they're connected to.</p>
+    </div>
+    <div class="cs-grid-item">
+      <div class="compare-media">[PLACEHOLDER: marketing site hero, desktop]</div>
+      <h4>Marketing site</h4>
+      <p>Brings agents and loan officers onto the platform in the first place.</p>
+    </div>
+    <div class="cs-grid-item">
+      <div class="compare-media">[PLACEHOLDER: shareable IDX home search, agent-branded]</div>
+      <h4>IDX home search</h4>
+      <p>Shareable search agents send to their own contacts, single or multiple MLS, with the agent positioned as the largest brand on the page.</p>
+      <p style="margin-top:0.5rem;"><span class="proj-credit" style="margin:0;">Reskin of an existing HomeASAP tool, not a from-scratch design problem, worth being upfront about, but it still shows the reach of the system into a fourth product surface.</span></p>
     </div>
   </div>
 </section>
 
 <section class="cs-section" id="outcome">
   <h2>Outcome</h2>
-  <p>[Replace: what happened after Afordal shipped? Soft signals count — still live, still in use, reused elsewhere.]</p>
-  <p>[Replace: any real numbers — adoption, timeline, revenue? If not, say so plainly rather than implying them.]</p>
+  <p>Afordal shipped as a solo six-month build, covering brand, design system, product, and marketing site, and is live today.</p>
+  <p>Separately, that same UI foundation was reused as the basis for a commercial real estate SaaS product through a joint venture, a downstream application beyond the original consumer-facing platform, and proof the system was built to extend past its first use case.</p>
 </section>
