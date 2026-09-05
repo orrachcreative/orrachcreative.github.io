@@ -52,6 +52,24 @@
   color: var(--ink);
 }
 
+.cs-diagram {
+  margin: 2rem 0 0;
+}
+
+.cs-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.cs-diagram-caption {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin: 1rem 0 0;
+  max-width: 46ch;
+}
+
 .cs-hero-image {
   margin-top: 2.5rem;
   aspect-ratio: 16 / 9;

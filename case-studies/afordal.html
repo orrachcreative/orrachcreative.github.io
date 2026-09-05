@@ -27,7 +27,45 @@ dek: "A real estate platform for buyers, sellers, agents, and loan officers, tak
   <p>Afordal wasn't one user with one journey. Buyers, sellers, agents, and loan officers all crossed paths, each arriving under different circumstances. A buyer might already have an agent, or might not. A seller might be working with a loan officer, or might not need one yet.</p>
   <p>On top of that, IDX and MLS compliance rules put hard limits on what listing data I could show and how it could be displayed and attributed outside the source system.</p>
   <p>I couldn't design a single screen until I understood how these people and these rules intersected. The hard part wasn't the UI, it was untangling who the product was for and what rules it had to obey.</p>
-  <div class="cs-hero-image">[PLACEHOLDER: simple boxes-and-arrows diagram — buyer, seller, agent, loan officer, and how they connect]</div>
+  <figure class="cs-diagram">
+    <svg viewBox="0 0 380 300" role="img" aria-labelledby="stakeholder-diagram-title stakeholder-diagram-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="stakeholder-diagram-title">Afordal stakeholder map</title>
+      <desc id="stakeholder-diagram-desc">Buyers and sellers may or may not already have an agent or loan officer. Loan officers are branded to a specific agent or brokerage. IDX and MLS rules constrain what an agent can show.</desc>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-faint)"></path>
+        </marker>
+      </defs>
+      <g fill="none" stroke="var(--ink-faint)" stroke-width="1.5">
+        <line x1="95" y1="70" x2="95" y2="128" marker-end="url(#arrow)"></line>
+        <line x1="130" y1="70" x2="230" y2="128" marker-end="url(#arrow)"></line>
+        <line x1="250" y1="70" x2="150" y2="128" marker-end="url(#arrow)"></line>
+        <line x1="285" y1="70" x2="285" y2="128" marker-end="url(#arrow)"></line>
+        <line x1="170" y1="155" x2="210" y2="155" stroke="var(--accent)" marker-end="url(#arrow)" marker-start="url(#arrow)"></line>
+        <line x1="95" y1="180" x2="95" y2="228" stroke-dasharray="4 3" marker-end="url(#arrow)"></line>
+      </g>
+      <g font-family="var(--mono)" font-size="9" fill="var(--ink-faint)" text-anchor="middle">
+        <text x="112" y="102">may have</text>
+        <text x="80" y="112">may have</text>
+        <text x="190" y="145">branded to</text>
+        <text x="95" y="207">limits data shown</text>
+      </g>
+      <g font-family="var(--sans)" font-size="13">
+        <rect x="20" y="20" width="150" height="50" rx="4" fill="var(--bg-raised)" stroke="var(--line-strong)"></rect>
+        <text x="95" y="50" text-anchor="middle" fill="var(--ink)">Buyer</text>
+        <rect x="210" y="20" width="150" height="50" rx="4" fill="var(--bg-raised)" stroke="var(--line-strong)"></rect>
+        <text x="285" y="50" text-anchor="middle" fill="var(--ink)">Seller</text>
+        <rect x="20" y="130" width="150" height="50" rx="4" fill="var(--bg-raised)" stroke="var(--accent)"></rect>
+        <text x="95" y="160" text-anchor="middle" fill="var(--ink)">Agent</text>
+        <rect x="210" y="130" width="150" height="50" rx="4" fill="var(--bg-raised)" stroke="var(--accent)"></rect>
+        <text x="285" y="160" text-anchor="middle" fill="var(--ink)">Loan officer</text>
+        <rect x="20" y="230" width="150" height="50" rx="4" fill="none" stroke="var(--line-strong)" stroke-dasharray="4 3"></rect>
+        <text x="95" y="255" text-anchor="middle" fill="var(--ink-soft)" font-size="11">IDX / MLS rules</text>
+        <text x="95" y="270" text-anchor="middle" fill="var(--ink-faint)" font-size="9">(external constraint)</text>
+      </g>
+    </svg>
+    <figcaption class="cs-diagram-caption">Buyers and sellers may or may not arrive with an agent or loan officer already in place. Loan officers are branded to a specific agent or brokerage. IDX/MLS rules constrain what the agent can show, from outside the product.</figcaption>
+  </figure>
 </section>
 
 <section class="cs-section" id="working-it-out">
