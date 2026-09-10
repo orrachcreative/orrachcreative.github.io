@@ -1,8 +1,10 @@
 /* ==========================================================================
    Anthony Orrach Creative — design tokens + base styles
-   Dark mode is the only theme implemented so far. Light mode values are
-   TODO — the [data-theme="light"] block below currently mirrors dark so the
-   toggle never breaks the UI while that pass is pending.
+   Light-mode values are pulled from the Figma Typography page's "Light
+   Mode" reference frame (node 19:14582): bg #FFFAF3, near-black ink,
+   Emerald 2 (#43B740) for actions, Bronze (#C9AA2E) for overline labels —
+   labels and actions use different accent hues in light mode, so they're
+   split into --accent (actions) and --accent-label (eyebrows/overlines).
    ========================================================================== */
 
 :root {
@@ -26,12 +28,15 @@
   --ink-faint: #8a8377;
   --accent: var(--emerald);
   --accent-2: var(--emerald-2);
+  --accent-label: var(--emerald);
   --line: rgba(254, 245, 234, 0.1);
   --line-strong: rgba(254, 245, 234, 0.25);
   --placeholder-bg: var(--ivory);
   --placeholder-ink: var(--ash);
   --reject: rgba(254, 245, 234, 0.6);
+  --reject-ink: rgba(254, 245, 234, 0.6);
   --ship: var(--emerald);
+  --shadow-nav: 0 8px 12px rgba(28, 25, 19, 0.6);
 
   /* Type */
   --font-display: "Big Shoulders Text", "Archivo Narrow", sans-serif;
@@ -47,12 +52,24 @@
 }
 
 [data-theme="light"] {
-  /* TODO: real light-mode pass. Mirrors dark for now so the toggle is safe. */
-  --bg: var(--black);
-  --bg-card: var(--ash);
-  --ink: var(--ivory);
-  --ink-strong: var(--parchment);
-  --ink-soft: #e6dfd3;
+  --bg: var(--parchment);
+  --bg-raised: rgba(31, 28, 22, 0.08);
+  --bg-card: rgba(31, 28, 22, 0.05);
+  --ink: #1e1e1e;
+  --ink-strong: #000000;
+  --ink-soft: #1f1c16;
+  --ink-faint: #656573;
+  --accent: var(--emerald-2);
+  --accent-2: var(--emerald);
+  --accent-label: var(--bronze);
+  --line: rgba(101, 101, 115, 0.1);
+  --line-strong: rgba(101, 101, 115, 0.25);
+  --placeholder-bg: #efe8da;
+  --placeholder-ink: var(--ink-faint);
+  --reject: rgba(31, 28, 22, 0.12);
+  --reject-ink: var(--ink-faint);
+  --ship: var(--emerald-2);
+  --shadow-nav: 0 4px 10px rgba(28, 25, 19, 0.1);
 }
 
 * {
@@ -61,6 +78,10 @@
 
 html {
   color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
@@ -169,7 +190,7 @@ button {
   font-size: 0.8125rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-label);
 }
 
 .meta-label {
@@ -178,7 +199,7 @@ button {
   font-size: 0.75rem;
   letter-spacing: 0.84px;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-label);
 }
 
 .overline-link {
@@ -251,7 +272,7 @@ button {
   padding: 0 24px;
   background: var(--bg);
   border-bottom: 1px solid var(--gold);
-  box-shadow: 0 8px 12px rgba(28, 25, 19, 0.6);
+  box-shadow: var(--shadow-nav);
 }
 
 .wordmark {
@@ -289,7 +310,7 @@ button {
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-label);
 }
 
 .site-nav {
@@ -644,7 +665,7 @@ button {
   justify-content: space-between;
   gap: 16px;
   padding: 24px 24px 32px;
-  background: var(--ash);
+  background: var(--bg-card);
   border-top: 1px solid var(--gold);
 }
 
@@ -652,7 +673,7 @@ button {
   font-family: var(--font-body);
   font-size: 0.875rem;
   letter-spacing: 0.25px;
-  color: rgba(255, 250, 243, 0.5);
+  color: var(--ink-faint);
 }
 
 .site-footer__social {
@@ -977,7 +998,7 @@ button {
 }
 
 .compare__pane--reject .compare__caption {
-  color: var(--reject);
+  color: var(--reject-ink);
 }
 
 .compare__pane--ship .compare__caption {
@@ -1174,7 +1195,7 @@ button {
 
 .grid-item__media {
   height: 228px;
-  background: var(--parchment);
+  background: var(--placeholder-bg);
   border-radius: 2px;
 }
 
@@ -1211,7 +1232,7 @@ button {
 
 .stakeholder-diagram__node {
   padding: 14px 12px;
-  background: var(--parchment);
+  background: var(--placeholder-bg);
   color: var(--black);
   border-radius: 6px;
   text-align: center;
@@ -1253,7 +1274,7 @@ button {
   justify-content: center;
   gap: 10px;
   padding: 44px 24px;
-  background: var(--ash);
+  background: var(--bg-card);
   text-align: center;
 }
 
@@ -1263,7 +1284,7 @@ button {
   font-size: 0.625rem;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-label);
 }
 
 .next-project__title {
