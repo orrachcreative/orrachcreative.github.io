@@ -1,0 +1,20 @@
+---
+layout: default
+title: Projects
+nav: projects
+permalink: /projects/
+---
+<div class="shell">
+  <section class="hero" style="padding-bottom: 72px;">
+    <h1 class="display-2 hero__title">Self-directed work.</h1>
+    <p class="body-lg hero__subtitle">Branding exercises, logo studies, and illustration. No client brief behind these, made to explore a direction on my own terms.</p>
+  </section>
+
+  <div class="card-grid card-grid--row" style="padding-bottom: 72px;">
+    {% for item in site.data.projects %}
+      {% include work-card.html item=item variant="vertical" %}
+    {% endfor %}
+  </div>
+</div>
+
+{% include cta.html %}

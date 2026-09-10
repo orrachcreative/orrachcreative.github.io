@@ -1,0 +1,30 @@
+{%- comment -%}
+  Params: title, first_attempt, landed_on, tradeoff, reject_text, ship_text
+  reject_text/ship_text default to the generic Figma placeholder copy.
+{%- endcomment -%}
+<div class="decision-block">
+  <p class="decision-block__title">{{ include.title }}</p>
+  <div class="decision-block__grid">
+    <div class="decision-block__col">
+      <p class="eyebrow">First attempt</p>
+      <p>{{ include.first_attempt }}</p>
+    </div>
+    <div class="decision-block__col">
+      <p class="eyebrow">What I landed on</p>
+      <p>{{ include.landed_on }}</p>
+    </div>
+  </div>
+  <p>{{ include.tradeoff }}</p>
+  <div class="compare">
+    <div class="compare__panes">
+      <div class="compare__pane compare__pane--reject">
+        <div class="compare__media"><p>{{ include.reject_text | default: "[PLACEHOLDER: single linear onboarding form, same questions for every user type]" }}</p></div>
+        <div class="compare__caption">Rejected</div>
+      </div>
+      <div class="compare__pane compare__pane--ship">
+        <div class="compare__media"><p>{{ include.ship_text | default: "[PLACEHOLDER: branching onboarding flow diagram, entry-point aware]" }}</p></div>
+        <div class="compare__caption">Shipped</div>
+      </div>
+    </div>
+  </div>
+</div>

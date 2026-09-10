@@ -1004,6 +1004,151 @@ button {
   height: 20px;
 }
 
+.pill--filled {
+  background: rgba(67, 183, 64, 0.6);
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ==========================================================================
+   About page
+   ========================================================================== */
+
+.about-row {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  padding: 48px 0;
+}
+
+.about-row + .about-row {
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .about-row {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+.about-row__media {
+  flex: none;
+  width: 368px;
+}
+
+.about-row__media .work-card__media {
+  min-height: 375px;
+}
+
+@media (max-width: 900px) {
+  .about-row__media {
+    width: 100%;
+  }
+}
+
+.about-row__copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.process {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 24px;
+}
+
+.process__grid {
+  display: flex;
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .process__grid {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.process__item {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.process__item .meta-label {
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+}
+
+.process__item p:last-child {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--ink-strong);
+  text-transform: capitalize;
+}
+
+.offer-grid {
+  display: flex;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .offer-grid {
+    flex-direction: column;
+  }
+}
+
+.gallery-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 48px 0;
+}
+
+@media (max-width: 900px) {
+  .logo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.logo-grid .work-card__media {
+  min-height: 264px;
+  border-radius: 8px;
+}
+
+.gallery-scroll .work-card__media {
+  flex: none;
+  width: 280px;
+  min-height: 280px;
+}
+
 .grid-items {
   display: flex;
   gap: 16px;

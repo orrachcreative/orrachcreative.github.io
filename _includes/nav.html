@@ -10,7 +10,7 @@
   <nav class="site-nav" aria-label="Primary">
     <div class="site-nav__links">
       <a href="{{ '/work/' | relative_url }}" class="nav-link{% if page.nav == 'work' %} is-active{% endif %}">Work</a>
-      <a href="{{ '/#projects' | relative_url }}" class="nav-link{% if page.nav == 'projects' %} is-active{% endif %}">Projects</a>
+      <a href="{{ '/projects/' | relative_url }}" class="nav-link{% if page.nav == 'projects' %} is-active{% endif %}">Projects</a>
       <a href="{{ '/about/' | relative_url }}" class="nav-link{% if page.nav == 'about' %} is-active{% endif %}">About</a>
     </div>
     <span class="nav-divider" aria-hidden="true"></span>
@@ -25,6 +25,6 @@
 
 <div class="mobile-drawer" id="mobile-drawer" data-mobile-drawer>
   <a href="{{ '/work/' | relative_url }}" class="nav-link{% if page.nav == 'work' %} is-active{% endif %}">Work</a>
-  <a href="{{ '/#projects' | relative_url }}" class="nav-link{% if page.nav == 'projects' %} is-active{% endif %}">Projects</a>
+  <a href="{{ '/projects/' | relative_url }}" class="nav-link{% if page.nav == 'projects' %} is-active{% endif %}">Projects</a>
   <a href="{{ '/about/' | relative_url }}" class="nav-link{% if page.nav == 'about' %} is-active{% endif %}">About</a>
 </div>

@@ -4,12 +4,119 @@ title: HomeASAP
 nav: work
 permalink: /work/homeasap/
 ---
-<div class="shell">
-  <section class="hero">
-    <h1 class="display-2 hero__title">HomeASAP</h1>
-    <p class="body-lg hero__subtitle">[Placeholder: case study not built yet — share the Figma frame link for this page.]</p>
-    <p class="overline-link"><a class="section__link" href="{{ '/work/' | relative_url }}">&larr; Back to work</a></p>
-  </section>
+<section class="case-hero shell">
+  <div class="case-hero__nav">
+    <a href="{{ '/work/' | relative_url }}">{% include icon.html name="arrow-left" %} All work</a>
+    <a href="{{ '/work/high5/' | relative_url }}">Next study {% include icon.html name="arrow-right" %}</a>
+  </div>
+  <div class="case-hero__copy">
+    <h1 class="case-hero__title">HomeASAP</h1>
+    <p class="case-hero__desc">A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture.</p>
+  </div>
+
+  <div class="case-meta">
+    <div class="case-meta__item">
+      <p class="meta-label">Role</p>
+      <p class="case-meta__value">Lead Visual Designer</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Tools</p>
+      <p class="case-meta__value">Adobe + Figma + Wordpress</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Type</p>
+      <p class="case-meta__value">Websites</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Timeline</p>
+      <p class="case-meta__value">Jan 2022 &ndash; Dec 2024</p>
+    </div>
+  </div>
+
+  <div class="case-hero__shot">
+    <div class="work-card__media">
+      <span>[IMAGE: the finished product at a glance]</span>
+    </div>
+  </div>
+</section>
+
+<div class="case-shell shell">
+  {% include case-sidebar.html %}
+
+  <div class="case-content">
+    <section class="case-section" id="the-ask">
+      <h2 class="case-section__title">The ask</h2>
+      <p>What did you actually walk into on HomeASAP? A vague brief, a half-finished file, a verbal ask, nothing at all? This project spans over a decade, so this might be less a single &ldquo;ask&rdquo; and more how the relationship started.</p>
+      <p>What didn&rsquo;t you have that you&rsquo;d normally expect &mdash; a spec, research, existing patterns, someone who could tell you what &ldquo;done&rdquo; looked like?</p>
+    </section>
+
+    <section class="case-section" id="the-problem">
+      <h2 class="case-section__title">The real problem</h2>
+      <p>Who were the different people HomeASAP had to work for? Name the user types, not just &ldquo;users.&rdquo;</p>
+      <p>What real-world rules, constraints, or limits shaped what you could do &mdash; legal, technical, business? Over this many years, constraints likely changed. Note if they did.</p>
+      <p>What made this genuinely hard to figure out, not just hard to build?</p>
+    </section>
+
+    <section class="case-section" id="working-it-out">
+      <h2 class="case-section__title">Working it out</h2>
+
+      {% include decision-block.html
+        title="Decision 1: [name the problem with no obvious right answer]"
+        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
+        landed_on="[Replace: what shipped instead.]"
+        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+      %}
+      {% include decision-block.html
+        title="Decision 2: [name the problem with no obvious right answer]"
+        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
+        landed_on="[Replace: what shipped instead.]"
+        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+      %}
+      {% include decision-block.html
+        title="Decision 3: [name the problem with no obvious right answer]"
+        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
+        landed_on="[Replace: what shipped instead.]"
+        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+      %}
+    </section>
+
+    <section class="case-section" id="the-system">
+      <h2 class="case-section__title">The system</h2>
+      <p>Did you build or extend a design system, pattern library, or component set over these years? What&rsquo;s worth showing?</p>
+      <div class="work-card__media">
+        <span>[IMAGE: system/component overview &mdash; the shared components or patterns worth showing]</span>
+      </div>
+    </section>
+
+    <section class="case-section" id="the-ecosystem">
+      <h2 class="case-section__title">The ecosystem</h2>
+      <p>Is HomeASAP more than one product or surface? List each one and who it&rsquo;s for. Flag anything that was a reskin/reuse rather than an original decision.</p>
+      <div class="grid-items">
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">[Surface name]</p>
+          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">[Surface name]</p>
+          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="outcome">
+      <h2 class="case-section__title">Outcome</h2>
+      <p>What happened after it shipped, and what&rsquo;s happened since &mdash; this one&rsquo;s still ongoing. Soft signals count.</p>
+      <p>Any real numbers &mdash; adoption, timeline, revenue? If not, say so plainly rather than implying them.</p>
+    </section>
+  </div>
+</div>
+
+<div class="next-project">
+  <p class="next-project__label">Next project</p>
+  <p class="next-project__title">High5</p>
+  <a class="workflow-link" href="{{ '/work/high5/' | relative_url }}">View case study {% include icon.html name="arrow-right" %}</a>
 </div>
 
 {% include cta.html %}

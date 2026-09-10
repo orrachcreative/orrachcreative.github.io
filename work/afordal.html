@@ -41,14 +41,7 @@ permalink: /work/afordal/
 </section>
 
 <div class="case-shell shell">
-  <nav class="case-sidebar" aria-label="Case study sections">
-    <a href="#the-ask">{% include icon.html name="arrow-right" %} The Ask</a>
-    <a href="#the-problem">{% include icon.html name="arrow-right" %} The Problem</a>
-    <a href="#working-it-out">{% include icon.html name="arrow-right" %} Working it out</a>
-    <a href="#the-system">{% include icon.html name="arrow-right" %} The system</a>
-    <a href="#the-ecosystem">{% include icon.html name="arrow-right" %} The ecosystem</a>
-    <a href="#outcome">{% include icon.html name="arrow-right" %} Outcome</a>
-  </nav>
+  {% include case-sidebar.html %}
 
   <div class="case-content">
     <section class="case-section" id="the-ask">
@@ -87,86 +80,30 @@ permalink: /work/afordal/
     <section class="case-section" id="working-it-out">
       <h2 class="case-section__title">Working it out</h2>
 
-      <div class="decision-block">
-        <p class="decision-block__title">Decision 1: Buyers arrive three different ways. One onboarding flow doesn&rsquo;t fit all three.</p>
-        <div class="decision-block__grid">
-          <div class="decision-block__col">
-            <p class="eyebrow">First attempt</p>
-            <p>A single linear onboarding form, same questions for everyone. It was simple to build, but it either asked people things they&rsquo;d already answered, or left gaps for people who needed more guidance.</p>
-          </div>
-          <div class="decision-block__col">
-            <p class="eyebrow">What I landed on</p>
-            <p>Branching onboarding that adapts based on how someone entered the product. An agent-invited buyer skips straight past agent-matching. Someone with no agent gets that step built in. Same core form, different path through it.</p>
-          </div>
-        </div>
-        <p>This kept one system instead of three separate products, but respected that people were arriving in genuinely different situations.</p>
-        <div class="compare">
-          <div class="compare__panes">
-            <div class="compare__pane compare__pane--reject">
-              <div class="compare__media"><p>[PLACEHOLDER: single linear onboarding form, same questions for every user type]</p></div>
-              <div class="compare__caption">Rejected</div>
-            </div>
-            <div class="compare__pane compare__pane--ship">
-              <div class="compare__media"><p>[PLACEHOLDER: branching onboarding flow diagram, entry-point aware]</p></div>
-              <div class="compare__caption">Shipped</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% include decision-block.html
+        title="Decision 1: Buyers arrive three different ways. One onboarding flow doesn’t fit all three."
+        first_attempt="A single linear onboarding form, same questions for everyone. It was simple to build, but it either asked people things they’d already answered, or left gaps for people who needed more guidance."
+        landed_on="Branching onboarding that adapts based on how someone entered the product. An agent-invited buyer skips straight past agent-matching. Someone with no agent gets that step built in. Same core form, different path through it."
+        tradeoff="This kept one system instead of three separate products, but respected that people were arriving in genuinely different situations."
+      %}
 
-      <div class="decision-block">
-        <p class="decision-block__title">Decision 2: IDX/MLS rules restrict how listing data can be shown outside the source system.</p>
-        <div class="decision-block__grid">
-          <div class="decision-block__col">
-            <p class="eyebrow">First attempt</p>
-            <p>Full listing detail shown directly inline in the buyer/seller dashboard.</p>
-          </div>
-          <div class="decision-block__col">
-            <p class="eyebrow">What I landed on</p>
-            <p>A compliant summary view with a clear path to the full listing.</p>
-          </div>
-        </div>
-        <p>The constraint wasn&rsquo;t a limitation to work around quietly, it shaped the information architecture. I designed the dashboard to summarize and route, not duplicate, which kept us compliant and actually made the dashboard less cluttered.</p>
-        <div class="compare">
-          <div class="compare__panes">
-            <div class="compare__pane compare__pane--reject">
-              <div class="compare__media"><p>[PLACEHOLDER: full listing detail inline in dashboard]</p></div>
-              <div class="compare__caption">Rejected</div>
-            </div>
-            <div class="compare__pane compare__pane--ship">
-              <div class="compare__media"><p>[PLACEHOLDER: compliant summary card with link to full listing]</p></div>
-              <div class="compare__caption">Shipped</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% include decision-block.html
+        title="Decision 2: IDX/MLS rules restrict how listing data can be shown outside the source system."
+        first_attempt="Full listing detail shown directly inline in the buyer/seller dashboard."
+        landed_on="A compliant summary view with a clear path to the full listing."
+        tradeoff="The constraint wasn’t a limitation to work around quietly, it shaped the information architecture. I designed the dashboard to summarize and route, not duplicate, which kept us compliant and actually made the dashboard less cluttered."
+        reject_text="[PLACEHOLDER: full listing detail inline in dashboard]"
+        ship_text="[PLACEHOLDER: compliant summary card with link to full listing]"
+      %}
 
-      <div class="decision-block">
-        <p class="decision-block__title">Decision 3: Financing options were added late, meant to be a differentiator.</p>
-        <div class="decision-block__grid">
-          <div class="decision-block__col">
-            <p class="eyebrow">First attempt</p>
-            <p>A financing CTA placed only at the final financing step. The easy move, but by then the decision path was mostly already set.</p>
-          </div>
-          <div class="decision-block__col">
-            <p class="eyebrow">What I landed on</p>
-            <p>Financing education surfaced earlier, woven into the decision path rather than tacked on at the end.</p>
-          </div>
-        </div>
-        <p>The goal wasn&rsquo;t just to mention financing options, it was to help people make better decisions earlier. That meant treating financing education as part of the core journey, not a late add-on, so users had the full picture before they were already locked into a direction.</p>
-        <div class="compare">
-          <div class="compare__panes">
-            <div class="compare__pane compare__pane--reject">
-              <div class="compare__media"><p>[PLACEHOLDER: financing CTA only at final step]</p></div>
-              <div class="compare__caption">Rejected</div>
-            </div>
-            <div class="compare__pane compare__pane--ship">
-              <div class="compare__media"><p>[PLACEHOLDER: financing education woven earlier into the journey]</p></div>
-              <div class="compare__caption">Shipped</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% include decision-block.html
+        title="Decision 3: Financing options were added late, meant to be a differentiator."
+        first_attempt="A financing CTA placed only at the final financing step. The easy move, but by then the decision path was mostly already set."
+        landed_on="Financing education surfaced earlier, woven into the decision path rather than tacked on at the end."
+        tradeoff="The goal wasn’t just to mention financing options, it was to help people make better decisions earlier. That meant treating financing education as part of the core journey, not a late add-on, so users had the full picture before they were already locked into a direction."
+        reject_text="[PLACEHOLDER: financing CTA only at final step]"
+        ship_text="[PLACEHOLDER: financing education woven earlier into the journey]"
+      %}
     </section>
 
     <section class="case-section" id="the-system">

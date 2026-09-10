@@ -24,10 +24,10 @@ nav: home
   <section class="section" id="projects">
     <div class="section__head">
       <h2 class="heading-1">Projects</h2>
-      <a class="overline-link section__link" href="{{ '/#projects' | relative_url }}">All projects &rarr;</a>
+      <a class="overline-link section__link" href="{{ '/projects/' | relative_url }}">All projects &rarr;</a>
     </div>
     <div class="card-grid card-grid--split">
-      {% for item in site.data.projects %}
+      {% for item in site.data.projects limit: 2 %}
         {% include work-card.html item=item variant="vertical" %}
       {% endfor %}
     </div>
