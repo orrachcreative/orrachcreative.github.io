@@ -1,7 +1,9 @@
 {%- comment -%}
   Params: item (hash with title, status, desc, url, cta), variant ("horizontal" | "vertical")
+  The whole card is a single link (not a nested anchor around the "View case
+  study" bit) so the entire surface is clickable.
 {%- endcomment -%}
-<div class="work-card work-card--{{ include.variant }}">
+<a class="work-card work-card--{{ include.variant }}" href="{{ include.item.url | relative_url }}">
   <div class="work-card__media">
     <span>[IMAGE: placeholder]</span>
   </div>
@@ -11,9 +13,9 @@
       <p class="work-card__title">{{ include.item.title }}</p>
       <p class="work-card__desc">{{ include.item.desc }}</p>
     </div>
-    <a class="view-link" href="{{ include.item.url | relative_url }}">
+    <span class="view-link">
       <span class="view-link__label">{{ include.item.cta | default: "View case study" }}</span>
       <span class="view-link__bar" aria-hidden="true"></span>
-    </a>
+    </span>
   </div>
-</div>
+</a>

@@ -503,6 +503,22 @@ button {
   min-width: 0;
 }
 
+a.work-card {
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+}
+
+a.work-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-raised);
+  transform: translateY(-2px);
+}
+
+a.work-card:hover .view-link__label {
+  color: var(--accent);
+}
+
 .work-card--horizontal {
   flex-direction: row;
   align-items: stretch;
@@ -602,16 +618,13 @@ button {
   background: var(--accent-2);
 }
 
-.view-link:hover .view-link__label {
-  color: var(--accent);
-}
-
 /* ==========================================================================
    CTA
    ========================================================================== */
 
 .cta {
-  padding: 24px 0;
+  padding-top: 24px;
+  padding-bottom: 24px;
   text-align: center;
 }
 
@@ -701,7 +714,8 @@ button {
    ========================================================================== */
 
 .case-hero {
-  padding: 48px 0;
+  padding-top: 48px;
+  padding-bottom: 48px;
   border-bottom: 1px solid var(--accent);
 }
 
@@ -794,7 +808,8 @@ button {
 .case-shell {
   display: flex;
   gap: 56px;
-  padding: 48px 0 80px;
+  padding-top: 48px;
+  padding-bottom: 80px;
 }
 
 @media (max-width: 1080px) {
@@ -840,9 +855,12 @@ button {
   transition: color 0.15s ease;
 }
 
-.case-sidebar a:hover,
+.case-sidebar a:hover {
+  color: var(--ink);
+}
+
 .case-sidebar a.is-active {
-  color: var(--accent-2);
+  color: var(--accent);
 }
 
 .case-sidebar a svg {
@@ -866,6 +884,7 @@ button {
   padding: 44px 0;
   border-bottom: 1px solid var(--line);
   text-align: left;
+  scroll-margin-top: calc(var(--header-h) + 24px);
 }
 
 .case-section > * {
