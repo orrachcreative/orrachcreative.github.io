@@ -1148,6 +1148,78 @@ button {
 }
 
 /* ==========================================================================
+   Preview password gate
+   ========================================================================== */
+
+html.gate-locked body > *:not(#preview-gate) {
+  display: none;
+}
+
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--black);
+}
+
+.gate__panel {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+}
+
+.gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gate__input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--ash);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--ink-strong);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.gate__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.gate__submit {
+  padding: 12px 14px;
+  background: var(--accent);
+  color: var(--black);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+}
+
+.gate__submit:hover {
+  background: var(--accent-2);
+}
+
+.gate__error {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: #e06b5f;
+}
+
+/* ==========================================================================
    Motion (respects reduced-motion)
    ========================================================================== */
 
