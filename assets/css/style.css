@@ -746,7 +746,9 @@ a.work-card:hover .view-link__label {
 
 .case-hero__copy {
   display: flex;
+  flex-direction: column;
   gap: 14px;
+  max-width: 50%;
   margin-bottom: 20px;
 }
 
@@ -756,11 +758,9 @@ a.work-card:hover .view-link__label {
   font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem);
   letter-spacing: -1.5px;
   color: var(--ink);
-  flex: none;
 }
 
 .case-hero__desc {
-  flex: 1;
   font-family: var(--font-body);
   font-size: 1.125rem;
   letter-spacing: 0.5px;
@@ -770,7 +770,7 @@ a.work-card:hover .view-link__label {
 
 @media (max-width: 900px) {
   .case-hero__copy {
-    flex-direction: column;
+    max-width: 100%;
   }
 }
 
