@@ -1,0 +1,19 @@
+{%- comment -%}
+  Params: item (hash with title, status, desc, url, cta), variant ("horizontal" | "vertical")
+{%- endcomment -%}
+<div class="work-card work-card--{{ include.variant }}">
+  <div class="work-card__media">
+    <span>[IMAGE: placeholder]</span>
+  </div>
+  <div class="work-card__body">
+    <div class="work-card__text">
+      <p class="eyebrow">{{ include.item.status }}</p>
+      <p class="work-card__title">{{ include.item.title }}</p>
+      <p class="work-card__desc">{{ include.item.desc }}</p>
+    </div>
+    <a class="view-link" href="{{ include.item.url | relative_url }}">
+      <span class="view-link__label">{{ include.item.cta | default: "View case study" }}</span>
+      <span class="view-link__bar" aria-hidden="true"></span>
+    </a>
+  </div>
+</div>

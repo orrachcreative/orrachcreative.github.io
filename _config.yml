@@ -1,0 +1,19 @@
+title: Anthony Orrach Creative
+description: "Senior product design, shown through how the decisions got made."
+author: Anthony Orrach
+email: orrachcreative@gmail.com
+url: "https://orrachcreative.github.io"
+baseurl: ""
+
+markdown: kramdown
+permalink: pretty
+
+sass:
+  style: compressed
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - node_modules

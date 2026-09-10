@@ -1,0 +1,238 @@
+---
+layout: default
+title: Afordal
+nav: work
+permalink: /work/afordal/
+---
+<section class="case-hero shell">
+  <div class="case-hero__nav">
+    <a href="{{ '/work/' | relative_url }}">{% include icon.html name="arrow-left" %} All work</a>
+    <a href="{{ '/work/homeasap/' | relative_url }}">Next study {% include icon.html name="arrow-right" %}</a>
+  </div>
+  <div class="case-hero__copy">
+    <h1 class="case-hero__title">Afordal</h1>
+    <p class="case-hero__desc">A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture.</p>
+  </div>
+
+  <div class="case-meta">
+    <div class="case-meta__item">
+      <p class="meta-label">Role</p>
+      <p class="case-meta__value">Solo Product Designer</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Tools</p>
+      <p class="case-meta__value">Figma</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Type</p>
+      <p class="case-meta__value">Saas &bull; CRM</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Timeline</p>
+      <p class="case-meta__value">Jan 2025 &ndash; present</p>
+    </div>
+  </div>
+
+  <div class="case-hero__shot">
+    <div class="work-card__media">
+      <span>[IMAGE: the finished product at a glance]</span>
+    </div>
+  </div>
+</section>
+
+<div class="case-shell shell">
+  <nav class="case-sidebar" aria-label="Case study sections">
+    <a href="#the-ask">{% include icon.html name="arrow-right" %} The Ask</a>
+    <a href="#the-problem">{% include icon.html name="arrow-right" %} The Problem</a>
+    <a href="#working-it-out">{% include icon.html name="arrow-right" %} Working it out</a>
+    <a href="#the-system">{% include icon.html name="arrow-right" %} The system</a>
+    <a href="#the-ecosystem">{% include icon.html name="arrow-right" %} The ecosystem</a>
+    <a href="#outcome">{% include icon.html name="arrow-right" %} Outcome</a>
+  </nav>
+
+  <div class="case-content">
+    <section class="case-section" id="the-ask">
+      <h2 class="case-section__title">The ask</h2>
+      <p>A stakeholder had a rough idea and a set of wireframes that were three years old and never finished. No user flows, no content strategy, no design system.</p>
+      <p>No spec, no research, no existing patterns, no stakeholder clarity on who the product was really for. My job was to figure out what this product actually needed to be before I could design a single real screen.</p>
+    </section>
+
+    <section class="case-section" id="the-problem">
+      <h2 class="case-section__title">The real problem</h2>
+      <p>Afordal wasn&rsquo;t one user with one journey. Buyers, sellers, agents, and loan officers all crossed paths, each arriving under different circumstances. A buyer might already have an agent, or might not. A seller might be working with a loan officer, or might not need one yet.</p>
+      <p>On top of that, IDX and MLS compliance rules put hard limits on what listing data I could show and how it could be displayed and attributed outside the source system.</p>
+      <p>I couldn&rsquo;t design a single screen until I understood how these people and these rules intersected. The hard part wasn&rsquo;t the UI, it was untangling who the product was for and what rules it had to obey.</p>
+
+      <div class="stakeholder-diagram" role="img" aria-label="Diagram: buyers and sellers may have an agent, who may be branded to a loan officer; IDX and MLS rules externally limit what listing data can be shown.">
+        <div class="stakeholder-diagram__row">
+          <div class="stakeholder-diagram__node">Buyer</div>
+          <span class="stakeholder-diagram__label">may have</span>
+          <div class="stakeholder-diagram__node">Seller</div>
+        </div>
+        <div class="stakeholder-diagram__row">
+          <span class="stakeholder-diagram__label" style="grid-column: 1 / -1;">may have</span>
+        </div>
+        <div class="stakeholder-diagram__row">
+          <div class="stakeholder-diagram__node">Agent</div>
+          <span class="stakeholder-diagram__label">branded to</span>
+          <div class="stakeholder-diagram__node">Loan officer</div>
+        </div>
+        <div class="stakeholder-diagram__note">
+          <strong>IDX / MLS rules</strong>
+          <span>(external constraint — limits data shown)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="working-it-out">
+      <h2 class="case-section__title">Working it out</h2>
+
+      <div class="decision-block">
+        <p class="decision-block__title">Decision 1: Buyers arrive three different ways. One onboarding flow doesn&rsquo;t fit all three.</p>
+        <div class="decision-block__grid">
+          <div class="decision-block__col">
+            <p class="eyebrow">First attempt</p>
+            <p>A single linear onboarding form, same questions for everyone. It was simple to build, but it either asked people things they&rsquo;d already answered, or left gaps for people who needed more guidance.</p>
+          </div>
+          <div class="decision-block__col">
+            <p class="eyebrow">What I landed on</p>
+            <p>Branching onboarding that adapts based on how someone entered the product. An agent-invited buyer skips straight past agent-matching. Someone with no agent gets that step built in. Same core form, different path through it.</p>
+          </div>
+        </div>
+        <p>This kept one system instead of three separate products, but respected that people were arriving in genuinely different situations.</p>
+        <div class="compare">
+          <div class="compare__panes">
+            <div class="compare__pane compare__pane--reject">
+              <div class="compare__media"><p>[PLACEHOLDER: single linear onboarding form, same questions for every user type]</p></div>
+              <div class="compare__caption">Rejected</div>
+            </div>
+            <div class="compare__pane compare__pane--ship">
+              <div class="compare__media"><p>[PLACEHOLDER: branching onboarding flow diagram, entry-point aware]</p></div>
+              <div class="compare__caption">Shipped</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision-block">
+        <p class="decision-block__title">Decision 2: IDX/MLS rules restrict how listing data can be shown outside the source system.</p>
+        <div class="decision-block__grid">
+          <div class="decision-block__col">
+            <p class="eyebrow">First attempt</p>
+            <p>Full listing detail shown directly inline in the buyer/seller dashboard.</p>
+          </div>
+          <div class="decision-block__col">
+            <p class="eyebrow">What I landed on</p>
+            <p>A compliant summary view with a clear path to the full listing.</p>
+          </div>
+        </div>
+        <p>The constraint wasn&rsquo;t a limitation to work around quietly, it shaped the information architecture. I designed the dashboard to summarize and route, not duplicate, which kept us compliant and actually made the dashboard less cluttered.</p>
+        <div class="compare">
+          <div class="compare__panes">
+            <div class="compare__pane compare__pane--reject">
+              <div class="compare__media"><p>[PLACEHOLDER: full listing detail inline in dashboard]</p></div>
+              <div class="compare__caption">Rejected</div>
+            </div>
+            <div class="compare__pane compare__pane--ship">
+              <div class="compare__media"><p>[PLACEHOLDER: compliant summary card with link to full listing]</p></div>
+              <div class="compare__caption">Shipped</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision-block">
+        <p class="decision-block__title">Decision 3: Financing options were added late, meant to be a differentiator.</p>
+        <div class="decision-block__grid">
+          <div class="decision-block__col">
+            <p class="eyebrow">First attempt</p>
+            <p>A financing CTA placed only at the final financing step. The easy move, but by then the decision path was mostly already set.</p>
+          </div>
+          <div class="decision-block__col">
+            <p class="eyebrow">What I landed on</p>
+            <p>Financing education surfaced earlier, woven into the decision path rather than tacked on at the end.</p>
+          </div>
+        </div>
+        <p>The goal wasn&rsquo;t just to mention financing options, it was to help people make better decisions earlier. That meant treating financing education as part of the core journey, not a late add-on, so users had the full picture before they were already locked into a direction.</p>
+        <div class="compare">
+          <div class="compare__panes">
+            <div class="compare__pane compare__pane--reject">
+              <div class="compare__media"><p>[PLACEHOLDER: financing CTA only at final step]</p></div>
+              <div class="compare__caption">Rejected</div>
+            </div>
+            <div class="compare__pane compare__pane--ship">
+              <div class="compare__media"><p>[PLACEHOLDER: financing education woven earlier into the journey]</p></div>
+              <div class="compare__caption">Shipped</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="the-system">
+      <h2 class="case-section__title">The system</h2>
+      <p>Because there was no existing system, I built one from scratch: a component library, type and color rules, and a brand asset library. This wasn&rsquo;t just for the buyer/seller app. It&rsquo;s the same system that carried into the agent and loan officer CRM and the marketing site, which meant every new screen after this point got faster and more consistent to design and build.</p>
+      <div class="grid-items">
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Components</p>
+          <p class="grid-item__desc">Built once, reused across the buyer/seller app, CRM, and marketing site.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Type &amp; color</p>
+          <p class="grid-item__desc">Rules for hierarchy and brand consistency across every surface.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Brand assets</p>
+          <p class="grid-item__desc">Logo, icon set, and imagery direction, built from nothing.</p>
+        </div>
+      </div>
+      <div class="work-card__media">
+        <span>[PLACEHOLDER: the system applied — a real dashboard screen]</span>
+      </div>
+    </section>
+
+    <section class="case-section" id="the-ecosystem">
+      <h2 class="case-section__title">The ecosystem</h2>
+      <p>Afordal isn&rsquo;t a single app. It&rsquo;s four connected pieces built on one design system, which meant a consistent brand and interaction language across every audience, without separate design efforts for each piece.</p>
+      <div class="grid-items">
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Buyer/seller app</p>
+          <p class="grid-item__desc">Home value stats, an AI-assisted dashboard steering buyers and sellers toward the right product offerings, linked back to the agent&rsquo;s IDX home search.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">CRM</p>
+          <p class="grid-item__desc">For agents and loan officers to manage their leads and clients. Loan officers show up branded to the specific agent or brokerage they&rsquo;re connected to.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Marketing site</p>
+          <p class="grid-item__desc">Brings agents and loan officers onto the platform in the first place.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">IDX home search</p>
+          <p class="grid-item__desc">Shareable search agents send to their own contacts, single or multiple MLS, with the agent positioned as the largest brand on the page. Reskin of an existing HomeASAP tool, worth being upfront about, but shows the reach of the system.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="outcome">
+      <h2 class="case-section__title">Outcome</h2>
+      <p>Afordal shipped as a solo six-month build, covering brand, design system, product, and marketing site, and is live today.</p>
+      <p>Separately, that same UI foundation was reused as the basis for a commercial real estate SaaS product through a joint venture, a downstream application beyond the original consumer-facing platform, and proof the system was built to extend past its first use case.</p>
+    </section>
+  </div>
+</div>
+
+<div class="next-project">
+  <p class="next-project__label">Next project</p>
+  <p class="next-project__title">HomeASAP</p>
+  <a class="workflow-link" href="{{ '/work/homeasap/' | relative_url }}">View case study {% include icon.html name="arrow-right" %}</a>
+</div>
+
+{% include cta.html %}

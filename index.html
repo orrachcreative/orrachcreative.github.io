@@ -1,0 +1,42 @@
+---
+layout: default
+title: Home
+nav: home
+---
+<div class="shell">
+  <section class="hero">
+    <p class="display-2 hero__title">[Replace: one sentence that positions you — senior product design, one-man-show energy, knows how to get things done, not just started.]</p>
+    <p class="body-lg hero__subtitle">[Replace: one supporting sentence — who you help and how, e.g. &ldquo;I take products from a phone call and a vague idea to something real, alone if I have to.&rdquo;]</p>
+  </section>
+
+  <section class="section" id="work">
+    <div class="section__head">
+      <h2 class="heading-1">Work</h2>
+      <a class="overline-link section__link" href="{{ '/work/' | relative_url }}">All work &rarr;</a>
+    </div>
+    <div class="card-grid">
+      {% for item in site.data.work %}
+        {% include work-card.html item=item variant="horizontal" %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section__head">
+      <h2 class="heading-1">Projects</h2>
+      <a class="overline-link section__link" href="{{ '/#projects' | relative_url }}">All projects &rarr;</a>
+    </div>
+    <div class="card-grid card-grid--split">
+      {% for item in site.data.projects %}
+        {% include work-card.html item=item variant="vertical" %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="closing-cta">
+    <p class="heading-3" style="font-size: 1.375rem; letter-spacing: 0;">[Replace: closing line — what you're looking for next, e.g. &ldquo;Looking for a Principal or Senior UX role where I can own the whole thing again.&rdquo;]</p>
+    <a class="overline-link section__link" href="{{ '/about/' | relative_url }}" style="color: var(--accent);">More about me &rarr;</a>
+  </div>
+</div>
+
+{% include cta.html %}
