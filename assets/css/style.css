@@ -277,7 +277,7 @@ button {
 }
 
 .site-header.is-menu-open {
-  background: rgba(34, 30, 31, 0.95);
+  background: rgba(67, 183, 64, 0.88);
   border-bottom-color: transparent;
   box-shadow: none;
 }
@@ -433,6 +433,7 @@ button {
 .menu-toggle.is-open .menu-toggle__icon svg {
   width: 22px;
   height: 22px;
+  color: #000000;
 }
 
 /* ==========================================================================
@@ -450,7 +451,7 @@ button {
   justify-content: space-between;
   width: 100vw;
   padding: 40px var(--gutter-mobile) 48px;
-  background: rgba(34, 30, 31, 0.95);
+  background: rgba(67, 183, 64, 0.88);
   transform: translateX(100%);
   transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
   overflow-y: auto;
@@ -463,6 +464,7 @@ button {
 .site-menu__nav {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 4px;
 }
 
@@ -486,7 +488,7 @@ button {
   font-weight: 600;
   font-size: clamp(2.25rem, 1.9rem + 2vw, 3rem);
   line-height: 1.2;
-  color: var(--parchment);
+  color: #000000;
   text-transform: capitalize;
 }
 
@@ -495,7 +497,7 @@ button {
   flex: none;
   width: 56px;
   height: 56px;
-  color: var(--emerald);
+  color: #000000;
   opacity: 0;
   transform: translateX(-6px);
   transition: opacity 0.15s ease, transform 0.15s ease;
@@ -509,7 +511,7 @@ button {
 .site-menu__link-bar {
   height: 3px;
   width: 100%;
-  background: var(--emerald);
+  background: #000000;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.2s ease;
@@ -542,12 +544,12 @@ button {
 }
 
 .site-menu__social a {
-  color: var(--parchment);
-  transition: color 0.15s ease;
+  color: #000000;
+  transition: opacity 0.15s ease;
 }
 
 .site-menu__social a:hover {
-  color: var(--emerald);
+  opacity: 0.6;
 }
 
 .site-menu__social svg {
