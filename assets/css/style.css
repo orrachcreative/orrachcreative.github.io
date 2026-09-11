@@ -271,7 +271,7 @@ button {
   height: var(--header-h);
   padding: 0 24px;
   background: var(--bg);
-  border-bottom: 1px solid var(--gold);
+  border-bottom: 1px solid rgba(231, 198, 66, 0.3);
   box-shadow: var(--shadow-nav);
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
@@ -641,23 +641,35 @@ body.menu-open {
   }
 }
 
-.about-hero {
+/* Reusable background-image treatment: add alongside any section's own
+   classes, then set `background-image` (inline or in CSS). The dark scrim
+   keeps light text legible over any photo; tune it per-instance with the
+   --scrim-top/--scrim-bottom custom properties if a section needs less
+   (or more) contrast than the default. */
+.bg-image-section {
   position: relative;
   isolation: isolate;
-  padding: 96px 48px 72px;
-  margin: 24px 0 0;
-  border-radius: var(--radius);
   background-size: cover;
   background-position: center;
   overflow: hidden;
 }
 
-.about-hero::before {
+.bg-image-section::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(20, 17, 14, 0.55) 0%, rgba(20, 17, 14, 0.8) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(20, 17, 14, var(--scrim-top, 0.55)) 0%,
+    rgba(20, 17, 14, var(--scrim-bottom, 0.8)) 100%
+  );
+}
+
+.about-hero {
+  padding: 96px 48px 72px;
+  margin: 24px 0 0;
+  border-radius: var(--radius);
 }
 
 .about-hero .eyebrow {
