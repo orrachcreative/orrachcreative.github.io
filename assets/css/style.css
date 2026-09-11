@@ -346,6 +346,10 @@ button {
   height: 18px;
 }
 
+.theme-toggle:hover {
+  opacity: 0.8;
+}
+
 /* Light theme's toggle chip is Gold (not Emerald) per spec */
 [data-theme="light"] .theme-toggle {
   background: var(--gold);
@@ -369,7 +373,11 @@ button {
   justify-content: center;
   border-radius: var(--radius);
   background: var(--dark-forest);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, opacity 0.15s ease;
+}
+
+.menu-toggle:hover {
+  opacity: 0.85;
 }
 
 .menu-toggle__inner {
@@ -1154,6 +1162,13 @@ a.work-card--horizontal:hover .work-card__cta {
   width: 20px;
   height: 20px;
   flex: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.case-sidebar a:hover svg,
+.case-sidebar a.is-active svg {
+  opacity: 1;
 }
 
 .case-content {
@@ -1207,7 +1222,7 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .decision-block .eyebrow {
-  color: #5cce59;
+  color: var(--gold);
 }
 
 .decision-block__title {
@@ -1331,6 +1346,13 @@ a.work-card--horizontal:hover .work-card__cta {
   padding: 14px 20px;
   border-radius: var(--radius);
   border: 2px solid rgba(92, 206, 89, 0.5);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.compare__cta:hover {
+  border-color: #5cce59;
+  background: rgba(92, 206, 89, 0.1);
 }
 
 .compare__cta-label {
@@ -1361,6 +1383,12 @@ a.work-card--horizontal:hover .work-card__cta {
   letter-spacing: 0.75px;
   text-transform: capitalize;
   color: var(--ink);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.pill:hover {
+  border-color: #5cce59;
+  background: rgba(92, 206, 89, 0.1);
 }
 
 .pill svg {
@@ -1370,6 +1398,11 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .pill--filled {
   background: rgba(67, 133, 65, 0.6);
+}
+
+.pill--filled:hover {
+  border-color: #5cce59;
+  background: rgba(67, 133, 65, 0.8);
 }
 
 .pill-row {
@@ -1485,7 +1518,7 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .logo-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   padding: 48px 0;
 }
@@ -1514,6 +1547,17 @@ a.work-card--horizontal:hover .work-card__cta {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.logo-grid__item--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
 }
 
 .gallery-scroll .work-card__media {
