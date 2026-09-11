@@ -631,6 +631,10 @@ body.menu-open {
   );
 }
 
+.home-hero-shell::before {
+  background: none;
+}
+
 .about-hero .eyebrow {
   color: var(--emerald);
 }
