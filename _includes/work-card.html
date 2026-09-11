@@ -13,9 +13,16 @@
       <p class="work-card__title">{{ include.item.title }}</p>
       <p class="work-card__desc">{{ include.item.desc }}</p>
     </div>
+    {%- if include.variant == "horizontal" -%}
+    <span class="work-card__cta">
+      <span class="work-card__cta-label">{{ include.item.cta | default: "See case study" }}</span>
+      {% include icon.html name="arrow-right" %}
+    </span>
+    {%- else -%}
     <span class="view-link">
       <span class="view-link__label">{{ include.item.cta | default: "View case study" }}</span>
       <span class="view-link__bar" aria-hidden="true"></span>
     </span>
+    {%- endif -%}
   </div>
 </a>
