@@ -2,7 +2,7 @@
    Anthony Orrach Creative — design tokens + base styles
    Light-mode values are pulled from the Figma Typography page's "Light
    Mode" reference frame (node 19:14582): bg #FFFAF3, near-black ink,
-   Emerald 2 (#43B740) for actions, Bronze (#C9AA2E) for overline labels —
+   Emerald 2 (#438541) for actions, Bronze (#C9AA2E) for overline labels —
    labels and actions use different accent hues in light mode, so they're
    split into --accent (actions) and --accent-label (eyebrows/overlines).
    ========================================================================== */
@@ -12,16 +12,16 @@
   --ivory: #f5ecde;
   --parchment: #fffaf3;
   --emerald: #5cce59;
-  --emerald-2: #43b740;
+  --emerald-2: #438541;
   --black: #1a1a1a;
-  --ash: #221e1f;
+  --dark-forest: #1e221e;
   --gold: #e7c642;
   --bronze: #c9aa2e;
 
   /* Semantic tokens (dark mode) */
   --bg: var(--black);
   --bg-raised: rgba(245, 236, 222, 0.08);
-  --bg-card: var(--ash);
+  --bg-card: var(--dark-forest);
   --ink: var(--ivory);
   --ink-strong: var(--parchment);
   --ink-soft: #e6dfd3;
@@ -32,7 +32,7 @@
   --line: rgba(254, 245, 234, 0.1);
   --line-strong: rgba(254, 245, 234, 0.25);
   --placeholder-bg: var(--ivory);
-  --placeholder-ink: var(--ash);
+  --placeholder-ink: var(--dark-forest);
   --reject: rgba(254, 245, 234, 0.6);
   --reject-ink: rgba(254, 245, 234, 0.6);
   --ship: var(--emerald);
@@ -277,7 +277,7 @@ button {
 }
 
 .site-header.is-menu-open {
-  background: rgba(67, 183, 64, 0.88);
+  background: rgba(67, 133, 65, 0.88);
   border-bottom-color: transparent;
   box-shadow: none;
 }
@@ -399,7 +399,7 @@ button {
   justify-content: center;
   padding: 11px;
   border-radius: var(--radius);
-  background: var(--ash);
+  background: var(--dark-forest);
   transition: background-color 0.2s ease;
 }
 
@@ -451,7 +451,7 @@ button {
   justify-content: space-between;
   width: 100vw;
   padding: 40px var(--gutter-mobile) 48px;
-  background: rgba(67, 183, 64, 0.88);
+  background: rgba(67, 133, 65, 0.88);
   transform: translateX(100%);
   transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
   overflow-y: auto;
@@ -735,8 +735,8 @@ body.menu-open {
   display: flex;
   gap: 28px;
   padding: 28px;
-  background: #221e1f;
-  border: 2px solid rgba(34, 30, 31, 0.1);
+  background: #1e221e;
+  border: 2px solid rgba(30, 34, 30, 0.1);
   border-radius: var(--radius);
   box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.2);
   flex: 1;
@@ -797,7 +797,7 @@ a.work-card:hover .view-link__label {
   font-family: var(--font-mono);
   font-size: 12.5px;
   letter-spacing: 0.75px;
-  color: #221e1f;
+  color: #1e221e;
 }
 
 .work-card__body {
@@ -871,7 +871,7 @@ a.work-card:hover .view-link__label {
   padding: 14px 16px;
   border-radius: var(--radius);
   border: 2px solid rgba(92, 206, 89, 0.5);
-  background: rgba(67, 183, 64, 0.2);
+  background: rgba(67, 133, 65, 0.2);
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
@@ -892,7 +892,7 @@ a.work-card:hover .view-link__label {
 
 a.work-card--horizontal:hover .work-card__cta {
   border-color: var(--emerald);
-  background: rgba(67, 183, 64, 0.32);
+  background: rgba(67, 133, 65, 0.32);
 }
 
 /* ==========================================================================
@@ -1355,7 +1355,7 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .pill--filled {
-  background: rgba(67, 183, 64, 0.6);
+  background: rgba(67, 133, 65, 0.6);
 }
 
 .pill-row {
@@ -1707,7 +1707,7 @@ html.gate-locked body > *:not(#preview-gate) {
 .gate__input {
   width: 100%;
   padding: 12px 14px;
-  background: var(--ash);
+  background: var(--dark-forest);
   border: 1px solid var(--line-strong);
   border-radius: 6px;
   color: var(--ink-strong);
