@@ -852,6 +852,7 @@ a.work-card:hover .view-link__label {
   gap: 8px;
   width: max-content;
   padding: 14px 16px;
+  margin-top: 32px;
   border-radius: var(--radius);
   border: 2px solid rgba(92, 206, 89, 0.5);
   background: rgba(67, 133, 65, 0.2);
