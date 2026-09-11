@@ -277,7 +277,7 @@ button {
 }
 
 .site-header.is-menu-open {
-  background: var(--black);
+  background: rgba(34, 30, 31, 0.95);
   border-bottom-color: transparent;
   box-shadow: none;
 }
@@ -450,7 +450,7 @@ button {
   justify-content: space-between;
   width: 100vw;
   padding: 40px var(--gutter-mobile) 48px;
-  background: var(--black);
+  background: rgba(34, 30, 31, 0.95);
   transform: translateX(100%);
   transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
   overflow-y: auto;
@@ -493,8 +493,8 @@ button {
 .site-menu__link-arrow {
   display: flex;
   flex: none;
-  width: 0.65em;
-  height: 0.65em;
+  width: 56px;
+  height: 56px;
   color: var(--emerald);
   opacity: 0;
   transform: translateX(-6px);
