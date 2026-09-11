@@ -715,12 +715,8 @@ body.menu-open {
 
 .work-card {
   display: flex;
-  gap: 28px;
-  padding: 28px;
   background: #1e221e;
-  border: 2px solid rgba(30, 34, 30, 0.1);
   border-radius: var(--radius);
-  box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.2);
   flex: 1;
   min-width: 0;
 }
@@ -745,10 +741,14 @@ a.work-card:hover .view-link__label {
 .work-card--horizontal {
   flex-direction: row;
   align-items: stretch;
+  overflow: hidden;
+  border: 2px solid rgba(34, 30, 31, 0.2);
+  box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.2);
 }
 
 .work-card--vertical {
   flex-direction: column;
+  border: 2px solid rgba(245, 236, 222, 0.1);
 }
 
 @media (max-width: 900px) {
@@ -773,6 +773,11 @@ a.work-card:hover .view-link__label {
 .work-card--vertical .work-card__media {
   width: 100%;
   min-height: 260px;
+  border-radius: 6px 6px 0 0;
+}
+
+.work-card--horizontal .work-card__media {
+  border-radius: 0;
 }
 
 .work-card__media span {
@@ -785,17 +790,18 @@ a.work-card:hover .view-link__label {
 .work-card__body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
+  padding: 28px;
 }
 
 .work-card--horizontal .work-card__body {
   width: 345px;
   flex: none;
+  justify-content: space-between;
 }
 
 .work-card--vertical .work-card__body {
   width: 100%;
+  gap: 32px;
 }
 
 .work-card__text {
