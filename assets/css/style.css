@@ -270,7 +270,7 @@ button {
   justify-content: space-between;
   height: var(--header-h);
   padding: 0 24px;
-  background: var(--bg);
+  background: #1e221e;
   border-bottom: 1px solid rgba(231, 198, 66, 0.3);
   box-shadow: var(--shadow-nav);
   transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -306,17 +306,9 @@ button {
   height: 40px;
 }
 
-/* Dark theme (default): dark-on-light-bg logo variant */
+/* The header is always Dark Forest regardless of site theme, so the logo
+   always shows its dark-on-dark (light-colored) variant. */
 .wordmark__logo--desktop.wordmark__logo--dark {
-  display: flex;
-}
-
-/* Light theme: swap to the light-mode logo variant */
-[data-theme="light"] .wordmark__logo--desktop.wordmark__logo--dark {
-  display: none;
-}
-
-[data-theme="light"] .wordmark__logo--desktop.wordmark__logo--light {
   display: flex;
 }
 
@@ -327,33 +319,6 @@ button {
 
   .wordmark__logo--mobile.wordmark__logo--dark {
     display: flex;
-  }
-
-  [data-theme="light"] .wordmark__logo--mobile.wordmark__logo--dark {
-    display: none;
-  }
-
-  [data-theme="light"] .wordmark__logo--mobile.wordmark__logo--light {
-    display: flex;
-  }
-}
-
-/* While the full-screen menu is open, the header becomes part of the dark
-   menu chrome regardless of site theme, so force the dark-on-dark logo
-   variant so it stays legible against the darkened header background. */
-.site-header.is-menu-open .wordmark__logo--light {
-  display: none !important;
-}
-
-@media (min-width: 901px) {
-  .site-header.is-menu-open .wordmark__logo--desktop.wordmark__logo--dark {
-    display: flex !important;
-  }
-}
-
-@media (max-width: 900px) {
-  .site-header.is-menu-open .wordmark__logo--mobile.wordmark__logo--dark {
-    display: flex !important;
   }
 }
 
@@ -423,7 +388,7 @@ button {
   font-weight: 700;
   font-size: 9px;
   letter-spacing: 0.03em;
-  color: var(--emerald);
+  color: var(--bronze);
 }
 
 .menu-toggle.is-open {
@@ -919,19 +884,21 @@ a.work-card--horizontal:hover .work-card__cta {
 .cta {
   padding-top: 24px;
   padding-bottom: 24px;
-  text-align: center;
+  background: #1e221e;
+  text-align: left;
 }
 
 .cta__inner {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   padding: 24px 0;
 }
 
 .cta__title {
   text-transform: none;
+  color: #f5ecde;
 }
 
 .cta__email {
@@ -939,7 +906,7 @@ a.work-card--horizontal:hover .work-card__cta {
   font-weight: 500;
   font-size: 1.25rem;
   letter-spacing: 0.8px;
-  color: var(--accent);
+  color: #5cce59;
 }
 
 .cta__email:hover {
