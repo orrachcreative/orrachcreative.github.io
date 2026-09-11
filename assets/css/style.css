@@ -632,7 +632,10 @@ body.menu-open {
 }
 
 .home-hero-shell::before {
-  background: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 }
 
 .about-hero .eyebrow {
