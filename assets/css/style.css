@@ -264,7 +264,7 @@ button {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -273,6 +273,13 @@ button {
   background: var(--bg);
   border-bottom: 1px solid var(--gold);
   box-shadow: var(--shadow-nav);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.site-header.is-menu-open {
+  background: var(--ash);
+  border-bottom-color: transparent;
+  box-shadow: none;
 }
 
 .wordmark {
@@ -282,7 +289,7 @@ button {
 }
 
 .wordmark__logo {
-  display: flex;
+  display: none;
   align-items: center;
 }
 
@@ -295,60 +302,65 @@ button {
   height: 32px;
 }
 
-.wordmark__logo--mobile {
+.wordmark__logo--mobile svg {
+  height: 40px;
+}
+
+/* Dark theme (default): dark-on-light-bg logo variant */
+.wordmark__logo--desktop.wordmark__logo--dark {
+  display: flex;
+}
+
+/* Light theme: swap to the light-mode logo variant */
+[data-theme="light"] .wordmark__logo--desktop.wordmark__logo--dark {
   display: none;
+}
+
+[data-theme="light"] .wordmark__logo--desktop.wordmark__logo--light {
+  display: flex;
 }
 
 @media (max-width: 900px) {
   .wordmark__logo--desktop {
-    display: none;
+    display: none !important;
   }
 
-  .wordmark__logo--mobile {
+  .wordmark__logo--mobile.wordmark__logo--dark {
     display: flex;
   }
 
-  .wordmark__logo--mobile svg {
-    height: 40px;
+  [data-theme="light"] .wordmark__logo--mobile.wordmark__logo--dark {
+    display: none;
+  }
+
+  [data-theme="light"] .wordmark__logo--mobile.wordmark__logo--light {
+    display: flex;
   }
 }
 
-.site-nav {
+/* While the full-screen menu is open, the header becomes part of the dark
+   menu chrome regardless of site theme, so force the dark-on-dark logo
+   variant so it stays legible against the darkened header background. */
+.site-header.is-menu-open .wordmark__logo--light {
+  display: none !important;
+}
+
+@media (min-width: 901px) {
+  .site-header.is-menu-open .wordmark__logo--desktop.wordmark__logo--dark {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .site-header.is-menu-open .wordmark__logo--mobile.wordmark__logo--dark {
+    display: flex !important;
+  }
+}
+
+.site-header__actions {
   display: flex;
   align-items: center;
-  gap: 24px;
-}
-
-.site-nav__links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.nav-link {
-  padding: 4px 8px;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 1rem;
-  letter-spacing: 1.5px;
-  color: var(--ink);
-  border-bottom: 3px solid transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.nav-link:hover {
-  color: var(--accent);
-}
-
-.nav-link.is-active {
-  color: var(--ink);
-  border-color: var(--accent);
-}
-
-.nav-divider {
-  width: 1px;
-  align-self: stretch;
-  background: var(--line-strong);
+  gap: 12px;
 }
 
 .theme-toggle {
@@ -361,6 +373,8 @@ button {
   border-radius: 999px;
   background: var(--accent);
   color: var(--black);
+  flex: none;
+  transition: opacity 0.15s ease;
 }
 
 .theme-toggle svg {
@@ -368,46 +382,160 @@ button {
   height: 18px;
 }
 
+.site-header.is-menu-open .theme-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Menu toggle: closed state is the "menu 2 / Default" chip (hamburger +
+   MENU label on an Ash card); open state swaps to a bare close icon so the
+   same button stays in the same spot while changing appearance. */
 .menu-toggle {
-  display: none;
-  width: 40px;
-  height: 40px;
+  display: flex;
+  flex: none;
+  width: 48px;
+  height: 48px;
   align-items: center;
   justify-content: center;
+  padding: 11px;
+  border-radius: var(--radius);
+  background: var(--ash);
+  transition: background-color 0.2s ease;
 }
 
-.menu-toggle svg {
-  width: 24px;
-  height: 24px;
+.menu-toggle__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
-@media (max-width: 900px) {
-  .site-nav__links {
-    display: none;
-  }
-
-  .menu-toggle {
-    display: inline-flex;
-  }
+.menu-toggle__icon svg {
+  display: block;
+  width: 18px;
+  height: 12px;
+  color: var(--emerald);
 }
 
-/* Mobile nav drawer */
-.mobile-drawer {
-  display: none;
+.menu-toggle__label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.03em;
+  color: var(--emerald);
+}
+
+.menu-toggle.is-open {
+  background: transparent;
+}
+
+.menu-toggle.is-open .menu-toggle__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ==========================================================================
+   Full-screen slide-out menu
+   ========================================================================== */
+
+.site-menu {
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  bottom: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100vw;
+  padding: 40px var(--gutter-mobile) 48px;
+  background: var(--ash);
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  overflow-y: auto;
+}
+
+.site-menu.is-open {
+  transform: translateX(0);
+}
+
+.site-menu__nav {
+  display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 16px var(--gutter-mobile) 24px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--gold);
 }
 
-.mobile-drawer.is-open {
+.site-menu__link {
+  width: fit-content;
+  padding: 6px 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.25rem, 1.9rem + 2vw, 3rem);
+  line-height: 1.2;
+  color: var(--parchment);
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.site-menu__link:hover {
+  color: var(--emerald);
+}
+
+.site-menu__link.is-active {
+  color: var(--emerald);
+  border-color: var(--emerald);
+}
+
+.site-menu__social {
   display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 48px;
 }
 
-.mobile-drawer .nav-link {
-  padding: 12px 4px;
-  border-bottom: 1px solid var(--line);
+.site-menu__social a {
+  color: var(--parchment);
+  transition: color 0.15s ease;
+}
+
+.site-menu__social a:hover {
+  color: var(--emerald);
+}
+
+.site-menu__social svg {
+  width: 22px;
+  height: 22px;
+}
+
+.site-menu__backdrop {
+  display: none;
+  position: fixed;
+  inset: var(--header-h) 0 0 0;
+  z-index: 24;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+
+.site-menu__backdrop.is-open {
+  display: block;
+}
+
+@media (min-width: 901px) {
+  .site-menu {
+    width: min(55vw, 720px);
+    padding: 64px 72px;
+  }
+
+  .site-menu__social {
+    display: none;
+  }
+}
+
+body.menu-open {
+  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -1421,7 +1549,13 @@ html.gate-locked body > *:not(#preview-gate) {
   a,
   button,
   .work-card,
-  .nav-link {
+  .site-menu__link {
+    transition-duration: 0.15s;
+  }
+
+  .site-menu,
+  .menu-toggle,
+  .site-header {
     transition-duration: 0.15s;
   }
 }

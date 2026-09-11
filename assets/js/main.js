@@ -32,13 +32,64 @@
 
   syncToggleUI();
 
-  // Mobile menu drawer
+  // Full-screen slide-out menu
   var menuToggle = document.querySelector("[data-menu-toggle]");
-  var drawer = document.querySelector("[data-mobile-drawer]");
-  if (menuToggle && drawer) {
+  var menuIcon = document.querySelector("[data-menu-icon]");
+  var menu = document.querySelector("[data-site-menu]");
+  var backdrop = document.querySelector("[data-menu-backdrop]");
+  var header = document.querySelector(".site-header");
+
+  var MENU_OPEN_INNER =
+    '<span class="menu-toggle__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" stroke-linecap="round"/></svg></span>' +
+    '<span class="menu-toggle__label">Menu</span>';
+  var MENU_CLOSE_INNER =
+    '<span class="menu-toggle__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke-linecap="round"/></svg></span>';
+
+  if (menuToggle && menuIcon && menu && header) {
+    var isMenuOpen = false;
+
+    var openMenu = function () {
+      isMenuOpen = true;
+      menu.classList.add("is-open");
+      menu.removeAttribute("inert");
+      header.classList.add("is-menu-open");
+      menuToggle.classList.add("is-open");
+      menuToggle.setAttribute("aria-expanded", "true");
+      menuToggle.setAttribute("aria-label", "Close menu");
+      menuIcon.innerHTML = MENU_CLOSE_INNER;
+      if (backdrop) backdrop.classList.add("is-open");
+      document.body.classList.add("menu-open");
+    };
+
+    var closeMenu = function () {
+      isMenuOpen = false;
+      menu.classList.remove("is-open");
+      menu.setAttribute("inert", "");
+      header.classList.remove("is-menu-open");
+      menuToggle.classList.remove("is-open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open menu");
+      menuIcon.innerHTML = MENU_OPEN_INNER;
+      if (backdrop) backdrop.classList.remove("is-open");
+      document.body.classList.remove("menu-open");
+    };
+
     menuToggle.addEventListener("click", function () {
-      var isOpen = drawer.classList.toggle("is-open");
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      if (isMenuOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    if (backdrop) backdrop.addEventListener("click", closeMenu);
+
+    menu.querySelectorAll(".site-menu__link").forEach(function (link) {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && isMenuOpen) closeMenu();
     });
   }
 
