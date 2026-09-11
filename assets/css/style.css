@@ -631,12 +631,6 @@ body.menu-open {
   );
 }
 
-.about-hero {
-  padding: 96px 48px 72px;
-  margin: 24px 0 0;
-  border-radius: var(--radius);
-}
-
 .about-hero .eyebrow {
   color: var(--emerald);
 }
@@ -645,10 +639,9 @@ body.menu-open {
   color: var(--parchment);
 }
 
-@media (max-width: 640px) {
-  .about-hero {
-    padding: 64px 24px 48px;
-  }
+.about-hero-shell .about-row__copy p,
+.about-hero-shell .pill {
+  color: var(--parchment);
 }
 
 /* ==========================================================================

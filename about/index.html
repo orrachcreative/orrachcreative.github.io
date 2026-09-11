@@ -4,8 +4,8 @@ title: About
 nav: about
 permalink: /about/
 ---
-<div class="shell">
-  <section class="hero about-hero bg-image-section" style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');">
+<div class="shell hero-shell about-hero-shell bg-image-section" style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');">
+  <section class="hero about-hero">
     <p class="eyebrow">About</p>
     <h1 class="display-1" style="margin-top: 18px;">Solo. Senior. <span style="color: var(--accent);">Shipped.</span></h1>
   </section>
@@ -26,7 +26,9 @@ permalink: /about/
       </div>
     </div>
   </div>
+</div>
 
+<div class="shell">
   <div class="about-row">
     <div class="about-row__media">
       <div class="work-card__media" style="min-height: 460px;">
@@ -64,25 +66,31 @@ permalink: /about/
   <section class="section" style="border-top: 1px solid var(--line);">
     <h2 class="heading-1" style="margin-bottom: 24px;">What I offer</h2>
     <div class="offer-grid">
-      <div class="work-card work-card--vertical" style="background: var(--bg-card);">
-        <div class="work-card__text" style="gap: 8px;">
-          <p class="eyebrow">01</p>
-          <p class="work-card__title" style="font-size: 1.75rem;">Product &amp; UX design</p>
-          <p class="work-card__desc">End-to-end product design: research, flows, wireframes, and interface design that ships.</p>
+      <div class="work-card work-card--vertical">
+        <div class="work-card__body">
+          <div class="work-card__text" style="gap: 8px;">
+            <p class="eyebrow">01</p>
+            <p class="work-card__title" style="font-size: 1.75rem;">Product &amp; UX design</p>
+            <p class="work-card__desc">End-to-end product design: research, flows, wireframes, and interface design that ships.</p>
+          </div>
         </div>
       </div>
-      <div class="work-card work-card--vertical" style="background: var(--bg-card);">
-        <div class="work-card__text" style="gap: 8px;">
-          <p class="eyebrow">02</p>
-          <p class="work-card__title" style="font-size: 1.75rem;">Brand &amp; visual identity</p>
-          <p class="work-card__desc">Logo systems, visual identity, and style guides built to extend across every surface.</p>
+      <div class="work-card work-card--vertical">
+        <div class="work-card__body">
+          <div class="work-card__text" style="gap: 8px;">
+            <p class="eyebrow">02</p>
+            <p class="work-card__title" style="font-size: 1.75rem;">Brand &amp; visual identity</p>
+            <p class="work-card__desc">Logo systems, visual identity, and style guides built to extend across every surface.</p>
+          </div>
         </div>
       </div>
-      <div class="work-card work-card--vertical" style="background: var(--bg-card);">
-        <div class="work-card__text" style="gap: 8px;">
-          <p class="eyebrow">03</p>
-          <p class="work-card__title" style="font-size: 1.75rem;">Illustration &amp; art direction</p>
-          <p class="work-card__desc">Custom illustration, iconography, and visual direction for brand and product work.</p>
+      <div class="work-card work-card--vertical">
+        <div class="work-card__body">
+          <div class="work-card__text" style="gap: 8px;">
+            <p class="eyebrow">03</p>
+            <p class="work-card__title" style="font-size: 1.75rem;">Illustration &amp; art direction</p>
+            <p class="work-card__desc">Custom illustration, iconography, and visual direction for brand and product work.</p>
+          </div>
         </div>
       </div>
     </div>
