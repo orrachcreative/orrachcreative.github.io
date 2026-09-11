@@ -42,7 +42,7 @@
 
   {% include nav.html %}
 
-  <main>
+  <main{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
     {{ content }}
   </main>
 
