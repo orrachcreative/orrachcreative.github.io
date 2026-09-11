@@ -40,8 +40,8 @@
   var header = document.querySelector(".site-header");
 
   var MENU_OPEN_INNER =
-    '<span class="menu-toggle__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17" stroke-linecap="round"/></svg></span>' +
-    '<span class="menu-toggle__label">Menu</span>';
+    '<span class="menu-toggle__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" aria-hidden="true"><path d="M2.5 6.5h19M2.5 12h19M2.5 17.5h19" stroke-linecap="round"/></svg></span>' +
+    '<span class="menu-toggle__label">MENU</span>';
   var MENU_CLOSE_INNER =
     '<span class="menu-toggle__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke-linecap="round"/></svg></span>';
 
