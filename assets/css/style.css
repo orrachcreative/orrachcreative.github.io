@@ -358,8 +358,9 @@ button {
 }
 
 /* Menu toggle: closed state is the "menu 2 / Default" chip (hamburger +
-   MENU label on an Ash card); open state swaps to a bare close icon so the
-   same button stays in the same spot while changing appearance. */
+   MENU label on an Ash card, baked into the SVG itself); open state swaps
+   to a bordered close icon so the same button stays in the same spot while
+   changing appearance. */
 .menu-toggle {
   display: flex;
   flex: none;
@@ -367,7 +368,6 @@ button {
   height: 48px;
   align-items: center;
   justify-content: center;
-  padding: 9px;
   border-radius: var(--radius);
   background: var(--dark-forest);
   transition: background-color 0.2s ease;
@@ -375,35 +375,18 @@ button {
 
 .menu-toggle__inner {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
 }
 
-.menu-toggle__icon svg {
+.menu-toggle__inner svg {
   display: block;
-  width: 20px;
-  height: 13px;
-  color: var(--gold);
-}
-
-.menu-toggle__label {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.05em;
-  color: var(--gold);
+  width: 48px;
+  height: auto;
 }
 
 .menu-toggle.is-open {
   background: transparent;
-}
-
-.menu-toggle.is-open .menu-toggle__icon svg {
-  width: 22px;
-  height: 22px;
-  color: var(--gold);
 }
 
 /* ==========================================================================
