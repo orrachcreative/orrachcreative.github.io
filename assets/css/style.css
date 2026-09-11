@@ -635,6 +635,11 @@ body.menu-open {
   max-width: 640px;
 }
 
+.hero-shell .hero__title,
+.hero-shell .hero__subtitle {
+  color: var(--parchment);
+}
+
 @media (max-width: 640px) {
   .hero {
     padding: 32px 0 0;
