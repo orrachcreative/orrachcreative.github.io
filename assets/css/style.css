@@ -277,7 +277,6 @@ button {
 }
 
 .site-header.is-menu-open {
-  background: rgba(67, 133, 65, 0.88);
   border-bottom-color: transparent;
   box-shadow: none;
 }
@@ -398,13 +397,14 @@ button {
   top: var(--header-h);
   right: 0;
   bottom: 0;
+  left: 0;
   z-index: 25;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100vw;
   padding: 40px var(--gutter-mobile) 48px;
-  background: rgba(67, 133, 65, 0.88);
+  background: var(--dark-forest);
   transform: translateX(100%);
   transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
   overflow-y: auto;
@@ -441,7 +441,7 @@ button {
   font-weight: 600;
   font-size: clamp(2.25rem, 1.9rem + 2vw, 3rem);
   line-height: 1.2;
-  color: #000000;
+  color: var(--parchment);
   text-transform: capitalize;
 }
 
@@ -450,7 +450,7 @@ button {
   flex: none;
   width: 56px;
   height: 56px;
-  color: #000000;
+  color: var(--gold);
   opacity: 0;
   transform: translateX(-6px);
   transition: opacity 0.15s ease, transform 0.15s ease;
@@ -464,7 +464,7 @@ button {
 .site-menu__link-bar {
   height: 3px;
   width: 100%;
-  background: #000000;
+  background: var(--gold);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.2s ease;
@@ -497,7 +497,7 @@ button {
 }
 
 .site-menu__social a {
-  color: #000000;
+  color: var(--emerald);
   transition: opacity 0.15s ease;
 }
 
@@ -548,7 +548,6 @@ button {
 
 @media (min-width: 901px) {
   .site-menu {
-    width: min(62vw, 893px);
     padding: 64px 72px;
   }
 
