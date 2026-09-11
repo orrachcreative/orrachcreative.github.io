@@ -279,6 +279,7 @@ button {
 .site-header.is-menu-open {
   border-bottom-color: transparent;
   box-shadow: none;
+  padding-right: 46px;
 }
 
 .wordmark {
