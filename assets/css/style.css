@@ -185,7 +185,7 @@ button {
 }
 
 .eyebrow {
-  font-family: var(--font-mono);
+  font-family: "Space Grotesk", sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   letter-spacing: 1.5px;
@@ -464,7 +464,7 @@ button {
 .site-menu__link-bar {
   height: 3px;
   width: 100%;
-  background: var(--gold);
+  background: var(--emerald-2);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.2s ease;
@@ -716,7 +716,7 @@ a.work-card {
 
 a.work-card:hover {
   border-color: rgba(92, 206, 89, 0.5);
-  background: rgba(245, 236, 222, 0.08);
+  background: #2f322d;
   transform: translateY(-10px);
   box-shadow: 0 4px 32px -8px #5cce59;
 }
