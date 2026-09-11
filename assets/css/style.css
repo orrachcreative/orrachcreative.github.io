@@ -878,13 +878,13 @@ a.work-card--horizontal:hover .work-card__cta {
   padding-top: 24px;
   padding-bottom: 24px;
   background: #1e221e;
-  text-align: left;
+  text-align: center;
 }
 
 .cta__inner {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   padding: 24px 0;
 }
