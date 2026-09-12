@@ -313,10 +313,28 @@
       if (url.pathname === window.location.pathname && url.hash) return;
 
       e.preventDefault();
+
+      // Start fetching the destination now, in the background, so it's
+      // likely already cached by the time the delay below elapses —
+      // independent of how long that delay ends up being.
+      var prefetch = document.createElement("link");
+      prefetch.rel = "prefetch";
+      prefetch.href = link.href;
+      document.head.appendChild(prefetch);
+
       document.body.classList.add("page-leaving");
-      setTimeout(function () {
-        window.location.href = link.href;
-      }, 200);
+      // A site-menu link also triggers closeMenu() (see above), whose
+      // slide-out is 0.35s — navigating at the old flat 200ms cut that
+      // animation off partway through every time. Give menu links the
+      // longer delay so the close actually finishes; everything else
+      // keeps the snappier 200ms it always had.
+      var isMenuLink = !!link.closest(".site-menu");
+      setTimeout(
+        function () {
+          window.location.href = link.href;
+        },
+        isMenuLink ? 350 : 200
+      );
     });
 
     // Scroll-reveal: tag common content blocks and fade/slide each in the

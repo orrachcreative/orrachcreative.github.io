@@ -429,6 +429,13 @@ button {
   overflow-y: auto;
 }
 
+/* Close noticeably faster than it opens — a deliberate reveal but a quick
+   dismissal — and short enough to actually finish before a menu-link
+   navigation fires (see the matching delay in main.js). */
+.site-menu:not(.is-open) {
+  transition-duration: 0.35s;
+}
+
 .site-menu.is-open {
   transform: translateX(0);
 }
