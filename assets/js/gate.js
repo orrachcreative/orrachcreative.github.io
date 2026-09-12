@@ -10,7 +10,7 @@
   //   crypto.subtle.digest("SHA-256", new TextEncoder().encode("NEW_PASSWORD"))
   //     .then(b => console.log(Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,"0")).join("")))
   // and swap the hex string below.
-  var PASSWORD_HASH = "01a9f6fe9573c524ae889e17b0977c509b0e67861342018e03dc2e4b978ab29a";
+  var PASSWORD_HASH = "255467ca2489cb6a048bf23e2e4db4236eac70f2dc6eba9e802194c21eeaa133";
   var STORAGE_KEY = "aoc-preview-unlocked";
 
   var root = document.documentElement;
