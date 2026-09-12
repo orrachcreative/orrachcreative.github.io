@@ -161,7 +161,18 @@
     };
 
     document.addEventListener("scroll", setActive, { passive: true });
-    setActive();
+    // For a first-time visitor the password gate hides <main> (display:
+    // none) until they submit it, so any layout read before then — this
+    // call included — sees offsetTop 0 for every section and lands on the
+    // last one. Real root fix is gate.js dispatching "gate:unlocked" once
+    // <main> is actually visible; requestAnimationFrame/fonts.ready are
+    // just cheap extra passes for the already-unlocked-session case where
+    // fonts still swap in and reflow the page after first layout.
+    requestAnimationFrame(setActive);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(setActive);
+    }
+    window.addEventListener("gate:unlocked", setActive);
   }
 
   // Image lightbox: case-study, project, logos, and illustrations pages

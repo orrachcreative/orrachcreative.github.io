@@ -1144,9 +1144,49 @@ a.work-card--horizontal:hover .work-card__cta {
   }
 }
 
+.case-sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.75px;
+  text-transform: capitalize;
+  color: var(--ink-faint);
+  transition: color 0.15s ease;
+}
+
+.case-sidebar a:hover {
+  color: rgba(255, 250, 243, 0.6);
+}
+
+.case-sidebar a.is-active {
+  color: var(--accent);
+}
+
+.case-sidebar a svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.case-sidebar a:hover svg,
+.case-sidebar a.is-active svg {
+  opacity: 1;
+}
+
 /* Mobile only: the section links become a horizontally-scrolling pill bar
    stuck to the bottom of the header, so page content scrolls underneath
-   it instead of pushing it down the page. */
+   it instead of pushing it down the page. Placed after the base
+   .case-sidebar rules above (not before, where it originally lived) so it
+   actually wins the cascade — a media query gets no specificity boost of
+   its own, so at equal specificity the later, unconditional base rule was
+   silently overriding several of these properties (padding, gap,
+   transition) whenever both matched. */
 @media (max-width: 640px) {
   .case-sidebar {
     /* Both inherited from earlier breakpoints and both fight the full-bleed
@@ -1185,7 +1225,7 @@ a.work-card--horizontal:hover .work-card__cta {
   .case-sidebar a {
     flex: none;
     gap: 6px;
-    padding: 8px 14px;
+    padding: 6px 10px 8px 10px;
     border: 1px solid var(--line-strong);
     border-radius: 999px;
     white-space: nowrap;
@@ -1200,42 +1240,12 @@ a.work-card--horizontal:hover .work-card__cta {
   .case-sidebar a svg {
     width: 14px;
     height: 14px;
+    display: none;
   }
-}
 
-.case-sidebar a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 0;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.875rem;
-  letter-spacing: 0.75px;
-  text-transform: capitalize;
-  color: var(--ink-faint);
-  transition: color 0.15s ease;
-}
-
-.case-sidebar a:hover {
-  color: rgba(255, 250, 243, 0.6);
-}
-
-.case-sidebar a.is-active {
-  color: var(--accent);
-}
-
-.case-sidebar a svg {
-  width: 20px;
-  height: 20px;
-  flex: none;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.case-sidebar a:hover svg,
-.case-sidebar a.is-active svg {
-  opacity: 1;
+  .case-sidebar a.is-active svg {
+    display: flex;
+  }
 }
 
 .case-content {

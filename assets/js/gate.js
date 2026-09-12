@@ -19,6 +19,11 @@
     root.classList.remove("gate-locked");
     var overlay = document.getElementById("preview-gate");
     if (overlay) overlay.remove();
+    // main.js runs (and does its initial layout-dependent work, like the
+    // case-sidebar scroll-spy) while <main> is still display:none behind
+    // the gate for a first-time visitor, so anything it measured then is
+    // wrong. Let it know the real layout is up now.
+    window.dispatchEvent(new CustomEvent("gate:unlocked"));
   }
 
   if (sessionStorage.getItem(STORAGE_KEY) === "1") {
