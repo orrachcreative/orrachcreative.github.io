@@ -155,9 +155,15 @@
     });
 
     // Scroll-reveal: tag common content blocks and fade/slide each in the
-    // first time it enters the viewport.
+    // first time it enters the viewport. Deliberately excludes case-study
+    // body content (.case-section / .decision-block / .compare): those are
+    // reached via the case-sidebar's anchor links, whose jump is instant
+    // (no scroll-behavior: smooth), so a section can get skipped over
+    // entirely without ever intersecting the viewport and stay invisible
+    // forever. This selector only covers content reached by ordinary
+    // top-to-bottom scrolling, where that failure mode can't happen.
     var revealEls = document.querySelectorAll(
-      ".work-card, .decision-block, .about-row, .logo-grid__item, .case-section, .closing-cta, .gallery-scroll > .work-card__media"
+      ".work-card, .about-row, .logo-grid__item, .closing-cta, .gallery-scroll > .work-card__media"
     );
 
     if (revealEls.length && "IntersectionObserver" in window) {
@@ -184,6 +190,21 @@
 
       revealEls.forEach(function (el) {
         io.observe(el);
+      });
+    }
+
+    // Safety net: any same-page anchor jump (like the case-sidebar links)
+    // is instant, so it can skip over a data-reveal element without ever
+    // intersecting it. Force-reveal everything the moment such a link is
+    // used, since a visitor jumping around non-linearly should never find
+    // content stuck invisible.
+    if (sidebarLinks.length) {
+      sidebarLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+          document.querySelectorAll("[data-reveal]:not(.is-revealed)").forEach(function (el) {
+            el.classList.add("is-revealed");
+          });
+        });
       });
     }
 
