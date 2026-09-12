@@ -114,6 +114,110 @@
     setActive();
   }
 
+  // Image lightbox: case-study, project, logos, and illustrations pages
+  // opt in via <main class="has-gallery"> (set from page.gallery in front
+  // matter). Any <img> inside that main opens a full-screen viewer with
+  // prev/next through every image on the page. Not gated behind js-anim —
+  // this is core functionality, not decorative motion; the open/close
+  // transition alone is covered by the reduced-motion CSS safety net.
+  var galleryMain = document.querySelector("main.has-gallery");
+  if (galleryMain) {
+    var galleryImgs = Array.prototype.slice.call(galleryMain.querySelectorAll("img"));
+
+    if (galleryImgs.length) {
+      var CLOSE_SVG =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke-linecap="round"/></svg>';
+      var ARROW_LEFT_SVG =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      var ARROW_RIGHT_SVG =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      var lightbox = document.createElement("div");
+      lightbox.className = "lightbox";
+      lightbox.setAttribute("role", "dialog");
+      lightbox.setAttribute("aria-modal", "true");
+      lightbox.setAttribute("aria-label", "Image viewer");
+      lightbox.innerHTML =
+        '<button type="button" class="lightbox__prev" aria-label="Previous image">' + ARROW_LEFT_SVG + "</button>" +
+        '<img class="lightbox__img" src="" alt="">' +
+        '<button type="button" class="lightbox__next" aria-label="Next image">' + ARROW_RIGHT_SVG + "</button>" +
+        '<button type="button" class="lightbox__close" aria-label="Close">' + CLOSE_SVG + "</button>" +
+        '<p class="lightbox__caption"></p>';
+      document.body.appendChild(lightbox);
+
+      var lbImg = lightbox.querySelector(".lightbox__img");
+      var lbCaption = lightbox.querySelector(".lightbox__caption");
+      var lbPrev = lightbox.querySelector(".lightbox__prev");
+      var lbNext = lightbox.querySelector(".lightbox__next");
+      var lbClose = lightbox.querySelector(".lightbox__close");
+      var currentIndex = 0;
+      var lastTrigger = null;
+
+      if (galleryImgs.length < 2) {
+        lbPrev.hidden = true;
+        lbNext.hidden = true;
+      }
+
+      var showImage = function (index) {
+        currentIndex = (index + galleryImgs.length) % galleryImgs.length;
+        var img = galleryImgs[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || "";
+        lbCaption.textContent = img.alt || "";
+      };
+
+      var openLightbox = function (index, trigger) {
+        lastTrigger = trigger || null;
+        showImage(index);
+        lightbox.classList.add("is-open");
+        document.body.classList.add("lightbox-open");
+        lbClose.focus();
+      };
+
+      var closeLightbox = function () {
+        lightbox.classList.remove("is-open");
+        document.body.classList.remove("lightbox-open");
+        if (lastTrigger) lastTrigger.focus();
+      };
+
+      galleryImgs.forEach(function (img, index) {
+        // <img> isn't focusable or keyboard-activatable by default, so
+        // without this it's mouse-only and lastTrigger.focus() on close
+        // (below) silently no-ops, dropping focus to <body>.
+        img.tabIndex = 0;
+        img.setAttribute("role", "button");
+        img.addEventListener("click", function () {
+          openLightbox(index, img);
+        });
+        img.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightbox(index, img);
+          }
+        });
+      });
+
+      lbClose.addEventListener("click", closeLightbox);
+      lbPrev.addEventListener("click", function () {
+        showImage(currentIndex - 1);
+      });
+      lbNext.addEventListener("click", function () {
+        showImage(currentIndex + 1);
+      });
+
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (!lightbox.classList.contains("is-open")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") showImage(currentIndex - 1);
+        if (e.key === "ArrowRight") showImage(currentIndex + 1);
+      });
+    }
+  }
+
   // Motion: page crossfade, scroll-reveal, and background parallax.
   // Everything here is skipped for reduced-motion users — root.classList
   // only carries "js-anim" when the head script already found no

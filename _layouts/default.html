@@ -45,7 +45,7 @@
 
   {% include nav.html %}
 
-  <main{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
+  <main{% if page.gallery %} class="has-gallery"{% endif %}{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
     {{ content }}
   </main>
 
