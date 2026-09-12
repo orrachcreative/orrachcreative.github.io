@@ -186,7 +186,7 @@ button {
 }
 
 .eyebrow {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk", sans-serif !important;
   font-weight: 500;
   font-size: 0.8125rem;
   letter-spacing: 1.5px;
@@ -284,7 +284,12 @@ button {
 .site-header.is-menu-open {
   border-bottom-color: transparent;
   box-shadow: none;
-  padding-right: 46px;
+}
+
+@media (min-width: 901px) {
+  .site-header.is-menu-open {
+    padding-right: 46px;
+  }
 }
 
 .wordmark {
@@ -770,6 +775,7 @@ a.work-card:hover .view-link__label {
   border: 1px dashed rgba(254, 245, 234, 0.25);
   border-radius: 2px;
   text-align: center;
+  overflow: hidden;
 }
 
 .work-card--vertical .work-card__media {
@@ -1997,6 +2003,20 @@ html.gate-locked body > *:not(#preview-gate) {
   .case-sidebar a:hover svg,
   .case-sidebar a.is-active svg {
     transform: translateX(0);
+  }
+
+  /* Slight zoom on hover for every content image site-wide. Excludes the
+     lightbox's own displayed image — it's already the maximized view, so
+     zooming further on hover there would just look broken. Containers
+     that hold real (or future) images need their own overflow:hidden for
+     this to look right instead of bleeding past rounded corners — already
+     true for .logo-grid__item and .work-card__media. */
+  img:not(.lightbox__img) {
+    transition: transform 0.3s ease;
+  }
+
+  img:not(.lightbox__img):hover {
+    transform: scale(1.05);
   }
 
   /* Underline sweep on the vertical work-card's "View case study" link. */
