@@ -1140,6 +1140,49 @@ a.work-card--horizontal:hover .work-card__cta {
   }
 }
 
+/* Mobile only: the section links become a horizontally-scrolling pill bar
+   stuck to the bottom of the header, so page content scrolls underneath
+   it instead of pushing it down the page. */
+@media (max-width: 640px) {
+  .case-sidebar {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 20;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    margin: 0 calc(var(--gutter-mobile) * -1);
+    padding: 12px var(--gutter-mobile);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+
+  .case-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .case-sidebar a {
+    flex: none;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .case-sidebar a.is-active {
+    border-color: var(--accent);
+    background: rgba(92, 206, 89, 0.1);
+  }
+
+  .case-sidebar a svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
 .case-sidebar a {
   display: flex;
   align-items: center;
