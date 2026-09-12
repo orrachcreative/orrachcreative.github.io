@@ -172,7 +172,7 @@
         el.setAttribute("data-reveal", "");
         var parent = el.parentElement;
         var idx = groupCounts.get(parent) || 0;
-        el.style.transitionDelay = Math.min(idx, 4) * 0.08 + "s";
+        el.style.transitionDelay = Math.min(idx, 4) * 0.12 + "s";
         groupCounts.set(parent, idx + 1);
       });
 
@@ -180,8 +180,17 @@
         function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
-              entry.target.classList.add("is-revealed");
-              io.unobserve(entry.target);
+              var el = entry.target;
+              // Once the fade-in genuinely finishes, drop data-reveal so
+              // the element's own (fast) transition governs hover again
+              // instead of staying locked to this slow entrance duration.
+              el.addEventListener("transitionend", function onEnd(ev) {
+                if (ev.propertyName !== "opacity") return;
+                el.removeEventListener("transitionend", onEnd);
+                el.removeAttribute("data-reveal");
+              });
+              el.classList.add("is-revealed");
+              io.unobserve(el);
             }
           });
         },
