@@ -7,9 +7,12 @@ gallery: true
 ---
 <div class="shell">
   <section class="hero">
+    <div class="case-hero__nav">
+      <a href="{{ '/projects/' | relative_url }}">{% include icon.html name="arrow-left" %} All projects</a>
+      <a href="{{ '/projects/task-yeti/' | relative_url }}">Next project {% include icon.html name="arrow-right" %}</a>
+    </div>
     <h1 class="display-2 hero__title">Eagle Quality</h1>
     <p class="body-lg hero__subtitle">[Placeholder: project page not built yet — share the Figma frame link for this page.]</p>
-    <p class="overline-link"><a class="section__link" href="{{ '/projects/' | relative_url }}">&larr; Back to projects</a></p>
   </section>
 </div>
 

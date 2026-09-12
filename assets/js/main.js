@@ -49,6 +49,10 @@
 
     var openMenu = function () {
       isMenuOpen = true;
+      // The menu toggle lives inside the header, so if it's mid-slide-away
+      // from the auto-hide behavior below, force it back before opening —
+      // otherwise the just-opened menu's close button would be offscreen.
+      if (typeof showHeader === "function") showHeader();
       menu.classList.add("is-open");
       menu.removeAttribute("inert");
       header.classList.add("is-menu-open");
@@ -90,6 +94,52 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && isMenuOpen) closeMenu();
     });
+  }
+
+  // Auto-hiding header: slides out of sight on scroll-down once past the
+  // hero, and slides back on scroll-up or after 3s with no further
+  // scrolling. The slide itself is a CSS transform transition on
+  // .site-header (covered by the reduced-motion safety net elsewhere) —
+  // this just drives the is-hidden class, so the header still functions
+  // (just snaps instead of sliding) for reduced-motion users.
+  if (header) {
+    var heroEl = document.querySelector(".hero, .case-hero");
+    var heroBottom = heroEl ? heroEl.offsetTop + heroEl.offsetHeight : 0;
+    var lastScrollY = window.scrollY;
+    var headerIdleTimer = null;
+
+    var showHeader = function () {
+      header.classList.remove("is-hidden");
+      document.body.classList.remove("header-hidden");
+    };
+
+    var hideHeader = function () {
+      if (document.body.classList.contains("menu-open")) return;
+      header.classList.add("is-hidden");
+      document.body.classList.add("header-hidden");
+    };
+
+    var scheduleHeaderIdleShow = function () {
+      clearTimeout(headerIdleTimer);
+      headerIdleTimer = setTimeout(showHeader, 3000);
+    };
+
+    document.addEventListener(
+      "scroll",
+      function () {
+        var currentY = window.scrollY;
+        if (currentY <= heroBottom || currentY < lastScrollY) {
+          showHeader();
+        } else if (currentY > lastScrollY) {
+          hideHeader();
+        }
+        lastScrollY = currentY;
+        scheduleHeaderIdleShow();
+      },
+      { passive: true }
+    );
+
+    scheduleHeaderIdleShow();
   }
 
   // Case-study sidebar: highlight the section in view
