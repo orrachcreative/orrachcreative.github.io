@@ -339,7 +339,7 @@ button {
   background: var(--emerald);
   color: var(--black);
   flex: none;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .theme-toggle svg {
@@ -374,7 +374,7 @@ button {
   justify-content: center;
   border-radius: var(--radius);
   background: var(--dark-forest);
-  transition: background-color 0.2s ease, opacity 0.15s ease;
+  transition: background-color 0.2s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 .menu-toggle:hover {
@@ -858,7 +858,7 @@ a.work-card:hover .view-link__label {
   border-radius: var(--radius);
   border: 2px solid rgba(92, 206, 89, 0.5);
   background: rgba(67, 133, 65, 0.2);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
 .work-card__cta-label {
@@ -1350,7 +1350,7 @@ a.work-card--horizontal:hover .work-card__cta {
   border-radius: var(--radius);
   border: 2px solid rgba(92, 206, 89, 0.5);
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
 .compare__cta:hover {
@@ -1386,7 +1386,7 @@ a.work-card--horizontal:hover .work-card__cta {
   letter-spacing: 0.75px;
   text-transform: capitalize;
   color: var(--ink);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
 .pill:hover {
@@ -1819,5 +1819,138 @@ html.gate-locked body > *:not(#preview-gate) {
   .menu-toggle,
   .site-header {
     transition-duration: 0.15s;
+  }
+}
+
+/* Global safety net: force every animation/transition to be instant for
+   anyone who has asked the OS for reduced motion, regardless of which rule
+   below would otherwise apply. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Micro-interactions & entrance animation
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Page enter/leave crossfade. .js-anim is set by an inline head script
+     before first paint, so a no-JS visitor (who never gets the class)
+     always sees `main` at full opacity instead of stuck invisible. */
+  .js-anim main {
+    opacity: 0;
+  }
+
+  .js-anim main.is-visible {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  .js-anim.page-leaving main {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Scroll-reveal: JS tags qualifying elements with data-reveal and flips
+     is-revealed via IntersectionObserver. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Hero entrance: runs immediately on load, no JS/scroll needed. */
+  .hero__title,
+  .hero__subtitle,
+  .about-hero .eyebrow,
+  .about-hero .display-1,
+  .about-hero .display-2 {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: hero-in 0.7s ease forwards;
+  }
+
+  .hero__subtitle,
+  .about-hero .display-1,
+  .about-hero .display-2 {
+    animation-delay: 0.12s;
+  }
+
+  @keyframes hero-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Theme icon: restart-able pop/rotate whenever main.js swaps the SVG. */
+  [data-theme-icon] svg {
+    animation: theme-icon-in 0.35s ease;
+  }
+
+  @keyframes theme-icon-in {
+    from {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Arrow-icon nudge: a small rightward slide on hover, layered on top of
+     each component's existing hover state. */
+  .pill svg,
+  .work-card__cta svg,
+  .compare__cta svg {
+    transition: transform 0.2s ease;
+  }
+
+  .pill:hover svg,
+  a.work-card--horizontal:hover .work-card__cta svg,
+  .compare__cta:hover svg {
+    transform: translateX(3px);
+  }
+
+  .case-sidebar a svg {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    transform: translateX(-4px);
+  }
+
+  .case-sidebar a:hover svg,
+  .case-sidebar a.is-active svg {
+    transform: translateX(0);
+  }
+
+  /* Underline sweep on the vertical work-card's "View case study" link. */
+  .view-link__bar {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  a.work-card:hover .view-link__bar {
+    transform: scaleX(1);
+  }
+
+  /* Gentle press feedback on the main tappable chips/buttons. */
+  .pill:active,
+  .compare__cta:active,
+  .menu-toggle:active,
+  .theme-toggle:active {
+    transform: scale(0.96);
   }
 }

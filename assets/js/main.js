@@ -113,4 +113,108 @@
     document.addEventListener("scroll", setActive, { passive: true });
     setActive();
   }
+
+  // Motion: page crossfade, scroll-reveal, and background parallax.
+  // Everything here is skipped for reduced-motion users — root.classList
+  // only carries "js-anim" when the head script already found no
+  // reduced-motion preference, so this whole block simply never runs for
+  // them (the CSS behind it is also gated the same way as a second layer).
+  if (root.classList.contains("js-anim")) {
+    var mainEl = document.querySelector("main");
+
+    if (mainEl) {
+      requestAnimationFrame(function () {
+        mainEl.classList.add("is-visible");
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      var link = e.target.closest("a[href]");
+      if (!link) return;
+      if (link.target === "_blank" || link.hasAttribute("download")) return;
+      if (e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      var href = link.getAttribute("href");
+      if (!href || href.indexOf("mailto:") === 0 || href.indexOf("tel:") === 0) return;
+
+      var url;
+      try {
+        url = new URL(link.href, window.location.href);
+      } catch (err) {
+        return;
+      }
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname === window.location.pathname && url.hash) return;
+
+      e.preventDefault();
+      document.body.classList.add("page-leaving");
+      setTimeout(function () {
+        window.location.href = link.href;
+      }, 200);
+    });
+
+    // Scroll-reveal: tag common content blocks and fade/slide each in the
+    // first time it enters the viewport.
+    var revealEls = document.querySelectorAll(
+      ".work-card, .decision-block, .about-row, .logo-grid__item, .case-section, .closing-cta, .gallery-scroll > .work-card__media"
+    );
+
+    if (revealEls.length && "IntersectionObserver" in window) {
+      var groupCounts = new Map();
+      revealEls.forEach(function (el) {
+        el.setAttribute("data-reveal", "");
+        var parent = el.parentElement;
+        var idx = groupCounts.get(parent) || 0;
+        el.style.transitionDelay = Math.min(idx, 4) * 0.08 + "s";
+        groupCounts.set(parent, idx + 1);
+      });
+
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      );
+
+      revealEls.forEach(function (el) {
+        io.observe(el);
+      });
+    }
+
+    // Subtle parallax on any section carrying its own background-image
+    // (the About hero, and <main> on the home page).
+    var parallaxEls = Array.prototype.slice.call(document.querySelectorAll(".bg-image-section"));
+    if (mainEl && mainEl.style.backgroundImage) parallaxEls.push(mainEl);
+    parallaxEls = parallaxEls.filter(function (el) {
+      return !!el.style.backgroundImage;
+    });
+
+    if (parallaxEls.length) {
+      var ticking = false;
+      var updateParallax = function () {
+        parallaxEls.forEach(function (el) {
+          var offset = el.getBoundingClientRect().top * 0.15;
+          el.style.backgroundPosition = "center calc(50% + " + -offset + "px)";
+        });
+        ticking = false;
+      };
+      document.addEventListener(
+        "scroll",
+        function () {
+          if (!ticking) {
+            requestAnimationFrame(updateParallax);
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
+      updateParallax();
+    }
+  }
 })();

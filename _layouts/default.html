@@ -16,6 +16,9 @@
     (function () {
       var root = document.documentElement;
       root.classList.add('gate-locked');
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        root.classList.add('js-anim');
+      }
       try {
         var theme = localStorage.getItem('aoc-theme');
         if (theme) root.setAttribute('data-theme', theme);
