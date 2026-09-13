@@ -8,15 +8,21 @@
    ========================================================================== */
 
 :root {
-  /* Palette (from Figma: Components / Typography pages) */
+  /* Palette (from Figma: Components / Typography pages).
+     v2: --bronze and --emerald-2 were retuned for phase 2 — both failed
+     WCAG AA text contrast against parchment at their original values
+     (bronze ~2.2:1, emerald-2 ~4.3:1 for body text; measured against the
+     actual rendered token pairs, see the design audit). Deepened both
+     until they clear 4.5:1 with margin; the darker, less-saccharine tone
+     also reads less "artisan brand," more editorial. */
   --ivory: #f5ecde;
   --parchment: #fffaf3;
   --emerald: #5cce59;
-  --emerald-2: #438541;
-  --black: #1a1a1a;
+  --emerald-2: #3a7238;
+  --black: #131313;
   --dark-forest: #1e221e;
   --gold: #e7c642;
-  --bronze: #c9aa2e;
+  --bronze: #8a6812;
 
   /* Semantic tokens (dark mode) */
   --bg: var(--black);
@@ -25,7 +31,7 @@
   --ink: var(--ivory);
   --ink-strong: var(--parchment);
   --ink-soft: #e6dfd3;
-  --ink-faint: #8a8377;
+  --ink-faint: #94897a;
   --accent: var(--emerald);
   --accent-2: var(--emerald-2);
   --accent-label: var(--emerald);
@@ -37,6 +43,9 @@
   --reject-ink: rgba(254, 245, 234, 0.6);
   --ship: var(--emerald);
   --shadow-nav: 0 8px 12px rgba(28, 25, 19, 0.6);
+  --focus-ring: var(--gold);
+  --focus-ring-offset: var(--black);
+  --draft-ink: var(--gold);
 
   /* Type */
   --font-display: "Big Shoulders Text", "Archivo Narrow", sans-serif;
@@ -49,6 +58,13 @@
   --gutter-mobile: 20px;
   --header-h: 80px;
   --radius: 8px;
+
+  /* Motion (see prefers-reduced-motion + [data-motion="off"] below — every
+     hand-written animation/transition duration in this file should read
+     through one of these two custom properties, not a literal, so both
+     the OS setting and the in-page motion toggle can kill it centrally). */
+  --motion-fast: 0.15s;
+  --motion-med: 0.6s;
 }
 
 [data-theme="light"] {
@@ -70,6 +86,13 @@
   --reject-ink: var(--ink-faint);
   --ship: var(--emerald-2);
   --shadow-nav: 0 4px 10px rgba(28, 25, 19, 0.1);
+  --focus-ring: var(--emerald-2);
+  --focus-ring-offset: var(--parchment);
+  /* var(--gold) (#e7c642) is a light color and reads fine on the always-
+     dark surfaces it's used on elsewhere (menu, decision-block), but the
+     draft-flag banner appears on ordinary page background, which is light
+     here — reuse the already-contrast-checked bronze instead of gold. */
+  --draft-ink: var(--bronze);
 }
 
 * {
@@ -93,6 +116,13 @@ body {
   font-size: 16px;
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+  /* Theme flip crossfade — CSS custom properties don't interpolate on
+     their own, so this transitions the actual computed properties that
+     read from them. Automatically becomes instant under reduced-motion
+     or the in-page motion toggle, same as everything else reading
+     var(--motion-med): both paths force every transition-duration to
+     0.01ms !important site-wide. */
+  transition: background-color var(--motion-med) ease, color var(--motion-med) ease;
 }
 
 img,
@@ -138,6 +168,59 @@ button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ==========================================================================
+   Focus visibility (WCAG 2.4.7 / 2.4.11) — sitewide, on-brand.
+   Nothing in the original build styled keyboard focus except the gate
+   input, so every interactive element fell back to (or in a few cases,
+   like the gate input, actively suppressed) the browser default. This is
+   the single ring/underline system every focusable element in the site
+   should resolve to; component-specific CSS should not add its own
+   competing :focus rule. Mouse/touch clicks never trigger :focus-visible,
+   so this never shows up as "unwanted boxes" from pointer interaction. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Full-bleed / dark-surface controls sit on their own background rather
+   than the page background, so the ring needs a matching offset shadow to
+   stay legible instead of blending into whatever's directly behind it. */
+.menu-toggle:focus-visible,
+.theme-toggle:focus-visible,
+.motion-toggle:focus-visible,
+a.work-card:focus-visible,
+.compare-slider:focus-visible {
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring-offset);
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 12px 18px;
+  background: var(--accent);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  transform: translateY(-140%);
+  transition: transform var(--motion-fast) ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline-offset: 4px;
 }
 
 /* ==========================================================================
@@ -371,6 +454,42 @@ button {
   pointer-events: none;
 }
 
+/* Explicit in-page motion control, independent of the OS-level
+   prefers-reduced-motion setting (see the design audit / field research on
+   why a heavily-animated site shouldn't rely on the media query alone). */
+.motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  color: var(--ink-strong);
+  flex: none;
+  transition: opacity var(--motion-fast) ease, transform var(--motion-fast) ease, background-color var(--motion-fast) ease;
+}
+
+.motion-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.motion-toggle:hover {
+  opacity: 0.8;
+}
+
+.motion-toggle[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.site-header.is-menu-open .motion-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Menu toggle: closed state is the "menu 2 / Default" chip (hamburger +
    MENU label on an Ash card, baked into the SVG itself); open state swaps
    to a bordered close icon so the same button stays in the same spot while
@@ -507,6 +626,39 @@ button {
   transform: scaleX(1);
 }
 
+.site-menu__secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 250, 243, 0.12);
+}
+
+.site-menu__secondary-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 250, 243, 0.4);
+}
+
+.site-menu__secondary-link {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: rgba(255, 250, 243, 0.7);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.site-menu__secondary-link:hover,
+.site-menu__secondary-link.is-active {
+  color: var(--parchment);
+  border-color: var(--emerald);
+}
+
 .site-menu__footer {
   display: flex;
   flex-direction: column;
@@ -616,6 +768,103 @@ body.menu-open {
 .hero-shell .hero__title,
 .hero-shell .hero__subtitle {
   color: var(--parchment);
+}
+
+/* ==========================================================================
+   Home hero — kinetic headline + proof strip
+   ========================================================================== */
+
+.home-hero {
+  gap: 24px;
+  padding: 96px 0 64px;
+}
+
+.kinetic-title {
+  max-width: 920px;
+  font-size: clamp(2.75rem, 2rem + 4.2vw, 5.5rem);
+  line-height: 1.05;
+}
+
+.kinetic-title-inner {
+  display: block;
+}
+
+.kinetic-word {
+  display: inline-block;
+}
+
+.kinetic-word--accent {
+  color: var(--emerald);
+}
+
+.hero-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(254, 245, 234, 0.18);
+}
+
+.hero-proof__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-proof__num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.75rem;
+  color: var(--parchment);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-proof__label {
+  max-width: 22ch;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  color: rgba(254, 245, 234, 0.65);
+}
+
+@media (max-width: 640px) {
+  .home-hero {
+    padding: 56px 0 40px;
+  }
+
+  .hero-proof {
+    gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion="off"] .kinetic-word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .kinetic-word {
+    opacity: 0;
+    transform: translateY(0.5em);
+    animation: kinetic-word-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 0.06s + 0.15s);
+  }
+
+  .kinetic-word:nth-child(1) { --i: 1; }
+  .kinetic-word:nth-child(2) { --i: 2; }
+  .kinetic-word:nth-child(3) { --i: 3; }
+  .kinetic-word:nth-child(4) { --i: 4; }
+  .kinetic-word:nth-child(5) { --i: 5; }
+  .kinetic-word:nth-child(6) { --i: 6; }
+  .kinetic-word:nth-child(7) { --i: 7; }
+
+  @keyframes kinetic-word-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 @media (max-width: 640px) {
@@ -773,16 +1022,23 @@ a.work-card:hover .view-link__label {
 
 .work-card__media {
   flex: 1;
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-start;
   min-height: 220px;
-  padding: 20px;
-  background: #f5ecde;
-  border: 1px dashed rgba(254, 245, 234, 0.25);
+  aspect-ratio: 16 / 10;
   border-radius: 2px;
   text-align: center;
   overflow: hidden;
+}
+
+.work-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .work-card--vertical .work-card__media {
@@ -795,11 +1051,64 @@ a.work-card:hover .view-link__label {
   border-radius: 0;
 }
 
-.work-card__media span {
+/* Placeholder swatch system: five deterministic gradient/pattern
+   treatments, picked per-item from its title (see work-card.html). Reads
+   as an intentional design choice — a "screenshot pending" state — rather
+   than a broken image, and shares the exact aspect-ratio a real <img>
+   will use, so nothing shifts on layout when one is added. */
+.work-card__media--placeholder {
+  padding: 16px;
+}
+
+.work-card__media--placeholder[data-swatch="1"] {
+  background: linear-gradient(135deg, #2c3a2b 0%, var(--dark-forest) 100%);
+}
+
+.work-card__media--placeholder[data-swatch="2"] {
+  background: linear-gradient(135deg, #3a2f14 0%, #1a1610 100%);
+}
+
+.work-card__media--placeholder[data-swatch="3"] {
+  background: linear-gradient(135deg, #1c2b2a 0%, #101716 100%);
+}
+
+.work-card__media--placeholder[data-swatch="4"] {
+  background: linear-gradient(135deg, #2b2420 0%, #171310 100%);
+}
+
+.work-card__media--placeholder[data-swatch="5"] {
+  background: linear-gradient(135deg, #202a33 0%, #10161b 100%);
+}
+
+.work-card__media--placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(254, 245, 234, 0.05) 0,
+    rgba(254, 245, 234, 0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.work-card__media--tall {
+  aspect-ratio: 16 / 10;
+  min-height: 360px;
+}
+
+.work-card__media-tag {
+  position: relative;
+  z-index: 1;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(19, 19, 19, 0.55);
+  backdrop-filter: blur(4px);
   font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.75px;
-  color: #1e221e;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--ivory);
 }
 
 .work-card__body {
@@ -826,7 +1135,15 @@ a.work-card:hover .view-link__label {
 }
 
 .work-card .eyebrow {
-  color: var(--bronze);
+  /* Was hardcoded to var(--bronze) directly, bypassing the theme-aware
+     --accent-label indirection. That happened to pass contrast against
+     the card's always-dark background before phase 2 darkened --bronze
+     to fix a *light-mode* contrast failure elsewhere (see the design
+     audit) — but the raw token is shared, so darkening it there silently
+     broke this dark-background usage (~3:1, fails AA). Routing through
+     --accent-label fixes both: emerald in dark mode, the corrected
+     bronze in light mode, each already tuned for its own background. */
+  color: var(--accent-label);
 }
 
 .work-card__title {
@@ -924,11 +1241,13 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .cta__email {
+  display: inline-block;
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 1.25rem;
   letter-spacing: 0.8px;
   color: #5cce59;
+  transition: transform var(--motion-fast) ease;
 }
 
 .cta__email:hover {
@@ -1028,6 +1347,29 @@ a.work-card--horizontal:hover .work-card__cta {
 /* ==========================================================================
    Case study
    ========================================================================== */
+
+/* Draft-content flag: phase 2 case-study copy for High5 and HomeASAP was
+   written from case-meta facts, not from Anthony's own account, per his
+   explicit choice to draft-now-verify-later rather than ship empty
+   prompts. This banner exists so nothing drafted this way is mistaken for
+   verified fact while reviewing this branch — pull both the banner and
+   every inline .draft-note before this merges to main. */
+.draft-flag {
+  margin-top: 24px;
+  padding: 10px 16px;
+  background: rgba(231, 198, 66, 0.14);
+  border: 1px solid rgba(231, 198, 66, 0.4);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2px;
+  color: var(--draft-ink);
+}
+
+.draft-note {
+  color: var(--draft-ink);
+  font-weight: 600;
+}
 
 .case-hero {
   padding-top: 48px;
@@ -1350,69 +1692,84 @@ a.work-card--horizontal:hover .work-card__cta {
   color: #e6dfd3;
 }
 
-.compare {
+/* ==========================================================================
+   Compare slider — a real implementation of the before/after affordance
+   the original template only promised in copy. Two full-bleed panes
+   stacked in the same box; the "after" (shipped) pane is clipped by
+   --pos, which a full-size <input type="range"> (the actual, keyboard-
+   operable control — see main.js) drives. The visible line-plus-grip
+   handle is purely decorative, positioned off the same --pos value.
+   ========================================================================== */
+
+.compare-slider {
+  --pos: 50%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-.compare__panes {
-  display: flex;
-  gap: 10px;
-  height: 220px;
+.compare-slider__frame {
+  position: relative;
+  height: 240px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(254, 245, 234, 0.25);
 }
 
 @media (max-width: 640px) {
-  .compare__panes {
-    flex-direction: column;
-    height: auto;
+  .compare-slider__frame {
+    height: 300px;
   }
 }
 
-.compare__pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid rgba(254, 245, 234, 0.25);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.compare__media {
-  flex: 1;
+.compare-slider__pane {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  min-height: 140px;
+  padding: 24px;
+  text-align: center;
 }
 
-.compare__media p {
+.compare-slider__pane p {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
   margin: 0;
+  max-width: 30ch;
 }
 
-.compare__pane--reject .compare__media {
-  background: rgba(254, 245, 234, 0.6);
+.compare-slider__pane--before {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(254, 245, 234, 0.55),
+    rgba(254, 245, 234, 0.55) 10px,
+    rgba(254, 245, 234, 0.4) 10px,
+    rgba(254, 245, 234, 0.4) 20px
+  );
 }
 
-.compare__pane--reject .compare__media p {
-  color: #fffaf3;
+.compare-slider__pane--before p {
+  color: #2a2620;
 }
 
-.compare__pane--ship .compare__media {
-  background: #5cce59;
+.compare-slider__pane--after {
+  background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-2) 100%);
+  clip-path: inset(0 50% 0 0);
 }
 
-.compare__pane--ship .compare__media p {
-  color: rgba(254, 245, 234, 0.6);
+.compare-slider__pane--after p {
+  color: var(--black);
 }
 
-.compare__caption {
-  padding: 8px 12px;
-  border-top: 1px solid rgba(254, 245, 234, 0.25);
+.compare-slider__tag {
+  position: absolute;
+  bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.625rem;
@@ -1420,44 +1777,76 @@ a.work-card--horizontal:hover .work-card__cta {
   text-transform: uppercase;
 }
 
-.compare__pane--reject .compare__caption {
-  color: rgba(254, 245, 234, 0.6);
+.compare-slider__tag--reject {
+  left: 12px;
+  background: rgba(42, 38, 32, 0.15);
+  color: #2a2620;
 }
 
-.compare__pane--ship .compare__caption {
-  color: #5cce59;
+.compare-slider__tag--ship {
+  right: 12px;
+  background: rgba(19, 19, 19, 0.2);
+  color: var(--black);
 }
 
-.compare__cta {
-  display: inline-flex;
+.compare-slider__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--parchment);
+  display: flex;
   align-items: center;
-  gap: 8px;
-  width: max-content;
-  padding: 14px 20px;
-  border-radius: var(--radius);
-  border: 2px solid rgba(92, 206, 89, 0.5);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.compare__cta:hover {
-  border-color: #5cce59;
-  background: rgba(92, 206, 89, 0.1);
+.compare-slider__handle svg {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 999px;
+  background: var(--parchment);
+  color: var(--black);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-.compare__cta-label {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.75px;
-  text-transform: capitalize;
-  color: #f5ecde;
+.compare-slider__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: ew-resize;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
 }
 
-.compare__cta svg {
-  width: 20px;
-  height: 20px;
-  color: #f5ecde;
+.compare-slider__input::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+.compare-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  border: none;
+}
+
+.compare-slider__input::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+.compare-slider__input::-moz-range-thumb {
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  border: none;
 }
 
 .pill {
@@ -1529,6 +1918,13 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .about-row__media .work-card__media {
+  /* Explicit width, not just "block fills container": a block with
+     aspect-ratio set and no width derives an intrinsic width from
+     min-height × ratio when asked for one (e.g. by the flex-layout
+     ancestor above), which was overflowing this 368px column out into
+     the copy text next to it. Width:100% pins it to the actual column
+     regardless of that intrinsic calculation. */
+  width: 100%;
   min-height: 375px;
 }
 
@@ -1591,6 +1987,20 @@ a.work-card--horizontal:hover .work-card__cta {
 .offer-grid {
   display: flex;
   gap: 24px;
+}
+
+/* "What I offer" is weighted, not two equal choices — product/UX is the
+   pitch, brand & craft is the secondary note (see the phase 2 IA decision
+   to stop giving self-directed branding work equal billing with product
+   design leadership). */
+.offer-grid--weighted .offer-grid__primary {
+  flex: 1.6;
+  border-color: var(--accent);
+}
+
+.offer-grid--weighted > .work-card:not(.offer-grid__primary) {
+  flex: 1;
+  opacity: 0.88;
 }
 
 @media (max-width: 900px) {
@@ -1680,9 +2090,29 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .grid-item__media {
-  height: 228px;
-  background: var(--placeholder-bg);
-  border-radius: 2px;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  border-radius: 4px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--dark-forest) 0%, #10120f 100%);
+}
+
+.grid-item__media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(254, 245, 234, 0.05) 0,
+    rgba(254, 245, 234, 0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+[data-theme="light"] .grid-item__media {
+  background: linear-gradient(135deg, #e7ddc7 0%, var(--placeholder-bg) 100%);
 }
 
 .grid-item__title {
@@ -1818,82 +2248,15 @@ a.work-card--horizontal:hover .work-card__cta {
   height: 16px;
 }
 
-/* ==========================================================================
-   Preview password gate
-   ========================================================================== */
-
-html.gate-locked body > *:not(#preview-gate) {
-  display: none;
-}
-
-.gate {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--black);
-}
-
-.gate__panel {
-  width: 100%;
-  max-width: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
-}
-
-.gate__form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.gate__input {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--dark-forest);
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  color: var(--ink-strong);
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  text-align: center;
-}
-
-.gate__input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.gate__submit {
-  padding: 12px 14px;
-  background: var(--accent);
-  color: var(--black);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.75px;
-  text-transform: uppercase;
-}
-
-.gate__submit:hover {
-  background: var(--accent-2);
-}
-
-.gate__error {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: #e06b5f;
-}
-
-
 /* Global safety net: force every animation/transition to be instant for
    anyone who has asked the OS for reduced motion, regardless of which rule
-   below would otherwise apply. */
+   below would otherwise apply. Phase 2 adds a second, equally strong path
+   to the same result — the in-page motion toggle (`data-motion="off"` on
+   <html>, set by main.js and persisted) — because the accessibility
+   research behind this rebuild is explicit that prefers-reduced-motion
+   alone isn't treated as sufficient once a site's motion budget goes up
+   this much: a visitor may not have set the OS preference but still want
+   the parallax/tilt/cursor-glow off on this specific site. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1903,6 +2266,15 @@ html.gate-locked body > *:not(#preview-gate) {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* ==========================================================================
@@ -1948,8 +2320,11 @@ html.gate-locked body > *:not(#preview-gate) {
     transform: none;
   }
 
-  /* Hero entrance: runs immediately on load, no JS/scroll needed. */
-  .hero__title,
+  /* Hero entrance: runs immediately on load, no JS/scroll needed.
+     .kinetic-title (the home hero's headline) is excluded — its own
+     .kinetic-word children each run their own staggered reveal, and
+     layering this whole-element fade on top of that just muddies it. */
+  .hero__title:not(.kinetic-title),
   .hero__subtitle,
   .about-hero .eyebrow,
   .about-hero .display-1,
@@ -1991,14 +2366,12 @@ html.gate-locked body > *:not(#preview-gate) {
   /* Arrow-icon nudge: a small rightward slide on hover, layered on top of
      each component's existing hover state. */
   .pill svg,
-  .work-card__cta svg,
-  .compare__cta svg {
+  .work-card__cta svg {
     transition: transform 0.2s ease;
   }
 
   .pill:hover svg,
-  a.work-card--horizontal:hover .work-card__cta svg,
-  .compare__cta:hover svg {
+  a.work-card--horizontal:hover .work-card__cta svg {
     transform: translateX(3px);
   }
 
@@ -2039,9 +2412,9 @@ html.gate-locked body > *:not(#preview-gate) {
 
   /* Gentle press feedback on the main tappable chips/buttons. */
   .pill:active,
-  .compare__cta:active,
   .menu-toggle:active,
-  .theme-toggle:active {
+  .theme-toggle:active,
+  .motion-toggle:active {
     transform: scale(0.96);
   }
 }

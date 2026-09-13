@@ -12,7 +12,7 @@ gallery: true
   </div>
   <div class="case-hero__copy">
     <h1 class="case-hero__title">Afordal</h1>
-    <p class="case-hero__desc">A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture.</p>
+    <p class="case-hero__desc">A solo six-month build: brand, design system, and four connected products (buyer/seller app, agent &amp; loan-officer CRM, marketing site, IDX search) grown from two unfinished, three-year-old wireframes into a live platform.</p>
   </div>
 
   <div class="case-meta">
@@ -35,9 +35,7 @@ gallery: true
   </div>
 
   <div class="case-hero__shot">
-    <div class="work-card__media">
-      <span>[IMAGE: the finished product at a glance]</span>
-    </div>
+    {% include media-placeholder.html label="The finished product at a glance" tall=true %}
   </div>
 </section>
 
@@ -86,6 +84,8 @@ gallery: true
         first_attempt="A single linear onboarding form, same questions for everyone. It was simple to build, but it either asked people things they’d already answered, or left gaps for people who needed more guidance."
         landed_on="Branching onboarding that adapts based on how someone entered the product. An agent-invited buyer skips straight past agent-matching. Someone with no agent gets that step built in. Same core form, different path through it."
         tradeoff="This kept one system instead of three separate products, but respected that people were arriving in genuinely different situations."
+        reject_text="One linear form, same questions for everyone"
+        ship_text="Branching form, adapts to entry point"
       %}
 
       {% include decision-block.html
@@ -93,8 +93,8 @@ gallery: true
         first_attempt="Full listing detail shown directly inline in the buyer/seller dashboard."
         landed_on="A compliant summary view with a clear path to the full listing."
         tradeoff="The constraint wasn’t a limitation to work around quietly, it shaped the information architecture. I designed the dashboard to summarize and route, not duplicate, which kept us compliant and actually made the dashboard less cluttered."
-        reject_text="[PLACEHOLDER: full listing detail inline in dashboard]"
-        ship_text="[PLACEHOLDER: compliant summary card with link to full listing]"
+        reject_text="Full listing detail inline in the dashboard"
+        ship_text="Compliant summary card, linked to the full listing"
       %}
 
       {% include decision-block.html
@@ -102,8 +102,8 @@ gallery: true
         first_attempt="A financing CTA placed only at the final financing step. The easy move, but by then the decision path was mostly already set."
         landed_on="Financing education surfaced earlier, woven into the decision path rather than tacked on at the end."
         tradeoff="The goal wasn’t just to mention financing options, it was to help people make better decisions earlier. That meant treating financing education as part of the core journey, not a late add-on, so users had the full picture before they were already locked into a direction."
-        reject_text="[PLACEHOLDER: financing CTA only at final step]"
-        ship_text="[PLACEHOLDER: financing education woven earlier into the journey]"
+        reject_text="Financing CTA only at the final step"
+        ship_text="Financing education woven earlier into the journey"
       %}
     </section>
 
@@ -127,9 +127,7 @@ gallery: true
           <p class="grid-item__desc">Logo, icon set, and imagery direction, built from nothing.</p>
         </div>
       </div>
-      <div class="work-card__media">
-        <span>[PLACEHOLDER: the system applied — a real dashboard screen]</span>
-      </div>
+      {% include media-placeholder.html label="The system applied — a real dashboard screen" tall=true %}
     </section>
 
     <section class="case-section" id="the-ecosystem">

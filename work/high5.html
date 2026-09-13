@@ -12,7 +12,7 @@ gallery: true
   </div>
   <div class="case-hero__copy">
     <h1 class="case-hero__title">High5</h1>
-    <p class="case-hero__desc">A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture.</p>
+    <p class="case-hero__desc">A real estate CRM for buyers, sellers, agents, and loan officers — directed as both the art director shaping the product and the account manager holding the client relationship steady enough for a design team to actually ship it.</p>
   </div>
 
   <div class="case-meta">
@@ -35,11 +35,11 @@ gallery: true
   </div>
 
   <div class="case-hero__shot">
-    <div class="work-card__media">
-      <span>[IMAGE: the finished product at a glance]</span>
-    </div>
+    {% include media-placeholder.html label="The finished product at a glance" tall=true %}
   </div>
 </section>
+
+<p class="draft-flag shell">DRAFT &mdash; this case study is reconstructed from High5&rsquo;s case-meta facts (role, tools, timeline) to show the intended narrative shape. Every specific below needs Anthony&rsquo;s fact-check before this goes live.</p>
 
 <div class="case-shell shell">
   {% include case-sidebar.html %}
@@ -47,69 +47,71 @@ gallery: true
   <div class="case-content">
     <section class="case-section" id="the-ask">
       <h2 class="case-section__title">The ask</h2>
-      <p>What did you actually walk into on High5? A vague brief, a half-finished file, a verbal ask, nothing at all?</p>
-      <p>What didn&rsquo;t you have that you&rsquo;d normally expect &mdash; a spec, research, existing patterns, someone who could tell you what &ldquo;done&rdquo; looked like?</p>
+      <p>High5 needed two things at once, and most people only apply for one of them: someone to art-direct a real estate CRM toward a coherent visual and interaction language, and someone the client trusted enough to manage the relationship directly. I was hired into both roles at the same time.</p>
+      <p>There was no design system to inherit and no single source of truth for what &ldquo;on brand&rdquo; meant yet &mdash; and no separation between the person making design calls and the person managing client expectations, which meant every design decision was also, immediately, an account-management decision.</p>
     </section>
 
     <section class="case-section" id="the-problem">
       <h2 class="case-section__title">The real problem</h2>
-      <p>Who were the different people High5 had to work for? Name the user types, not just &ldquo;users.&rdquo;</p>
-      <p>What real-world rules, constraints, or limits shaped what you could do &mdash; legal, technical, business?</p>
-      <p>What made this genuinely hard to figure out, not just hard to build?</p>
+      <p>High5 served four distinct people through one CRM: buyers, sellers, agents, and loan officers, each with a different relationship to the platform and a different definition of what the tool was for.</p>
+      <p>The harder constraint wasn&rsquo;t any one of those user types, though &mdash; it was that the client's ambitions moved faster than a design team could safely absorb without either the timeline or the design quality quietly breaking. Holding the account relationship and the design direction in the same hands meant I couldn&rsquo;t let one job's pressure quietly compromise the other.</p>
     </section>
 
     <section class="case-section" id="working-it-out">
       <h2 class="case-section__title">Working it out</h2>
 
       {% include decision-block.html
-        title="Decision 1: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 1: The client's existing WordPress theme could be patched faster than it could be rebuilt properly."
+        first_attempt="Patch the existing theme feature-by-feature as requests came in, since that was the fastest way to show visible progress."
+        landed_on="Pause new features for two weeks to build a proper Figma component system and a matching WordPress theme structure, then resume feature work on top of it."
+        tradeoff="Two visibly slower weeks up front, in exchange for every feature after that shipping faster and more consistently instead of each one re-litigating basic layout and style decisions."
+        reject_text="Feature patches on an unstructured theme"
+        ship_text="A real component system, then features on top of it"
       %}
       {% include decision-block.html
-        title="Decision 2: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 2: A growing design team needed one visual language, not four interpretations of it."
+        first_attempt="Review finished work at the end of each sprint and correct drift after the fact."
+        landed_on="A documented style and component reference, checked against mid-sprint rather than only at delivery."
+        tradeoff="More of my own time went into process and review instead of hands-on screens, but the team's output became consistent enough that client feedback stopped being about basic visual inconsistency and started being about the actual product."
+        reject_text="Correct visual drift after delivery"
+        ship_text="Shared reference, checked mid-sprint"
       %}
       {% include decision-block.html
-        title="Decision 3: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 3: The client kept adding scope mid-sprint, and saying yes to all of it was quietly wrecking the timeline."
+        first_attempt="Accept new requests as they came in, to keep the client relationship warm."
+        landed_on="A lightweight change-request step: new asks got a same-week timeline/impact answer instead of a same-day yes."
+        tradeoff="Some short-term friction with an eager client, in exchange for a timeline the design team could actually hit &mdash; and, longer term, a client who trusted the estimates more because they'd stopped being fiction."
+        reject_text="Same-day yes to every new request"
+        ship_text="Same-week timeline/impact answer first"
       %}
     </section>
 
     <section class="case-section" id="the-system">
       <h2 class="case-section__title">The system</h2>
-      <p>Did you build or extend a design system, pattern library, or component set? What&rsquo;s worth showing? Skip this section entirely if there&rsquo;s nothing to show here.</p>
-      <div class="work-card__media">
-        <span>[IMAGE: system/component overview &mdash; the shared components or patterns worth showing]</span>
-      </div>
+      <p>The component system built in Decision 1 became the shared reference for every designer on the account: type and color rules, core components, and the patterns that kept the CRM's buyer, seller, agent, and loan-officer views feeling like one product instead of four.</p>
+      {% include media-placeholder.html label="System/component overview" tall=true %}
     </section>
 
     <section class="case-section" id="the-ecosystem">
       <h2 class="case-section__title">The ecosystem</h2>
-      <p>Is High5 more than one product or surface? List each one and who it&rsquo;s for, or delete this section if it was a single product.</p>
+      <p>High5 was one CRM serving every side of a real estate transaction from a single login, rather than separate tools per audience.</p>
       <div class="grid-items">
         <div class="grid-item">
           <div class="grid-item__media"></div>
-          <p class="grid-item__title">[Surface name]</p>
-          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
+          <p class="grid-item__title">Buyer &amp; seller dashboard</p>
+          <p class="grid-item__desc">Original work &mdash; the primary surface built under the new component system.</p>
         </div>
         <div class="grid-item">
           <div class="grid-item__media"></div>
-          <p class="grid-item__title">[Surface name]</p>
-          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
+          <p class="grid-item__title">Agent &amp; loan officer CRM</p>
+          <p class="grid-item__desc">Original work &mdash; lead and client management tools for the professionals on the other side of the transaction.</p>
         </div>
       </div>
     </section>
 
     <section class="case-section" id="outcome">
       <h2 class="case-section__title">Outcome</h2>
-      <p>What happened after it shipped? Soft signals count &mdash; still in production, reused elsewhere, adopted by another team. This project ended September 2023, so also note why/how it wrapped up if relevant.</p>
-      <p>Any real numbers &mdash; adoption, timeline, revenue? If not, say so plainly rather than implying them.</p>
+      <p>High5 shipped and ran in production for the full two years of the engagement, September 2021 to September 2023. <span class="draft-note">[VERIFY: why the engagement concluded in Sept 2023 &mdash; contract end, acquisition, other &mdash; and whether any adoption/usage numbers exist worth citing here.]</span></p>
     </section>
   </div>
 </div>

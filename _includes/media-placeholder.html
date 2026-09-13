@@ -1,0 +1,18 @@
+{%- comment -%}
+  Params: label (caption text), tall (optional — pass true for a taller
+  slot), swatch (optional 1-5 — force a swatch instead of deriving one from
+  the label's length; needed when several captions in the same row happen
+  to share a length and would otherwise render identically)
+  Shared "screenshot pending" placeholder — reuses the swatch system built
+  for work-card.html so every unfilled image slot across the site (case
+  studies, about, project pages) reads as one deliberate design choice
+  instead of ad hoc "[IMAGE: placeholder]" text.
+{%- endcomment -%}
+{%- if include.swatch -%}
+  {%- assign swatch = include.swatch -%}
+{%- else -%}
+  {%- assign swatch = include.label | size | modulo: 5 | plus: 1 -%}
+{%- endif -%}
+<div class="work-card__media work-card__media--placeholder{% if include.tall %} work-card__media--tall{% endif %}" data-swatch="{{ swatch }}">
+  <span class="work-card__media-tag">{{ include.label }}</span>
+</div>

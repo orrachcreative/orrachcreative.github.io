@@ -32,6 +32,48 @@
 
   syncToggleUI();
 
+  // Explicit in-page motion toggle. Independent of (and layered on top of)
+  // the OS-level prefers-reduced-motion query already handled by the head
+  // script + the CSS in style.css: this lets a visitor who hasn't set that
+  // OS preference still turn off this specific site's parallax/tilt/
+  // cursor-glow. Setting data-motion="off" on <html> is the single switch
+  // every motion-driven rule (CSS and JS) checks.
+  var MOTION_ON_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 17c2-6 4-6 6 0s4 6 6 0 4-6 6 0" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var MOTION_OFF_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 12h18" stroke-linecap="round"/></svg>';
+
+  function isMotionOff() {
+    return root.getAttribute("data-motion") === "off";
+  }
+
+  function syncMotionUI() {
+    var off = isMotionOff();
+    document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(off));
+      btn.setAttribute("aria-label", off ? "Turn on site animations" : "Turn off site animations");
+      var icon = btn.querySelector("[data-motion-icon]");
+      if (icon) icon.innerHTML = off ? MOTION_OFF_SVG : MOTION_ON_SVG;
+    });
+  }
+
+  document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var next = isMotionOff() ? "on" : "off";
+      if (next === "off") {
+        root.setAttribute("data-motion", "off");
+      } else {
+        root.removeAttribute("data-motion");
+      }
+      try {
+        localStorage.setItem("aoc-motion", next);
+      } catch (e) {}
+      syncMotionUI();
+    });
+  });
+
+  syncMotionUI();
+
   // Full-screen slide-out menu
   var menuToggle = document.querySelector("[data-menu-toggle]");
   var menuIcon = document.querySelector("[data-menu-icon]");
@@ -161,18 +203,13 @@
     };
 
     document.addEventListener("scroll", setActive, { passive: true });
-    // For a first-time visitor the password gate hides <main> (display:
-    // none) until they submit it, so any layout read before then — this
-    // call included — sees offsetTop 0 for every section and lands on the
-    // last one. Real root fix is gate.js dispatching "gate:unlocked" once
-    // <main> is actually visible; requestAnimationFrame/fonts.ready are
-    // just cheap extra passes for the already-unlocked-session case where
-    // fonts still swap in and reflow the page after first layout.
+    // Fonts swap in and reflow the page after first layout, which can move
+    // section offsets enough to change the active link — cheap extra
+    // passes to catch that.
     requestAnimationFrame(setActive);
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(setActive);
     }
-    window.addEventListener("gate:unlocked", setActive);
   }
 
   // Image lightbox: case-study, project, logos, and illustrations pages
@@ -278,6 +315,31 @@
       });
     }
   }
+
+  // Before/after compare slider: a real implementation of the "Compare
+  // with slider" affordance the original decision-block markup promised
+  // but never built. Not gated behind js-anim, same reasoning as the
+  // lightbox above — this is a content-reveal control, not decorative
+  // motion, so reduced-motion visitors still need it to work (just without
+  // any animated transition on drag, which the CSS leaves instant for
+  // them anyway). The range input is the real control: native keyboard
+  // support (arrow keys), a screen-reader label, and its value drives a
+  // CSS custom property that clips the "shipped" layer over the
+  // "rejected" one underneath.
+  document.querySelectorAll(".compare-slider").forEach(function (slider) {
+    var input = slider.querySelector(".compare-slider__input");
+    var afterLayer = slider.querySelector(".compare-slider__pane--after");
+    if (!input || !afterLayer) return;
+
+    var setPos = function () {
+      var v = input.value;
+      slider.style.setProperty("--pos", v + "%");
+      afterLayer.style.clipPath = "inset(0 " + (100 - v) + "% 0 0)";
+    };
+
+    input.addEventListener("input", setPos);
+    setPos();
+  });
 
   // Motion: page crossfade, scroll-reveal, and background parallax.
   // Everything here is skipped for reduced-motion users — root.classList
@@ -411,6 +473,13 @@
     if (parallaxEls.length) {
       var ticking = false;
       var updateParallax = function () {
+        if (isMotionOff()) {
+          parallaxEls.forEach(function (el) {
+            el.style.backgroundPosition = "";
+          });
+          ticking = false;
+          return;
+        }
         parallaxEls.forEach(function (el) {
           var offset = el.getBoundingClientRect().top * 0.15;
           el.style.backgroundPosition = "center calc(50% + " + -offset + "px)";
@@ -429,5 +498,26 @@
       );
       updateParallax();
     }
+
+    // Magnetic hover: primary CTAs (opted in via [data-magnetic]) nudge
+    // toward the cursor within a small radius, then spring back. Reset to
+    // no transform whenever the in-page motion toggle is off, since this
+    // sets inline transforms directly rather than through a CSS class the
+    // motion-off stylesheet rule could otherwise neutralize on its own.
+    var magneticEls = document.querySelectorAll("[data-magnetic]");
+    magneticEls.forEach(function (el) {
+      var strength = 0.3;
+      el.addEventListener("mousemove", function (e) {
+        if (isMotionOff()) return;
+        var rect = el.getBoundingClientRect();
+        var x = e.clientX - (rect.left + rect.width / 2);
+        var y = e.clientY - (rect.top + rect.height / 2);
+        el.style.transform = "translate(" + x * strength + "px, " + y * strength + "px)";
+      });
+      el.addEventListener("mouseleave", function () {
+        el.style.transform = "";
+      });
+    });
+
   }
 })();

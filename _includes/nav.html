@@ -7,6 +7,9 @@
   </a>
 
   <div class="site-header__actions">
+    <button class="motion-toggle" data-motion-toggle type="button" aria-pressed="false" aria-label="Turn off site animations">
+      <span data-motion-icon>{% include icon.html name="motion-on" %}</span>
+    </button>
     <button class="theme-toggle" data-theme-toggle type="button" aria-pressed="false" aria-label="Toggle light and dark theme">
       <span data-theme-icon>{% include icon.html name="moon" %}</span>
     </button>
@@ -32,13 +35,6 @@
       </span>
       <span class="site-menu__link-bar" aria-hidden="true"></span>
     </a>
-    <a href="{{ '/projects/' | relative_url }}" class="site-menu__link{% if page.nav == 'projects' %} is-active{% endif %}">
-      <span class="site-menu__link-row">
-        <span class="site-menu__link-arrow" aria-hidden="true">{% include icon.html name="arrow-right" %}</span>
-        <span class="site-menu__link-label">Projects</span>
-      </span>
-      <span class="site-menu__link-bar" aria-hidden="true"></span>
-    </a>
     <a href="{{ '/about/' | relative_url }}" class="site-menu__link{% if page.nav == 'about' %} is-active{% endif %}">
       <span class="site-menu__link-row">
         <span class="site-menu__link-arrow" aria-hidden="true">{% include icon.html name="arrow-right" %}</span>
@@ -47,6 +43,10 @@
       <span class="site-menu__link-bar" aria-hidden="true"></span>
     </a>
   </nav>
+  <div class="site-menu__secondary">
+    <span class="site-menu__secondary-label">Also</span>
+    <a href="{{ '/projects/' | relative_url }}" class="site-menu__secondary-link{% if page.nav == 'projects' %} is-active{% endif %}">Craft &mdash; logos, illustration &amp; brand work</a>
+  </div>
   <div class="site-menu__footer">
     <div class="site-menu__social">
       <a href="https://www.linkedin.com/in/anthony-orrach-b51b7238/" target="_blank" rel="noopener" aria-label="LinkedIn">{% include icon.html name="linkedin" %}</a>

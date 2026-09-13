@@ -12,17 +12,16 @@ permalink: /about/
 
   <div class="about-row">
     <div class="about-row__media">
-      <div class="work-card__media">
-        <span>[IMAGE: placeholder]</span>
-      </div>
+      {% include media-placeholder.html label="Portrait" %}
     </div>
     <div class="about-row__copy">
-      <p class="heading-3" style="font-family: var(--font-body); font-weight: 700; font-size: 1.25rem; letter-spacing: 0.1px;">[Replace: 3-5 sentences. Who you are, what kind of designer you are, what you're like to work with, and what you're looking for next. Write it like you'd say it out loud, not like a bio a stranger wrote about you.]</p>
+      <p class="draft-flag" style="margin-top: 0;">DRAFT &mdash; written to show the voice and structure. Needs Anthony's own words before this ships.</p>
+      <p class="heading-3" style="font-family: var(--font-body); font-weight: 700; font-size: 1.25rem; letter-spacing: 0.1px;">I&rsquo;m the person a real estate company calls when the idea is bigger than the team behind it &mdash; sketching, directing, and shipping brand and product work myself when there was no one else to hand it to. I&rsquo;m at my best owning something end to end: a rough ask, a messy constraint, and a product that has to work for four different kinds of people at once, not one persona in a deck. I&rsquo;m looking for a Senior, Lead, or Principal Product Design role where that&rsquo;s the actual job again.</p>
       <div class="pill-row">
-        <a class="pill pill--filled" href="{{ '/resume.pdf' | relative_url }}" target="_blank" rel="noopener">Download Resume {% include icon.html name="arrow-right" %}</a>
-        <a class="pill" href="https://www.linkedin.com/in/anthony-orrach-b51b7238/" target="_blank" rel="noopener">LinkedIn {% include icon.html name="arrow-right" %}</a>
-        <a class="pill" href="https://dribbble.com/anthonyorrach" target="_blank" rel="noopener">Dribbble {% include icon.html name="arrow-right" %}</a>
-        <a class="pill" href="https://instagram.com/" target="_blank" rel="noopener">Instagram {% include icon.html name="arrow-right" %}</a>
+        <a class="pill pill--filled" data-magnetic href="{{ '/resume.pdf' | relative_url }}" target="_blank" rel="noopener">Download Resume {% include icon.html name="arrow-right" %}</a>
+        <a class="pill" data-magnetic href="https://www.linkedin.com/in/anthony-orrach-b51b7238/" target="_blank" rel="noopener">LinkedIn {% include icon.html name="arrow-right" %}</a>
+        <a class="pill" data-magnetic href="https://dribbble.com/anthonyorrach" target="_blank" rel="noopener">Dribbble {% include icon.html name="arrow-right" %}</a>
+        <a class="pill" data-magnetic href="https://instagram.com/" target="_blank" rel="noopener">Instagram {% include icon.html name="arrow-right" %}</a>
       </div>
     </div>
   </div>
@@ -31,9 +30,7 @@ permalink: /about/
 <div class="shell">
   <div class="about-row">
     <div class="about-row__media">
-      <div class="work-card__media" style="min-height: 460px;">
-        <span>[IMAGE: placeholder]</span>
-      </div>
+      {% include media-placeholder.html label="A screen from the work" tall=true %}
     </div>
     <div class="about-row__copy">
       <p class="heading-2" style="font-size: 2.25rem; text-transform: none;">Good design is judged by what ships, not what&rsquo;s in the deck. I&rsquo;d rather own a project end to end, from the first sketch to the live product, than hand off a polished idea and hope it survives the rest of the way.</p>
@@ -65,13 +62,13 @@ permalink: /about/
 
   <section class="section" style="border-top: 1px solid var(--line);">
     <h2 class="heading-1" style="margin-bottom: 24px;">What I offer</h2>
-    <div class="offer-grid">
-      <div class="work-card work-card--vertical">
+    <div class="offer-grid offer-grid--weighted">
+      <div class="work-card work-card--vertical offer-grid__primary">
         <div class="work-card__body">
           <div class="work-card__text" style="gap: 8px;">
             <p class="eyebrow">01</p>
             <p class="work-card__title" style="font-size: 1.75rem;">Product &amp; UX design</p>
-            <p class="work-card__desc">End-to-end product design: research, flows, wireframes, and interface design that ships.</p>
+            <p class="work-card__desc">End-to-end product design: research, flows, wireframes, and interface design that ships &mdash; solo when that's what the job needs.</p>
           </div>
         </div>
       </div>
@@ -79,17 +76,9 @@ permalink: /about/
         <div class="work-card__body">
           <div class="work-card__text" style="gap: 8px;">
             <p class="eyebrow">02</p>
-            <p class="work-card__title" style="font-size: 1.75rem;">Brand &amp; visual identity</p>
-            <p class="work-card__desc">Logo systems, visual identity, and style guides built to extend across every surface.</p>
-          </div>
-        </div>
-      </div>
-      <div class="work-card work-card--vertical">
-        <div class="work-card__body">
-          <div class="work-card__text" style="gap: 8px;">
-            <p class="eyebrow">03</p>
-            <p class="work-card__title" style="font-size: 1.75rem;">Illustration &amp; art direction</p>
-            <p class="work-card__desc">Custom illustration, iconography, and visual direction for brand and product work.</p>
+            <p class="work-card__title" style="font-size: 1.75rem;">Brand &amp; visual craft</p>
+            <p class="work-card__desc">Logo systems, illustration, and identity work &mdash; the self-directed side of the practice.</p>
+            <a class="overline-link section__link" href="{{ '/projects/' | relative_url }}" style="color: var(--accent); margin-top: 8px;">See the craft work &rarr;</a>
           </div>
         </div>
       </div>
@@ -99,10 +88,10 @@ permalink: /about/
   <section class="section" style="border-top: 1px solid var(--line); padding-bottom: 72px;">
     <h2 class="heading-1" style="margin-bottom: 24px;">Hobbies &amp; interests</h2>
     <div class="gallery-scroll">
-      <div class="work-card__media"><span>[IMAGE: photo 1]</span></div>
-      <div class="work-card__media"><span>[IMAGE: photo 2]</span></div>
-      <div class="work-card__media"><span>[IMAGE: photo 3]</span></div>
-      <div class="work-card__media"><span>[IMAGE: photo 4]</span></div>
+      {% include media-placeholder.html label="Photo 1" swatch=1 %}
+      {% include media-placeholder.html label="Photo 2" swatch=3 %}
+      {% include media-placeholder.html label="Photo 3" swatch=5 %}
+      {% include media-placeholder.html label="Photo 4" swatch=2 %}
     </div>
   </section>
 </div>
