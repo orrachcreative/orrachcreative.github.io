@@ -1063,6 +1063,18 @@ body.menu-open {
   flex: none;
 }
 
+/* The crown/sword glyphs between phrases render visually smaller than
+   the bold condensed text at the same font-size (emoji cap-height reads
+   shorter than Big Shoulders Text's), so they get their own larger size
+   to actually match the surrounding text's height rather than the same
+   nominal font-size. */
+.marquee-band__icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 2rem;
+  line-height: 1;
+}
+
 /* Device mockup — stages a real screenshot inside a simple laptop bezel
    instead of a bare crop, the way eszterbial.com and 63 Visual both
    present client work. Pure CSS, no image asset. */
