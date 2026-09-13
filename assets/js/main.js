@@ -43,11 +43,6 @@
   // OS preference still turn off this specific site's parallax/tilt/
   // cursor-glow. Setting data-motion="off" on <html> is the single switch
   // every motion-driven rule (CSS and JS) checks.
-  var MOTION_ON_SVG =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 17c2-6 4-6 6 0s4 6 6 0 4-6 6 0" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  var MOTION_OFF_SVG =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 12h18" stroke-linecap="round"/></svg>';
-
   function isMotionOff() {
     return root.getAttribute("data-motion") === "off";
   }
@@ -57,9 +52,9 @@
     document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {
       btn.setAttribute("aria-pressed", String(off));
       btn.setAttribute("aria-label", off ? "Turn on site animations" : "Turn off site animations");
-      var icon = btn.querySelector("[data-motion-icon]");
-      if (icon) icon.innerHTML = off ? MOTION_OFF_SVG : MOTION_ON_SVG;
     });
+    // No icon swap: it's one knight either way, and CSS stops him
+    // prancing off the same data-motion attribute this sets.
   }
 
   document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {

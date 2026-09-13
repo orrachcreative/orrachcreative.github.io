@@ -502,8 +502,37 @@ a.work-card--horizontal:focus-visible {
 }
 
 .motion-toggle svg {
-  width: 16px;
-  height: 16px;
+  /* Up from 16px: the knight's silhouette needs the extra room to still
+     read as a knight rather than a smudge at this size. */
+  width: 22px;
+  height: 22px;
+}
+
+/* The knight prances while site motion is on and stands still when it's
+   off — the control demonstrating the thing it controls. Gated exactly
+   like every other animation here: the OS preference first, then the
+   in-page toggle, so turning motion off genuinely stops him. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .motion-toggle__knight {
+    transform-box: view-box;
+    transform-origin: 12px 20.4px;
+    animation: knight-prance 1s ease-in-out infinite;
+  }
+
+  /* Bobs in place rather than travelling: a looping translate across the
+     box would just read as the piece sliding back to where it started. */
+  @keyframes knight-prance {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    30% {
+      transform: translateY(-1.6px) rotate(-5deg);
+    }
+    60% {
+      transform: translateY(-0.4px) rotate(2deg);
+    }
+  }
 }
 
 .motion-toggle:hover {
