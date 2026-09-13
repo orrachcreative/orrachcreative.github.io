@@ -2866,7 +2866,11 @@ html[data-motion="off"] *::after {
      this to look right instead of bleeding past rounded corners — already
      true for .logo-grid__item and .work-card__media. */
   img:not(.lightbox__img) {
-    transition: transform 0.3s ease;
+    /* Was 0.3s ease — read as an instant snap rather than a deliberate
+       zoom. var(--motion-med) plus an ease-out-expo curve (the same one
+       .proclamation uses) draws the motion out and lets it settle instead
+       of linearly ramping the whole way. */
+    transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   img:not(.lightbox__img):hover {
@@ -2899,7 +2903,14 @@ html[data-motion="off"] *::after {
 
 main.has-gallery img {
   cursor: zoom-in;
-  transition: opacity 0.15s ease;
+  /* `transition` is a shorthand — declaring it here for opacity alone
+     was silently replacing the img:not(.lightbox__img) rule's transform
+     transition on every gallery page (this selector is more specific,
+     so it wins the whole property, not just the parts it mentions).
+     That's why the hover zoom read as instant on exactly the pages with
+     real images: it had no transition running at all there. Both listed
+     together so neither rule quietly cancels the other's. */
+  transition: opacity 0.15s ease, transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 main.has-gallery img:hover {
