@@ -639,7 +639,7 @@
     // *toward* the cursor means negating both — cursor above center
     // (py < 0) has to produce a negative rotateX to bring the top edge
     // forward, and cursor right of center (px > 0) a negative rotateY.
-    var tiltMax = 6; // degrees, at the card's edge
+    var tiltMax = 10; // degrees, at the card's edge
     document.querySelectorAll(".work-card").forEach(function (el) {
       el.addEventListener("mousemove", function (e) {
         if (isMotionOff()) return;
