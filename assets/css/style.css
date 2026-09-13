@@ -468,7 +468,39 @@ a.work-card--horizontal:focus-visible {
   background: var(--gold);
 }
 
-.site-header.is-menu-open .theme-toggle {
+/* Moved out of the header per feedback — now a persistent corner control
+   rather than one more icon in the header row. Sized up from the header's
+   24px chip since it's standing alone rather than packed next to two
+   other icons. */
+.theme-toggle--floating {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.4);
+}
+
+.theme-toggle--floating svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (max-width: 640px) {
+  .theme-toggle--floating {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+/* The open full-screen menu is itself a fixed, full-viewport panel — the
+   floating toggle sits above it in z-index, so without this it would
+   visibly poke through the menu in the bottom-right corner. main.js
+   already makes it inert (untabbable) while the menu is open; this is
+   the matching visual state. */
+body.menu-open .theme-toggle--floating {
   opacity: 0;
   pointer-events: none;
 }
