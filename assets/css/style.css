@@ -81,7 +81,14 @@
 }
 
 [data-theme="light"] {
-  --bg: var(--parchment);
+  /* Parchment knocked back 15% toward the warm dark ink (#1f1c16), so
+     the page reads as a warm off-white rather than near-white. Only the
+     page ground moves — --parchment itself stays pure, since it's still
+     the ivory the cards and the always-dark hero text are made of. That
+     separation is the point: at full parchment the 85% ivory card panels
+     were sitting on an identical ivory ground and had no visible edge of
+     their own. */
+  --bg: #ddd9d2;
   --bg-raised: rgba(31, 28, 22, 0.08);
   --bg-card: rgba(31, 28, 22, 0.05);
   /* Parchment rather than the faint dark tint --bg-card uses here: at
