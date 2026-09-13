@@ -12,25 +12,25 @@ gallery: true
   </div>
   <div class="case-hero__copy">
     <h1 class="case-hero__title">HomeASAP</h1>
-    <p class="case-hero__desc">A real estate marketing &amp; IDX platform live since 2013, powering branded websites for individual agents and brokerages &mdash; three years as Lead Visual Designer modernizing a decade of accumulated product without breaking a single live client site.</p>
+    <p class="case-hero__desc">Thirteen years at one company, from Senior Visual Designer to Principal Product Designer &mdash; growing with it from a small team into owning design across the product suite that drives the majority of its revenue.</p>
   </div>
 
   <div class="case-meta">
     <div class="case-meta__item">
       <p class="meta-label">Role</p>
-      <p class="case-meta__value">Lead Visual Designer</p>
+      <p class="case-meta__value">Senior Visual Designer &rarr; Principal Product Designer</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Tools</p>
-      <p class="case-meta__value">Adobe + Figma + Wordpress</p>
+      <p class="case-meta__value">Figma + Adobe Suite + WordPress</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Type</p>
-      <p class="case-meta__value">Websites</p>
+      <p class="case-meta__value">SaaS &bull; Real Estate Tech</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Timeline</p>
-      <p class="case-meta__value">Jan 2022 &ndash; Dec 2024</p>
+      <p class="case-meta__value">June 2013 &ndash; Present</p>
     </div>
   </div>
 
@@ -39,7 +39,7 @@ gallery: true
   </div>
 </section>
 
-<p class="draft-flag shell">DRAFT &mdash; this case study is reconstructed from HomeASAP&rsquo;s case-meta facts and its cross-reference in the Afordal case study (the reused IDX search tool) to show the intended narrative shape. Every specific below needs Anthony&rsquo;s fact-check before this goes live.</p>
+<p class="draft-flag shell">DRAFT &mdash; role, timeline, and product names below are real (from Anthony's resume). The specific decisions and their tradeoffs are a plausible reconstruction of how a 13-year, small-team-to-Principal arc usually plays out, not a verified account &mdash; needs Anthony's fact-check before this goes live.</p>
 
 <div class="case-shell shell">
   {% include case-sidebar.html %}
@@ -47,78 +47,88 @@ gallery: true
   <div class="case-content">
     <section class="case-section" id="the-ask">
       <h2 class="case-section__title">The ask</h2>
-      <p>HomeASAP wasn&rsquo;t a blank slate &mdash; it was already a decade into serving real estate agents and brokerages with branded marketing websites and IDX search when I joined as Lead Visual Designer. The ask wasn&rsquo;t &ldquo;build this,&rdquo; it was &ldquo;modernize this without anyone noticing the ground moved.&rdquo;</p>
-      <p>There was no clean spec for that, because the constraint wasn&rsquo;t creative, it was operational: thousands of live, agent-branded sites already running on the existing visual system, each one somebody's actual business.</p>
+      <p>I joined HomeASAP in 2013 when it was still small, as a Senior Visual Designer focused on marketing. There was no formal product-design function yet &mdash; the job was to contribute wherever the growing company needed design: branding, marketing, Facebook advertising, and the MLS/IDX systems real estate agents relied on for lead generation and lead nurture.</p>
+      <p>There was no single "ask" so much as a company that kept getting bigger around me, for thirteen years, and a role that had to grow with it.</p>
     </section>
 
     <section class="case-section" id="the-problem">
       <h2 class="case-section__title">The real problem</h2>
-      <p>Two very different audiences depended on the same platform: the agents and brokerages who were HomeASAP&rsquo;s paying customers, and the buyers, sellers, and loan officers who used those agents&rsquo; sites without ever knowing HomeASAP&rsquo;s name. IDX and MLS compliance rules constrained what listing data could be shown and how, on every one of those sites at once.</p>
-      <p>The genuinely hard part was sequencing: any visual or system change had to roll out gradually across a decade of live client sites without a single one visibly breaking mid-transition, which ruled out most of the fast, direct approaches that would have worked on a greenfield product.</p>
+      <p>As the product lineup expanded into IDX Home Search, Page Engage, Home Value Leads, TurnKey Suite, and more &mdash; tools that now account for the majority of the company's revenue &mdash; visual/marketing design skill alone wasn't enough. The job had to evolve into real product design: research, systems, and UX for SaaS tools serving real estate agents and brokerages directly, not just the marketing that brought them in the door.</p>
+      <p>The hard part wasn't any single product, it was the transition itself &mdash; becoming a product designer while still owning the marketing and lead-generation work that had always been the job, without a clean handoff point where one ended and the other began.</p>
     </section>
 
     <section class="case-section" id="working-it-out">
       <h2 class="case-section__title">Working it out</h2>
 
       {% include decision-block.html
-        title="Decision 1: The visual system needed modernizing, but thousands of live agent sites were already built on the old one."
-        first_attempt="Design the new visual system as a hard cutover, scheduled for all client sites at once."
-        landed_on="An opt-in theme upgrade path: new agent sites launched on the modernized system by default, existing ones migrated on their own timeline."
-        tradeoff="Full modernization took years instead of one release, but zero paying customers woke up to a broken or unrecognizable site."
-        reject_text="Hard cutover, all sites at once"
-        ship_text="Opt-in upgrade, migrated on their own timeline"
+        title="Decision 1: The product lineup outgrew what visual/marketing design alone could support."
+        first_attempt="Keep treating each new product (IDX Home Search, Page Engage, Home Value Leads, TurnKey Suite) as another marketing site to skin."
+        landed_on="Formalized an actual product-design practice &mdash; research, systems, UX &mdash; as the suite diversified, rather than waiting for a dedicated product designer to be hired."
+        tradeoff="Took on a discipline the original job title didn't cover, while still delivering on deadline, in exchange for design ownership across the products that now drive most of the company's revenue."
+        reject_text="Marketing-skin each new product"
+        ship_text="A real product-design practice"
       %}
       {% include decision-block.html
-        title="Decision 2: IDX/MLS compliance rules constrained the same search experience across every agent's differently-branded site."
-        first_attempt="A separate IDX implementation tuned per major client, to fit each brand more tightly."
-        landed_on="One compliant, reusable IDX search component, themeable per agent's brand without touching its underlying logic."
-        tradeoff="Individual agent sites gave up some bespoke tuning, but the platform gained one component to maintain and keep compliant instead of many &mdash; the same tool that would later become the reskin basis for Afordal's own IDX search."
-        reject_text="Bespoke IDX build per major client"
-        ship_text="One themeable, compliant IDX component"
+        title="Decision 2: The corporate site needed 18 product landing pages (including checkouts) plus 12 supporting pages &mdash; too many for one-off design."
+        first_attempt="Design each landing page bespoke as sales and marketing requested it."
+        landed_on="A reusable landing-page system, run with a 2-person team, that could produce and maintain all 30 pages consistently."
+        tradeoff="Upfront system-building time against immediate one-off requests, in exchange for a 2-person team sustaining a 30-page site instead of needing a much bigger one."
+        reject_text="Bespoke page per request"
+        ship_text="One system, 2-person team, 30 pages"
       %}
       {% include decision-block.html
-        title="Decision 3: Every agent wanted their own brand on the site, but the underlying UX needed to stay consistent."
-        first_attempt="A single rigid template, lightly recolored per agent."
-        landed_on="A theme system separating agent-brand tokens (logo, color, imagery) from the structural layout and interaction patterns underneath."
-        tradeoff="Agents had less freedom to change the site's actual structure, in exchange for every agent site sharing the same underlying UX quality &mdash; so a usability fix in one place improved every site at once."
-        reject_text="Rigid template, recolored per agent"
-        ship_text="Brand tokens layered on shared structure"
+        title="Decision 3: Lead-generation instincts from the marketing side and the newer product-design responsibilities risked staying two disconnected skill sets."
+        first_attempt="Keep marketing design and product design as separate lanes."
+        landed_on="Applied lead-gen and lead-nurture thinking directly into core product UX &mdash; tools like Home Value Leads carrying the same conversion discipline that used to live only in marketing."
+        tradeoff="Blurred the line between what was originally a marketing role and what became a product-design one, in exchange for products that generate leads by design, not just by the marketing pointed at them."
+        reject_text="Marketing and product design, kept separate"
+        ship_text="Lead-gen discipline built into the product"
       %}
     </section>
 
     <section class="case-section" id="the-system">
       <h2 class="case-section__title">The system</h2>
-      <p>The brand-token theme system from Decision 3 became the backbone for every new agent site: shared structural components and interaction patterns, with each agent's logo, color, and imagery layered on top without touching the underlying UX.</p>
+      <p>The product-design practice from Decision 1 became the shared foundation across IDX Home Search, Page Engage, Home Value Leads, and TurnKey Suite &mdash; the tools that now account for the majority of HomeASAP's revenue &mdash; plus the landing-page system from Decision 2 running the corporate site.</p>
       {% include media-placeholder.html label="System/component overview" tall=true %}
     </section>
 
     <section class="case-section" id="the-ecosystem">
       <h2 class="case-section__title">The ecosystem</h2>
-      <p>HomeASAP wasn&rsquo;t one website, it was a platform generating many: an agent-branded site template used at scale, and the shared IDX search tool underneath all of them.</p>
+      <p>What thirteen years turned into: a suite of product surfaces plus the corporate site that sells them, all under one design practice.</p>
       <div class="grid-items">
         <div class="grid-item">
           <div class="grid-item__media"></div>
-          <p class="grid-item__title">Agent &amp; brokerage sites</p>
-          <p class="grid-item__desc">Original work &mdash; the branded template system generated at scale across the platform's customer base.</p>
+          <p class="grid-item__title">IDX Home Search</p>
+          <p class="grid-item__desc">Core product surface &mdash; part of the suite driving the majority of company revenue.</p>
         </div>
         <div class="grid-item">
           <div class="grid-item__media"></div>
-          <p class="grid-item__title">IDX search component</p>
-          <p class="grid-item__desc">Original work, later reused &mdash; the same compliant search tool reskinned as the basis for Afordal's IDX search.</p>
+          <p class="grid-item__title">Page Engage &amp; Home Value Leads</p>
+          <p class="grid-item__desc">Lead-generation product surfaces, carrying the conversion discipline from Decision 3.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">TurnKey Suite</p>
+          <p class="grid-item__desc">Part of the broader product lineup owned end to end.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Corporate site</p>
+          <p class="grid-item__desc">18 product landing pages (including checkouts) plus 12 supporting pages, run with a 2-person team.</p>
         </div>
       </div>
     </section>
 
     <section class="case-section" id="outcome">
       <h2 class="case-section__title">Outcome</h2>
-      <p>The platform has been running since 2013; my own tenure as Lead Visual Designer ran January 2022 through December 2024. The IDX search component built here went on to a second life as the reskinned foundation for Afordal's own search tool.</p>
+      <p>Thirteen years and counting &mdash; from a Senior Visual Designer hired when the company was small, to the Principal Product Designer owning design across the product suite that drives the majority of its revenue today.</p>
     </section>
 
     <aside class="verify-list">
       <p class="verify-list__title">To verify before this goes live</p>
       <ul>
-        <li>work.yml lists this platform as &ldquo;2013 &ndash; present&rdquo;; this page's case-meta lists Anthony's own tenure as Jan 2022 &ndash; Dec 2024 &mdash; confirm both are correct read together (platform lifespan vs. his personal role window).</li>
-        <li>Agent/site count, and any real adoption or performance numbers worth citing in the Outcome section.</li>
+        <li>The three decisions above are a plausible reconstruction of the real arc on the resume (visual designer &rarr; product-design practice &rarr; suite ownership) &mdash; swap in the actual turning points.</li>
+        <li>What each product (Page Engage, TurnKey Suite specifically) actually does, described precisely rather than inferred from its name.</li>
       </ul>
     </aside>
   </div>
