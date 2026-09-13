@@ -51,6 +51,11 @@
   --font-display: "Big Shoulders Text", "Archivo Narrow", sans-serif;
   --font-body: "Archivo", sans-serif;
   --font-mono: "Space Grotesk", sans-serif;
+  /* Accent serif — mixed-weight pairing (bold condensed sans + italic
+     serif) used sparingly for one word/phrase at a time, the way
+     eszterbial.com pairs a bold grotesk with an italic serif for
+     personality. Not a body or heading workhorse font. */
+  --font-accent: "Fraunces", Georgia, serif;
 
   /* Layout */
   --content-max: 1152px;
@@ -880,6 +885,218 @@ body.menu-open {
   .hero {
     padding: 32px 0 0;
   }
+}
+
+/* ==========================================================================
+   Homepage v2 prototype — badge/seal motif, marquee band, device mockup,
+   corner label, accent-serif word, and the proclamation easter egg.
+   Scoped to the homepage for now (per the "prototype one page first" call)
+   — not yet part of the shared system other pages use.
+   ========================================================================== */
+
+.accent-word {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Vertical corner label, running bottom-to-top along the left edge —
+   an "editorial margin note" device that showed up independently across
+   all three reference sites (63 Visual's rotated section labels,
+   eszterbial.com's "W. / Honors" tab, its own corner masthead). */
+.corner-label {
+  position: fixed;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(254, 245, 234, 0.35);
+  z-index: 5;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .corner-label {
+    display: none;
+  }
+}
+
+/* Rotating circular seal badge — the recurring motif across all three
+   references (Made By James's own circular logomark, eszterbial.com's
+   "VIEW LIVE SITE" spinning stamp, and it echoes Anthony's own Eagle
+   Quality gear-seal rebrand concept). Placeholder center glyph until the
+   real castle/pencil/sword mark exists — also doubles as the easter-egg
+   trigger, see main.js.
+   Structure: <button class="seal-badge"><svg text on a circular path>
+   with a static center glyph layered on top via absolute positioning. */
+.seal-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 128px;
+  height: 128px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dark-forest);
+  border: 1px solid rgba(254, 245, 234, 0.18);
+  cursor: pointer;
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.seal-badge:hover {
+  border-color: var(--emerald);
+  transform: scale(1.04);
+}
+
+.seal-badge:active {
+  transform: scale(0.97);
+}
+
+.seal-badge svg.seal-badge__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--emerald);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .seal-badge__ring {
+    animation: seal-spin 14s linear infinite;
+  }
+
+  @keyframes seal-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.seal-badge__center {
+  position: relative;
+  z-index: 1;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+/* Marquee band — a full-bleed scrolling strip of repeating text, the
+   rhythm device eszterbial.com uses between sections ("contact ❀ contact
+   ❀ co…"). Duplicated content + a 50%-shift keyframe is the standard
+   seamless-loop trick: track is twice the visible content, animating
+   exactly half its own width loops with no visible seam. */
+.marquee-band {
+  overflow: hidden;
+  background: var(--emerald);
+  padding: 14px 0;
+  white-space: nowrap;
+}
+
+.marquee-band__track {
+  display: inline-flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .marquee-band__track {
+    animation: marquee-scroll 22s linear infinite;
+  }
+
+  @keyframes marquee-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.marquee-band__item {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  padding: 0 24px;
+  flex: none;
+}
+
+/* Device mockup — stages a real screenshot inside a simple laptop bezel
+   instead of a bare crop, the way eszterbial.com and 63 Visual both
+   present client work. Pure CSS, no image asset. */
+.device-mockup {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.device-mockup__screen {
+  border: 10px solid #1b1b1b;
+  border-bottom-width: 18px;
+  border-radius: 10px 10px 4px 4px;
+  background: #1b1b1b;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.5);
+}
+
+.device-mockup__screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.device-mockup__base {
+  height: 12px;
+  margin: 0 -6px;
+  background: linear-gradient(180deg, #2a2a2a, #151515);
+  border-radius: 0 0 8px 8px;
+}
+
+.device-mockup__base::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  margin: 0 auto;
+  background: #0a0a0a;
+  border-radius: 0 0 4px 4px;
+}
+
+/* Easter egg: clicking the seal badge a few times raises this banner.
+   Themed to the castle/sword brand direction; swap the copy once the
+   real brand voice/assets exist. */
+.proclamation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 22px 24px;
+  background: var(--emerald);
+  color: var(--black);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-align: center;
+  transform: translateY(-100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proclamation.is-shown {
+  transform: translateY(0);
+}
+
+html[data-motion="off"] .proclamation,
+html.no-anim .proclamation {
+  transition-duration: 0.01ms;
 }
 
 /* Reusable background-image treatment: add alongside any section's own

@@ -373,6 +373,80 @@
     setPos();
   });
 
+  // Seal badge: draws the rotating circular text on an SVG path, then
+  // doubles as an easter-egg trigger. Text-on-path is generated here
+  // rather than hardcoded in the HTML so the copy only lives in one place
+  // and the radius always matches the badge's actual rendered size.
+  // Placeholder copy/glyph until the real castle/pencil/sword mark lands —
+  // swap SEAL_TEXT and the center glyph then, nothing else should need to
+  // change.
+  var SEAL_TEXT = "PRINCIPAL PRODUCT DESIGNER ✦ SHIPS THE VAGUE STUFF ✦ ";
+  document.querySelectorAll(".seal-badge").forEach(function (badge, badgeIndex) {
+    var size = 128;
+    var r = size / 2 - 14;
+    var cx = size / 2;
+    var cy = size / 2;
+    var pathId = "seal-ring-path-" + badgeIndex;
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("class", "seal-badge__ring");
+    svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+    svg.setAttribute("aria-hidden", "true");
+
+    var defs = document.createElementNS(svgNS, "defs");
+    var path = document.createElementNS(svgNS, "path");
+    path.setAttribute("id", pathId);
+    // Full circle drawn as two arcs — a single 360deg arc command is
+    // degenerate (start === end) and most renderers just drop it.
+    path.setAttribute(
+      "d",
+      "M " + cx + "," + (cy - r) +
+        " A " + r + "," + r + " 0 1 1 " + cx + "," + (cy + r) +
+        " A " + r + "," + r + " 0 1 1 " + cx + "," + (cy - r)
+    );
+    defs.appendChild(path);
+    svg.appendChild(defs);
+
+    var text = document.createElementNS(svgNS, "text");
+    text.setAttribute("font-size", "8.6");
+    text.setAttribute("font-family", "var(--font-mono)");
+    text.setAttribute("font-weight", "600");
+    text.setAttribute("letter-spacing", "0.5");
+    var textPath = document.createElementNS(svgNS, "textPath");
+    textPath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + pathId);
+    textPath.setAttribute("href", "#" + pathId);
+    textPath.textContent = SEAL_TEXT.repeat(3);
+    text.appendChild(textPath);
+    svg.appendChild(text);
+
+    badge.insertBefore(svg, badge.firstChild);
+
+    // Easter egg: a few clicks on the seal raises the proclamation banner.
+    // Gated at 3 clicks so a single curious tap doesn't immediately spam a
+    // full-width banner over the page.
+    var proclamation = document.querySelector("[data-proclamation]");
+    if (!proclamation) return;
+    var clickCount = 0;
+    var hideTimer = null;
+    badge.addEventListener("click", function () {
+      clickCount += 1;
+      if (clickCount < 3) return;
+      clickCount = 0;
+      proclamation.classList.add("is-shown");
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () {
+        proclamation.classList.remove("is-shown");
+      }, 4000);
+    });
+  });
+
+  document.querySelectorAll("[data-proclamation-close]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var proclamation = btn.closest("[data-proclamation]");
+      if (proclamation) proclamation.classList.remove("is-shown");
+    });
+  });
+
   // Motion: page crossfade, scroll-reveal, and background parallax.
   // Everything here is skipped for reduced-motion users — root.classList
   // only carries "js-anim" when the head script already found no
