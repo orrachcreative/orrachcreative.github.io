@@ -1154,12 +1154,83 @@ html.no-anim .proclamation {
   );
 }
 
+/* No light-mode override here, unlike main.home-bg below: every
+   .bg-image-section instance (the About hero-shell, which wraps both
+   the hero heading and the bio paragraph beneath it) pairs this dark
+   scrim with text that's hardcoded to var(--parchment) — not a
+   theme-aware ink token — specifically because it's designed to always
+   read against this same dark photo, independent of site theme. That
+   combination already works in both themes; the actual bug this was
+   chasing lives in main.home-bg below, where the home page's
+   background photo has ordinary theme-aware text sitting on it with
+   no scrim protecting it at all. */
 .home-hero-shell::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background: none;
+}
+
+/* In light mode, main.home-bg::before (below) washes the whole page's
+   photo ivory to protect the theme-aware text sitting on it further
+   down the page — but this hero's own headline/proof-strip text is
+   hardcoded to var(--parchment) (permanently light, see .hero-shell
+   .hero__title etc.), same reasoning as the About hero-shell above.
+   Left at "none" it would inherit that ivory wash from main and its
+   permanently-light text would vanish into it. Reinstating the same
+   dark gradient .bg-image-section normally uses — only here, only in
+   light mode — keeps this one region dark regardless of site theme,
+   matching what it already looks like today in dark mode. */
+[data-theme="light"] .home-hero-shell::before {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 17, 14, var(--scrim-top, 0.55)) 0%,
+    rgba(20, 17, 14, var(--scrim-bottom, 0.8)) 100%
+  );
+}
+
+/* The home page's background photo is set directly on <main> (it spans
+   the whole page, not just the hero), so it never went through
+   .bg-image-section's scrim at all — dark mode happened to still read
+   fine without one, but light mode had no protection against the same
+   dark-photo/dark-text collision described above. Dark mode is left
+   alone here (no scrim change, matching what's already shipped); only
+   light mode gets the ivory wash. */
+/* An inset box-shadow rather than the ::before + z-index:-1 scrim used
+   by .bg-image-section: an inset shadow paints above the element's own
+   background image but below its content, with no stacking context
+   involved. The pseudo-element version needs `isolation: isolate` on
+   the parent to render at all — and isolating <main> traps the
+   .proclamation banner (z-index: 90) inside it, so it can no longer
+   paint over the header (z-index: 30) that sits outside <main>. */
+[data-theme="light"] main.home-bg {
+  box-shadow: inset 0 0 0 100vmax rgba(255, 250, 243, 0.88);
+}
+
+/* Both photo hero-shells stay dark in either theme (see the two scrim
+   rules above), so in light mode their contents need the dark palette
+   rather than the page's. Re-pointing the tokens here covers every
+   descendant at once — otherwise each one needs its own hardcoded
+   var(--parchment), which is what .about-hero .display-1 already does
+   and .display-2 next to it doesn't, leaving "Solo. Senior. Shipped."
+   nearly black on a dark photo. */
+[data-theme="light"] .home-hero-shell,
+[data-theme="light"] .about-hero-shell {
+  --ink: var(--ivory);
+  --ink-strong: var(--parchment);
+  --ink-soft: #e6dfd3;
+  --ink-faint: #94897a;
+  --accent: var(--emerald);
+  --accent-label: var(--emerald);
+  --line: rgba(254, 245, 234, 0.1);
+  --line-strong: rgba(254, 245, 234, 0.25);
+  /* Re-resolve `color` here too: body's own `color: var(--ink)` was
+     already computed against the page palette, and inherits down as a
+     finished color rather than a live token reference — so re-pointing
+     --ink alone leaves anything that merely inherits (the .display-2
+     next to .display-1's explicit parchment, for one) still dark. */
+  color: var(--ink);
 }
 
 .about-hero .eyebrow {

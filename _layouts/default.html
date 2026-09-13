@@ -67,7 +67,10 @@
 
   {% include nav.html %}
 
-  <main id="main-content" tabindex="-1"{% if page.gallery %} class="has-gallery"{% endif %}{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
+  {%- assign main_classes = "" | split: "" -%}
+  {%- if page.gallery -%}{%- assign main_classes = main_classes | push: "has-gallery" -%}{%- endif -%}
+  {%- if page.nav == 'home' -%}{%- assign main_classes = main_classes | push: "home-bg" -%}{%- endif -%}
+  <main id="main-content" tabindex="-1"{% if main_classes.size > 0 %} class="{{ main_classes | join: ' ' }}"{% endif %}{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
     {{ content }}
   </main>
 
