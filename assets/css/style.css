@@ -1367,12 +1367,17 @@ a.work-card:hover .view-link__label {
   display: flex;
   flex-direction: column;
   padding: 28px;
-  opacity: 0.85;
-  transition: opacity var(--motion-fast) ease;
+  /* A dark veil on the body's own background-color rather than opacity
+     on the element: opacity fades the title/desc text along with the
+     panel. background-color always paints behind an element's own
+     content, so this dims just the panel while the text (set via its
+     own `color`) stays fully legible. */
+  background-color: rgba(0, 0, 0, 0.15);
+  transition: background-color var(--motion-fast) ease;
 }
 
 a.work-card:hover .work-card__body {
-  opacity: 0.95;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .work-card--horizontal .work-card__body {
