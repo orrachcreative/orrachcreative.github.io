@@ -468,43 +468,6 @@ a.work-card--horizontal:focus-visible {
   background: var(--gold);
 }
 
-/* Moved out of the header per feedback — now a persistent corner control
-   rather than one more icon in the header row. Sized up from the header's
-   24px chip since it's standing alone rather than packed next to two
-   other icons. */
-.theme-toggle--floating {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 40;
-  width: 44px;
-  height: 44px;
-  padding: 10px;
-  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.4);
-}
-
-.theme-toggle--floating svg {
-  width: 22px;
-  height: 22px;
-}
-
-@media (max-width: 640px) {
-  .theme-toggle--floating {
-    right: 16px;
-    bottom: 16px;
-  }
-}
-
-/* The open full-screen menu is itself a fixed, full-viewport panel — the
-   floating toggle sits above it in z-index, so without this it would
-   visibly poke through the menu in the bottom-right corner. main.js
-   already makes it inert (untabbable) while the menu is open; this is
-   the matching visual state. */
-body.menu-open .theme-toggle--floating {
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* Explicit in-page motion control, independent of the OS-level
    prefers-reduced-motion setting (see the design audit / field research on
    why a heavily-animated site shouldn't rely on the media query alone). */
@@ -787,9 +750,18 @@ body.menu-open .theme-toggle--floating {
     text-align: left;
   }
 
+  /* Match the main site footer's left-to-right order (copyright block,
+     then social) — this section's markup keeps social first for a
+     sensible reading order, so the swap happens here via `order` rather
+     than in the DOM. */
   .site-menu__meta {
-    align-items: flex-end;
-    text-align: right;
+    order: 1;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .site-menu__social {
+    order: 2;
   }
 }
 
@@ -1605,7 +1577,7 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .site-footer {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 24px;
@@ -1615,11 +1587,39 @@ a.work-card--horizontal:hover .work-card__cta {
   text-align: center;
 }
 
+/* Mobile stacking order, independent of source order (kept as
+   toggle/meta/social in the markup for a sensible reading/tab order):
+   social on top, then the copyright block, then the theme toggle at the
+   bottom. Scoped to the mobile breakpoint only — the desktop grid below
+   relies on plain source order for its left-to-right placement, and
+   `order` would override that the same way it does here. */
+@media (max-width: 900px) {
+  .site-footer__social {
+    order: 1;
+  }
+
+  .site-footer__meta {
+    order: 2;
+  }
+
+  .site-footer__theme-toggle {
+    order: 3;
+  }
+}
+
 .site-footer__meta {
   display: flex;
   flex-direction: column;
   gap: 2px;
   align-items: center;
+}
+
+.site-footer__theme-toggle {
+  /* Base .theme-toggle is a 24px chip sized for the header; the footer's
+     own icons (.site-footer__social) run 24px too, so this matches them
+     rather than reusing the header's sizing by coincidence. */
+  width: 24px;
+  height: 24px;
 }
 
 .site-footer__copy {
@@ -1659,14 +1659,25 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 @media (min-width: 901px) {
+  /* A 3-column grid instead of flex row + space-between: the toggle and
+     social block naturally differ in width, so space-between alone can't
+     put the copyright block in the true center between them — the grid's
+     center column can, regardless of how wide its neighbors are. Source
+     order already matches left-to-right (toggle, meta, social), so no
+     `order` overrides are needed here (those above are mobile-only). */
   .site-footer {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    text-align: center;
   }
 
-  .site-footer__meta {
-    align-items: flex-start;
+  .site-footer__theme-toggle {
+    justify-self: start;
+  }
+
+  .site-footer__social {
+    justify-self: end;
   }
 }
 

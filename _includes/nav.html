@@ -16,10 +16,6 @@
   </div>
 </header>
 
-<button class="theme-toggle theme-toggle--floating" data-theme-toggle type="button" aria-pressed="false" aria-label="Switch to light theme">
-  <span data-theme-icon>{% include icon.html name="moon" %}</span>
-</button>
-
 <div class="site-menu" id="site-menu" data-site-menu inert>
   <nav class="site-menu__nav" aria-label="Full site menu">
     <a href="{{ '/' | relative_url }}" class="site-menu__link{% if page.nav == 'home' %} is-active{% endif %}">
