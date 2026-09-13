@@ -625,5 +625,27 @@
       });
     });
 
+    // Card tilt: work-cards rotate toward wherever the cursor sits over
+    // them, on top of the CSS-driven lift/glow that :hover already adds.
+    // The card's own --tilt-x/--tilt-y custom properties (declared in
+    // style.css) drive the rotation; this just keeps them in sync with
+    // the pointer. --tilt-lift stays a plain CSS :hover value, not JS —
+    // it doesn't depend on cursor position.
+    var tiltMax = 6; // degrees, at the card's edge
+    document.querySelectorAll(".work-card").forEach(function (el) {
+      el.addEventListener("mousemove", function (e) {
+        if (isMotionOff()) return;
+        var rect = el.getBoundingClientRect();
+        var px = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+        var py = (e.clientY - rect.top) / rect.height - 0.5; // -0.5..0.5
+        el.style.setProperty("--tilt-y", (px * 2 * tiltMax).toFixed(2) + "deg");
+        el.style.setProperty("--tilt-x", (py * -2 * tiltMax).toFixed(2) + "deg");
+      });
+      el.addEventListener("mouseleave", function () {
+        el.style.setProperty("--tilt-x", "0deg");
+        el.style.setProperty("--tilt-y", "0deg");
+      });
+    });
+
   }
 })();

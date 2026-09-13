@@ -35,6 +35,10 @@
   --accent: var(--emerald);
   --accent-2: var(--emerald-2);
   --accent-label: var(--emerald);
+  /* RGB triplet of --accent, for building translucent glows/borders that
+     can't be made from the solid hex token alone (rgba()/color-mix() both
+     need this in a component that has to work in both themes). */
+  --accent-rgb: 92, 206, 89;
   --line: rgba(254, 245, 234, 0.1);
   --line-strong: rgba(254, 245, 234, 0.25);
   --placeholder-bg: var(--ivory);
@@ -83,6 +87,7 @@
   --accent: var(--emerald-2);
   --accent-2: var(--emerald);
   --accent-label: var(--bronze);
+  --accent-rgb: 58, 114, 56;
   --line: rgba(101, 101, 115, 0.1);
   --line-strong: rgba(101, 101, 115, 0.25);
   --placeholder-bg: #efe8da;
@@ -1213,19 +1218,32 @@ html.no-anim .proclamation {
   border-radius: var(--radius);
   flex: 1;
   min-width: 0;
+  /* Cursor tilt: --tilt-x/--tilt-y are set from JS on mousemove (how far
+     the cursor sits from the card's center), --tilt-lift only changes via
+     the :hover rule below. Defaults keep the card flat/untilted whenever
+     JS hasn't touched it (no-JS, or motion off) or the cursor isn't over
+     it. */
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --tilt-lift: 0px;
+  transform: perspective(900px) translateY(var(--tilt-lift)) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
 }
 
 a.work-card {
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+  transition: border-color var(--motion-fast) ease, transform var(--motion-fast) ease,
+    background-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
 }
 
 a.work-card:hover {
-  border-color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.45);
   background: var(--bg-raised);
-  transform: translateY(-10px) perspective(600px) rotateX(1.5deg);
-  box-shadow: 0 4px 32px -8px var(--accent);
+  --tilt-lift: -10px;
+  /* A soft ambient glow instead of the previous solid-color outline/hard
+     shadow — two translucent layers (a wide soft one, a tighter one close
+     to the edge) read as a glow rather than a drop shadow. */
+  box-shadow: 0 20px 48px -16px rgba(var(--accent-rgb), 0.3), 0 0 32px -6px rgba(var(--accent-rgb), 0.25);
 }
 
 a.work-card:hover .view-link__label {
