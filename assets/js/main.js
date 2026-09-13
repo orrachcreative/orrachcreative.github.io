@@ -380,7 +380,7 @@
   // Placeholder copy/glyph until the real castle/pencil/sword mark lands —
   // swap SEAL_TEXT and the center glyph then, nothing else should need to
   // change.
-  var SEAL_TEXT = "PRINCIPAL PRODUCT DESIGNER ✦ SHIPS THE VAGUE STUFF ✦ ";
+  var SEAL_TEXT = "PRINCIPAL PRODUCT DESIGNER ✦ JACKSONVILLE, FL ✦ ";
   document.querySelectorAll(".seal-badge").forEach(function (badge, badgeIndex) {
     var size = 128;
     var r = size / 2 - 14;
