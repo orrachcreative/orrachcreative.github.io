@@ -625,12 +625,20 @@
       });
     });
 
-    // Card tilt: work-cards rotate toward wherever the cursor sits over
-    // them, on top of the CSS-driven lift/glow that :hover already adds.
-    // The card's own --tilt-x/--tilt-y custom properties (declared in
-    // style.css) drive the rotation; this just keeps them in sync with
-    // the pointer. --tilt-lift stays a plain CSS :hover value, not JS —
-    // it doesn't depend on cursor position.
+    // Card tilt: every .work-card on the site (home Work strip, /work/,
+    // the Craft grid, About's offer tiles) leans toward wherever the
+    // cursor sits over it, like the corner nearest the pointer is being
+    // pulled up to meet it. On top of the CSS-driven lift/glow that
+    // :hover already adds. The card's own --tilt-x/--tilt-y custom
+    // properties (declared in style.css) drive the rotation; this just
+    // keeps them in sync with the pointer. --tilt-lift stays a plain CSS
+    // :hover value, not JS — it doesn't depend on cursor position.
+    //
+    // Signs: a positive rotateX pushes the top edge away from the viewer
+    // and a positive rotateY pushes the right edge away, so leaning
+    // *toward* the cursor means negating both — cursor above center
+    // (py < 0) has to produce a negative rotateX to bring the top edge
+    // forward, and cursor right of center (px > 0) a negative rotateY.
     var tiltMax = 6; // degrees, at the card's edge
     document.querySelectorAll(".work-card").forEach(function (el) {
       el.addEventListener("mousemove", function (e) {
@@ -638,8 +646,8 @@
         var rect = el.getBoundingClientRect();
         var px = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
         var py = (e.clientY - rect.top) / rect.height - 0.5; // -0.5..0.5
-        el.style.setProperty("--tilt-y", (px * 2 * tiltMax).toFixed(2) + "deg");
-        el.style.setProperty("--tilt-x", (py * -2 * tiltMax).toFixed(2) + "deg");
+        el.style.setProperty("--tilt-y", (px * -2 * tiltMax).toFixed(2) + "deg");
+        el.style.setProperty("--tilt-x", (py * 2 * tiltMax).toFixed(2) + "deg");
       });
       el.addEventListener("mouseleave", function () {
         el.style.setProperty("--tilt-x", "0deg");
