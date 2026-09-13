@@ -978,7 +978,12 @@ body.menu-open {
 
 .work-card {
   display: flex;
-  background: #1e221e;
+  /* Was a hardcoded #1e221e regardless of theme — meant the light/dark
+     toggle visibly changed almost nothing on /work/, /projects/, or About
+     (flagged in review as "toggle looks broken here"). --bg-card is the
+     token this component should have used from the start: the same one
+     .next-project already uses correctly. */
+  background: var(--bg-card);
   border-radius: var(--radius);
   flex: 1;
   min-width: 0;
@@ -991,14 +996,14 @@ a.work-card {
 }
 
 a.work-card:hover {
-  border-color: rgba(92, 206, 89, 0.5);
-  background: #2f322d;
-  transform: translateY(-10px);
-  box-shadow: 0 4px 32px -8px #5cce59;
+  border-color: var(--accent);
+  background: var(--bg-raised);
+  transform: translateY(-10px) perspective(600px) rotateX(1.5deg);
+  box-shadow: 0 4px 32px -8px var(--accent);
 }
 
 a.work-card:hover .view-link__label {
-  color: #5cce59;
+  color: var(--accent);
 }
 
 .work-card--horizontal {
@@ -1011,7 +1016,10 @@ a.work-card:hover .view-link__label {
 
 .work-card--vertical {
   flex-direction: column;
-  border: 2px solid rgba(245, 236, 222, 0.1);
+  border: 2px solid var(--line);
+  /* box-shadow specifically: a.work-card (higher specificity) already
+     transitions border-color/background-color/transform. */
+  transition: box-shadow var(--motion-fast) ease;
 }
 
 @media (max-width: 900px) {
@@ -1150,7 +1158,7 @@ a.work-card:hover .view-link__label {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 2.25rem;
-  color: #fffaf3;
+  color: var(--ink-strong);
   text-transform: capitalize;
 }
 
@@ -1158,7 +1166,7 @@ a.work-card:hover .view-link__label {
   font-family: var(--font-body);
   font-size: 0.875rem;
   letter-spacing: 0.25px;
-  color: #f5ecde;
+  color: var(--ink-soft);
 }
 
 .view-link {
@@ -1174,7 +1182,8 @@ a.work-card:hover .view-link__label {
   font-size: 0.875rem;
   letter-spacing: 0.75px;
   text-transform: uppercase;
-  color: #f5ecde;
+  color: var(--ink-soft);
+  transition: color var(--motion-fast) ease;
 }
 
 .view-link__bar {
@@ -1202,13 +1211,13 @@ a.work-card:hover .view-link__label {
   font-size: 1rem;
   letter-spacing: 0.75px;
   text-transform: capitalize;
-  color: #f5ecde;
+  color: var(--ink-strong);
 }
 
 .work-card__cta svg {
   width: 20px;
   height: 20px;
-  color: #f5ecde;
+  color: var(--ink-strong);
 }
 
 a.work-card--horizontal:hover .work-card__cta {
@@ -1369,6 +1378,48 @@ a.work-card--horizontal:hover .work-card__cta {
 .draft-note {
   color: var(--draft-ink);
   font-weight: 600;
+}
+
+/* Fact-check items pulled OUT of the narrative prose (an earlier pass had
+   these embedded mid-sentence via .draft-note, which read as "the numbers
+   on this page are made up" right inside the Outcome section — see
+   design-critic review). Grouped instead as one clearly-internal note at
+   the end of the case content. */
+.verify-list {
+  margin: 8px 0 44px;
+  padding: 16px 20px;
+  background: rgba(231, 198, 66, 0.08);
+  border: 1px dashed rgba(231, 198, 66, 0.4);
+  border-radius: 8px;
+}
+
+.verify-list__title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--draft-ink);
+  margin-bottom: 8px;
+}
+
+.verify-list ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.verify-list li {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  padding-left: 16px;
+  position: relative;
+}
+
+.verify-list li::before {
+  content: "\2022";
+  position: absolute;
+  left: 0;
+  color: var(--draft-ink);
 }
 
 .case-hero {
@@ -1647,14 +1698,17 @@ a.work-card--horizontal:hover .work-card__cta {
   flex-direction: column;
   gap: 20px;
   padding: 24px;
-  background: #1e221e;
-  border: 1px solid rgba(255, 250, 243, 0.1);
+  /* Same fix as .work-card: was hardcoded dark regardless of theme. */
+  background: var(--bg-card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   width: 100%;
 }
 
 .decision-block .eyebrow {
-  color: var(--gold);
+  /* Was var(--gold) directly — fails contrast on this card's light-mode
+     background (~1.6:1). --accent-label is already tuned per-theme. */
+  color: var(--accent-label);
 }
 
 .decision-block__title {
@@ -1662,15 +1716,15 @@ a.work-card--horizontal:hover .work-card__cta {
   font-weight: 600;
   font-size: 1.875rem;
   letter-spacing: 0.6px;
-  color: var(--parchment);
+  color: var(--ink-strong);
 }
 
 .decision-block__grid {
   display: flex;
   gap: 16px;
   padding: 16px 0;
-  border-top: 1px solid rgba(255, 250, 243, 0.3);
-  border-bottom: 1px solid rgba(255, 250, 243, 0.3);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
 }
 
 @media (max-width: 640px) {
@@ -1689,7 +1743,7 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .decision-block__col p,
 .decision-block > p {
-  color: #e6dfd3;
+  color: var(--ink-soft);
 }
 
 /* ==========================================================================
