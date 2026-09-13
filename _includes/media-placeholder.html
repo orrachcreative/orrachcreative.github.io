@@ -14,5 +14,6 @@
   {%- assign swatch = include.label | size | modulo: 5 | plus: 1 -%}
 {%- endif -%}
 <div class="work-card__media work-card__media--placeholder{% if include.tall %} work-card__media--tall{% endif %}" data-swatch="{{ swatch }}">
+  <span class="work-card__media-icon">{% include icon.html name="image-pending" %}</span>
   <span class="work-card__media-tag">{{ include.label }}</span>
 </div>

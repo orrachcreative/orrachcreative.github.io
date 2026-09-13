@@ -1115,6 +1115,24 @@ a.work-card:hover .view-link__label {
   min-height: 360px;
 }
 
+.work-card__media-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(254, 245, 234, 0.18);
+  z-index: 0;
+}
+
+.work-card__media-icon svg {
+  width: 56px;
+  height: 56px;
+}
+
+[data-theme="light"] .work-card__media-icon {
+  color: rgba(31, 28, 22, 0.12);
+}
+
 .work-card__media-tag {
   position: relative;
   z-index: 1;

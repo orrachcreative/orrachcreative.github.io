@@ -18,6 +18,7 @@
   </div>
   {%- else %}
   <div class="work-card__media work-card__media--placeholder" data-swatch="{{ include.item.title | size | modulo: 5 | plus: 1 }}">
+    <span class="work-card__media-icon">{% include icon.html name="image-pending" %}</span>
     <span class="work-card__media-tag">Screenshot pending</span>
   </div>
   {%- endif %}
