@@ -194,10 +194,19 @@ input:focus-visible,
 .menu-toggle:focus-visible,
 .theme-toggle:focus-visible,
 .motion-toggle:focus-visible,
-a.work-card:focus-visible,
-.compare-slider:focus-visible {
+a.work-card:focus-visible {
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--focus-ring-offset);
+}
+
+/* .work-card--horizontal clips its own box with overflow:hidden (needed
+   for the media panel's rounded/flush edges), which also clips the
+   offset halo above — verified via keyboard testing, only a thin ring
+   flush with the edge was rendering. Inset ring instead, which can't be
+   clipped by the element's own overflow regardless of ancestor stacking. */
+a.work-card--horizontal:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--focus-ring);
 }
 
 .skip-link {

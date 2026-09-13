@@ -10,6 +10,11 @@
     var isLight = root.getAttribute("data-theme") === "light";
     document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
       btn.setAttribute("aria-pressed", String(isLight));
+      // Was a static "Toggle light and dark theme" label — aria-pressed
+      // changed but nothing told a screen-reader user which state that
+      // referred to. Name the action that pressing it will take next,
+      // same pattern the motion toggle already uses correctly.
+      btn.setAttribute("aria-label", isLight ? "Switch to dark theme" : "Switch to light theme");
       var icon = btn.querySelector("[data-theme-icon]");
       if (icon) icon.innerHTML = isLight ? SUN_SVG : MOON_SVG;
     });
@@ -88,6 +93,16 @@
 
   if (menuToggle && menuIcon && menu && header) {
     var isMenuOpen = false;
+    var mainEl2 = document.querySelector("main");
+    var footerEl = document.querySelector(".site-footer");
+    // Deliberately just these two, not their parent .site-header__actions
+    // — the menu's own close button (menuToggle) lives in that same
+    // container, and inert-ing the parent would make the close button
+    // itself keyboard-unreachable while the menu it closes is open.
+    var inertOnMenuOpen = [
+      document.querySelector("[data-motion-toggle]"),
+      document.querySelector("[data-theme-toggle]"),
+    ].filter(Boolean);
 
     var openMenu = function () {
       isMenuOpen = true;
@@ -104,6 +119,18 @@
       menuIcon.innerHTML = MENU_CLOSE_INNER;
       if (backdrop) backdrop.classList.add("is-open");
       document.body.classList.add("menu-open");
+      // The overlay covers <main>/<footer> visually (via transform + the
+      // header/backdrop's stacking), but neither was ever actually taken
+      // out of the tab order — a keyboard user tabbing through the open
+      // menu's links continued straight into homepage content sitting
+      // invisibly underneath it. Theme/motion toggles were the same: CSS
+      // already hides them (opacity:0; pointer-events:none) while the
+      // menu is open, but that alone doesn't stop Tab from reaching them.
+      if (mainEl2) mainEl2.setAttribute("inert", "");
+      if (footerEl) footerEl.setAttribute("inert", "");
+      inertOnMenuOpen.forEach(function (el) {
+        el.setAttribute("inert", "");
+      });
     };
 
     var closeMenu = function () {
@@ -117,6 +144,11 @@
       menuIcon.innerHTML = MENU_OPEN_INNER;
       if (backdrop) backdrop.classList.remove("is-open");
       document.body.classList.remove("menu-open");
+      if (mainEl2) mainEl2.removeAttribute("inert");
+      if (footerEl) footerEl.removeAttribute("inert");
+      inertOnMenuOpen.forEach(function (el) {
+        el.removeAttribute("inert");
+      });
     };
 
     menuToggle.addEventListener("click", function () {
