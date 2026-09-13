@@ -2105,6 +2105,53 @@ a.work-card--horizontal:hover .work-card__cta {
   padding-bottom: 4px;
 }
 
+/* Real project screenshots (unlike .logo-grid's square logo tiles) —
+   full-width, natural aspect ratio, no forced cropping. */
+.shot-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.shot-stack__item {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+.shot-stack__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.shot-stack__item figcaption {
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.4px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+}
+
+.shot-stack--mobile {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.shot-stack__item--phone {
+  flex: none;
+  width: 280px;
+}
+
+@media (max-width: 640px) {
+  .shot-stack__item--phone {
+    width: 100%;
+  }
+}
+
 .logo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

@@ -12,13 +12,49 @@ gallery: true
       <a href="{{ '/projects/task-yeti/' | relative_url }}">Next project {% include icon.html name="arrow-right" %}</a>
     </div>
     <h1 class="display-2 hero__title">Eagle Quality</h1>
-    <p class="body-lg hero__subtitle">A brand identity concept for a home-inspection service &mdash; sharp and trustworthy at a glance, built to stand out in a category full of clip-art house logos.</p>
+    <p class="body-lg hero__subtitle">A full website for Eagle Quality Components, a family-owned CNC precision machining shop &mdash; industrial photography, bold condensed type, and a dark, no-nonsense feel that matches a shop floor rather than a generic corporate template.</p>
   </section>
-  <p class="draft-flag">DRAFT &mdash; gallery below is placeholder framing until the real frames are exported from Figma.</p>
-  <div class="logo-grid">
-    {% include media-placeholder.html label="Wordmark & lockup" swatch=2 %}
-    {% include media-placeholder.html label="Color & type system" swatch=4 %}
-    {% include media-placeholder.html label="Applied to the website" swatch=1 %}
+
+  <div class="case-meta" style="margin-bottom: 40px;">
+    <div class="case-meta__item">
+      <p class="meta-label">Client</p>
+      <p class="case-meta__value">Eagle Quality Components</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Type</p>
+      <p class="case-meta__value">Manufacturing &bull; Website</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Pages</p>
+      <p class="case-meta__value">Home, Services, Equipment, Quality Control, Gallery, About</p>
+    </div>
+  </div>
+
+  <div class="shot-stack">
+    <figure class="shot-stack__item">
+      <img src="{{ '/assets/images/projects/eagle-quality/home-desktop.webp' | relative_url }}" alt="Eagle Quality Components homepage: dark hero with CNC machining photography and a Quality Assurance headline" loading="lazy">
+      <figcaption>Home</figcaption>
+    </figure>
+    <figure class="shot-stack__item">
+      <img src="{{ '/assets/images/projects/eagle-quality/equipment-desktop.webp' | relative_url }}" alt="Equipment page showing a Haas CNC machine in the shop, with a CNC Machines gallery below" loading="lazy">
+      <figcaption>Equipment</figcaption>
+    </figure>
+    <figure class="shot-stack__item">
+      <img src="{{ '/assets/images/projects/eagle-quality/about-desktop.webp' | relative_url }}" alt="About Us page with shop-floor photography and a Why We Are The Best section" loading="lazy">
+      <figcaption>About</figcaption>
+    </figure>
+  </div>
+
+  <p class="eyebrow" style="margin: 32px 0 16px;">Responsive</p>
+  <div class="shot-stack shot-stack--mobile">
+    <figure class="shot-stack__item shot-stack__item--phone">
+      <img src="{{ '/assets/images/projects/eagle-quality/home-mobile.png' | relative_url }}" alt="Eagle Quality Components homepage on mobile" loading="lazy">
+      <figcaption>Home &mdash; mobile</figcaption>
+    </figure>
+    <figure class="shot-stack__item shot-stack__item--phone">
+      <img src="{{ '/assets/images/projects/eagle-quality/about-mobile.png' | relative_url }}" alt="Eagle Quality Components about page on mobile, Family Owned & Operated section" loading="lazy">
+      <figcaption>About &mdash; mobile</figcaption>
+    </figure>
   </div>
 </div>
 
