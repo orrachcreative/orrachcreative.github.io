@@ -28,6 +28,10 @@
   --bg: var(--black);
   --bg-raised: rgba(245, 236, 222, 0.08);
   --bg-card: var(--dark-forest);
+  /* RGB triplet of --bg-card, for the work-card body panel, which needs
+     a real alpha so the page's background photo reads through it. Same
+     reason --accent-rgb exists: rgba() can't take the hex token. */
+  --bg-card-rgb: 30, 34, 30;
   --ink: var(--ivory);
   --ink-strong: var(--parchment);
   --ink-soft: #e6dfd3;
@@ -80,6 +84,11 @@
   --bg: var(--parchment);
   --bg-raised: rgba(31, 28, 22, 0.08);
   --bg-card: rgba(31, 28, 22, 0.05);
+  /* Parchment rather than the faint dark tint --bg-card uses here: at
+     85% this is an actual light panel sitting over the ivory-washed
+     photo, where 85% of a 5% dark tint would be indistinguishable from
+     the background behind it. */
+  --bg-card-rgb: 255, 250, 243;
   --ink: #1e1e1e;
   --ink-strong: #000000;
   --ink-soft: #1f1c16;
@@ -1319,12 +1328,12 @@ html.no-anim .proclamation {
 
 .work-card {
   display: flex;
-  /* Was a hardcoded #1e221e regardless of theme — meant the light/dark
-     toggle visibly changed almost nothing on /work/, /projects/, or About
-     (flagged in review as "toggle looks broken here"). --bg-card is the
-     token this component should have used from the start: the same one
-     .next-project already uses correctly. */
-  background: var(--bg-card);
+  /* Transparent, not --bg-card: the body panel below carries the card's
+     fill at a real alpha so the page's background photo reads through
+     it. An opaque fill here would sit behind that panel and cancel the
+     alpha out. The media half doesn't need this one — it's always
+     covered by either a screenshot or the placeholder's own gradient. */
+  background: transparent;
   border-radius: var(--radius);
   flex: 1;
   min-width: 0;
@@ -1348,7 +1357,11 @@ a.work-card {
 
 a.work-card:hover {
   border-color: rgba(var(--accent-rgb), 0.45);
-  background: var(--bg-raised);
+  /* No background swap here: --bg-raised is itself translucent, so
+     swapping to it on hover washed the whole card out and let the photo
+     through — the opposite of the body panel firming up from 85% to 95%
+     below. Hover feedback is that panel, the lift, the glow and the
+     border. */
   --tilt-lift: -10px;
   /* A soft ambient glow instead of the previous solid-color outline/hard
      shadow — two translucent layers (a wide soft one, a tighter one close
@@ -1495,17 +1508,18 @@ a.work-card:hover .view-link__label {
   display: flex;
   flex-direction: column;
   padding: 28px;
-  /* A dark veil on the body's own background-color rather than opacity
-     on the element: opacity fades the title/desc text along with the
-     panel. background-color always paints behind an element's own
-     content, so this dims just the panel while the text (set via its
-     own `color`) stays fully legible. */
-  background-color: rgba(0, 0, 0, 0.15);
+  /* The card's fill lives here, at 85% so the background photo reads
+     through it, going to 95% on hover (below) so the panel firms up
+     under the cursor. Alpha on background-color rather than `opacity`
+     on the element: opacity would fade the title and description along
+     with the panel, where a background-color always paints behind an
+     element's own content and leaves the text at full strength. */
+  background-color: rgba(var(--bg-card-rgb), 0.85);
   transition: background-color var(--motion-fast) ease;
 }
 
 a.work-card:hover .work-card__body {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(var(--bg-card-rgb), 0.95);
 }
 
 .work-card--horizontal .work-card__body {
