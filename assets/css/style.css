@@ -1971,6 +1971,14 @@ a.work-card--horizontal:hover .work-card__cta {
   gap: 16px;
 }
 
+.about-credential {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  color: rgba(254, 245, 234, 0.55);
+}
+
 /* ==========================================================================
    About page
    ========================================================================== */
