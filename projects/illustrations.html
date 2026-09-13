@@ -5,15 +5,45 @@ nav: projects
 permalink: /projects/illustrations/
 gallery: true
 ---
+<div class="proclamation" data-proclamation role="status" aria-live="polite">
+  <span>You found it. Real crest on the way — this seal's a placeholder for now.</span>
+  <button type="button" data-proclamation-close aria-label="Dismiss" style="position: static; background: none; border: none; color: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer; flex: none;">&times;</button>
+</div>
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <div class="shell">
   <section class="hero">
     <div class="case-hero__nav">
       <a href="{{ '/projects/' | relative_url }}">{% include icon.html name="arrow-left" %} All projects</a>
       <a href="{{ '/projects/eagle-quality/' | relative_url }}">Next project {% include icon.html name="arrow-right" %}</a>
     </div>
-    <h1 class="display-2 hero__title">Illustrations</h1>
-    <p class="body-lg hero__subtitle">A running collection of illustration work &mdash; icon sets, spot illustrations, and visual direction made outside of any client brief.</p>
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <h1 class="display-2 hero__title">Illustrations</h1>
+        <p class="body-lg hero__subtitle">A running collection of illustration work &mdash; icon sets, spot illustrations, and visual direction made <span class="accent-word">outside of any client brief</span>.</p>
+      </div>
+      <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+        <span class="seal-badge__center">&#9813;</span>
+      </button>
+    </div>
   </section>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Icon sets &amp; spot illustration</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">No client brief</span>
+    <span class="marquee-band__item">&#9876;</span>
+    <span class="marquee-band__item">Icon sets &amp; spot illustration</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">No client brief</span>
+    <span class="marquee-band__item">&#9876;</span>
+  </div>
+</div>
+
+<div class="shell">
   <p class="draft-flag">DRAFT &mdash; gallery pending export from Figma.</p>
   <div class="logo-grid">
     {% include media-placeholder.html label="Icon set" swatch=5 %}

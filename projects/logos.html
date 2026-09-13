@@ -5,17 +5,42 @@ nav: projects
 permalink: /projects/logos/
 gallery: true
 ---
+<div class="proclamation" data-proclamation role="status" aria-live="polite">
+  <span>You found it. Real crest on the way — this seal's a placeholder for now.</span>
+  <button type="button" data-proclamation-close aria-label="Dismiss" style="position: static; background: none; border: none; color: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer; flex: none;">&times;</button>
+</div>
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <section class="case-hero shell" style="border-bottom: 1px solid var(--line-strong);">
   <div class="case-hero__nav">
     <a href="{{ '/projects/' | relative_url }}">{% include icon.html name="arrow-left" %} All projects</a>
     <a href="{{ '/projects/illustrations/' | relative_url }}">Next project {% include icon.html name="arrow-right" %}</a>
   </div>
-  <div class="case-hero__copy" style="flex-direction: column; gap: 14px;">
-    <p class="meta-label">Collection</p>
-    <h1 class="case-hero__title" style="font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem);">Logos</h1>
-    <p class="case-hero__desc" style="max-width: 640px;">A running collection of logo studies.</p>
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+    <div class="case-hero__copy" style="flex-direction: column; gap: 14px;">
+      <p class="meta-label">Collection</p>
+      <h1 class="case-hero__title" style="font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem);">Logos</h1>
+      <p class="case-hero__desc" style="max-width: 640px;">A running collection of <span class="accent-word">logo studies</span>.</p>
+    </div>
+    <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+      <span class="seal-badge__center">&#9813;</span>
+    </button>
   </div>
 </section>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Mark, wordmark, lockup</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">A running collection</span>
+    <span class="marquee-band__item">&#9876;</span>
+    <span class="marquee-band__item">Mark, wordmark, lockup</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">A running collection</span>
+    <span class="marquee-band__item">&#9876;</span>
+  </div>
+</div>
 
 <div class="shell">
   <div class="logo-grid">

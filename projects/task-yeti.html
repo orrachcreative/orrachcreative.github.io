@@ -5,15 +5,45 @@ nav: projects
 permalink: /projects/task-yeti/
 gallery: true
 ---
+<div class="proclamation" data-proclamation role="status" aria-live="polite">
+  <span>You found it. Real crest on the way — this seal's a placeholder for now.</span>
+  <button type="button" data-proclamation-close aria-label="Dismiss" style="position: static; background: none; border: none; color: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer; flex: none;">&times;</button>
+</div>
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <div class="shell">
   <section class="hero">
     <div class="case-hero__nav">
       <a href="{{ '/projects/' | relative_url }}">{% include icon.html name="arrow-left" %} All projects</a>
       <a href="{{ '/projects/logos/' | relative_url }}">Next project {% include icon.html name="arrow-right" %}</a>
     </div>
-    <h1 class="display-2 hero__title">Task Yeti</h1>
-    <p class="body-lg hero__subtitle">A playful brand and app-icon concept for a task manager &mdash; built to feel less corporate than the category default.</p>
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <h1 class="display-2 hero__title">Task Yeti</h1>
+        <p class="body-lg hero__subtitle">A playful brand and app-icon concept for a task manager &mdash; built to feel <span class="accent-word">less corporate</span> than the category default.</p>
+      </div>
+      <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+        <span class="seal-badge__center">&#9813;</span>
+      </button>
+    </div>
   </section>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Branding exercise</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">Less corporate, on purpose</span>
+    <span class="marquee-band__item">&#9876;</span>
+    <span class="marquee-band__item">Branding exercise</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">Less corporate, on purpose</span>
+    <span class="marquee-band__item">&#9876;</span>
+  </div>
+</div>
+
+<div class="shell">
   <p class="draft-flag">DRAFT &mdash; full frame gallery pending export from Figma; logo mark below is the one real finished asset for this exercise.</p>
   <div class="logo-grid">
     <div class="logo-grid__item"><img src="{{ '/assets/images/projects/logos/task-yeti.png' | relative_url }}" alt="Task Yeti logo mark" loading="lazy"></div>
