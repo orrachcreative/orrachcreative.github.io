@@ -5,14 +5,26 @@ nav: work
 permalink: /work/afordal/
 gallery: true
 ---
+<div class="proclamation" data-proclamation role="status" aria-live="polite">
+  <span>You found it. Real crest on the way — this seal's a placeholder for now.</span>
+  <button type="button" data-proclamation-close aria-label="Dismiss" style="position: static; background: none; border: none; color: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer; flex: none;">&times;</button>
+</div>
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <section class="case-hero shell">
   <div class="case-hero__nav">
     <a href="{{ '/work/' | relative_url }}">{% include icon.html name="arrow-left" %} All work</a>
     <a href="{{ '/work/homeasap/' | relative_url }}">Next study {% include icon.html name="arrow-right" %}</a>
   </div>
-  <div class="case-hero__copy">
-    <h1 class="case-hero__title">Afordal</h1>
-    <p class="case-hero__desc">A solo six-month build: brand, design system, and four connected products (buyer/seller app, agent &amp; loan-officer CRM, marketing site, IDX search) grown from two unfinished, three-year-old wireframes into a live platform.</p>
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+    <div class="case-hero__copy">
+      <h1 class="case-hero__title">Afordal</h1>
+      <p class="case-hero__desc">A <span class="accent-word">solo</span> six-month build: brand, design system, and four connected products (buyer/seller app, agent &amp; loan-officer CRM, marketing site, IDX search) grown from two unfinished, three-year-old wireframes into a live platform.</p>
+    </div>
+    <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+      <span class="seal-badge__center">&#9813;</span>
+    </button>
   </div>
 
   <div class="case-meta">
@@ -38,6 +50,19 @@ gallery: true
     {% include media-placeholder.html label="The finished product at a glance" tall=true %}
   </div>
 </section>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Solo build &mdash; brand, system, and four products</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">Six months, live platform</span>
+    <span class="marquee-band__item">&#9876;</span>
+    <span class="marquee-band__item">Solo build &mdash; brand, system, and four products</span>
+    <span class="marquee-band__item">&#9813;</span>
+    <span class="marquee-band__item">Six months, live platform</span>
+    <span class="marquee-band__item">&#9876;</span>
+  </div>
+</div>
 
 <div class="case-shell shell">
   {% include case-sidebar.html %}
