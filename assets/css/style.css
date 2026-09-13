@@ -1337,15 +1337,36 @@ html.no-anim .proclamation {
   border-radius: var(--radius);
   flex: 1;
   min-width: 0;
-  /* Cursor tilt: --tilt-x/--tilt-y are set from JS on mousemove (how far
-     the cursor sits from the card's center), --tilt-lift only changes via
-     the :hover rule below. Defaults keep the card flat/untilted whenever
-     JS hasn't touched it (no-JS, or motion off) or the cursor isn't over
-     it. */
+}
+
+/* Cursor tilt, shared by every card-shaped tile on the site: the work/
+   project cards, the logo tiles on Logos and Task Yeti, the standalone
+   "screenshot pending" tiles that sit directly in a logo grid or the
+   About hobbies scroller, the case-study system/ecosystem tiles, the
+   next-project block, and Eagle Quality's screenshot and logo figures.
+   --tilt-x/--tilt-y are set from JS on mousemove (how far the cursor
+   sits from the tile's center); --tilt-lift only changes via a :hover
+   rule. Defaults keep everything flat when JS hasn't touched it (no-JS,
+   or motion off) or the cursor isn't over it.
+
+   Deliberately NOT on .decision-block: those are full-width content
+   sections rather than tiles, and each one holds a drag slider that
+   tilting the container underneath would fight.
+
+   Keep this selector list in sync with TILT_SELECTOR in main.js. */
+.work-card,
+.logo-grid__item,
+.logo-grid > .work-card__media,
+.gallery-scroll > .work-card__media,
+.grid-item,
+.next-project,
+.shot-stack__item,
+.logo-showcase__item {
   --tilt-x: 0deg;
   --tilt-y: 0deg;
   --tilt-lift: 0px;
   transform: perspective(900px) translateY(var(--tilt-lift)) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition: transform var(--motion-fast) ease;
 }
 
 a.work-card {

@@ -625,14 +625,26 @@
       });
     });
 
-    // Card tilt: every .work-card on the site (home Work strip, /work/,
-    // the Craft grid, About's offer tiles) leans toward wherever the
-    // cursor sits over it, like the corner nearest the pointer is being
-    // pulled up to meet it. On top of the CSS-driven lift/glow that
-    // :hover already adds. The card's own --tilt-x/--tilt-y custom
-    // properties (declared in style.css) drive the rotation; this just
-    // keeps them in sync with the pointer. --tilt-lift stays a plain CSS
-    // :hover value, not JS — it doesn't depend on cursor position.
+    // Card tilt: every card-shaped tile on the site leans toward
+    // wherever the cursor sits over it, like the corner nearest the
+    // pointer is being pulled up to meet it. On top of whatever
+    // lift/glow that tile's own :hover already adds. The tile's
+    // --tilt-x/--tilt-y custom properties (declared in style.css, on the
+    // matching selector list) drive the rotation; this just keeps them
+    // in sync with the pointer. --tilt-lift stays a plain CSS :hover
+    // value, not JS — it doesn't depend on cursor position.
+    //
+    // Keep in sync with the grouped tilt selector in style.css.
+    var TILT_SELECTOR = [
+      ".work-card",
+      ".logo-grid__item",
+      ".logo-grid > .work-card__media",
+      ".gallery-scroll > .work-card__media",
+      ".grid-item",
+      ".next-project",
+      ".shot-stack__item",
+      ".logo-showcase__item",
+    ].join(",");
     //
     // Signs: a positive rotateX pushes the top edge away from the viewer
     // and a positive rotateY pushes the right edge away, so leaning
@@ -640,7 +652,7 @@
     // (py < 0) has to produce a negative rotateX to bring the top edge
     // forward, and cursor right of center (px > 0) a negative rotateY.
     var tiltMax = 10; // degrees, at the card's edge
-    document.querySelectorAll(".work-card").forEach(function (el) {
+    document.querySelectorAll(TILT_SELECTOR).forEach(function (el) {
       el.addEventListener("mousemove", function (e) {
         if (isMotionOff()) return;
         var rect = el.getBoundingClientRect();
