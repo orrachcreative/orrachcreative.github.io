@@ -1375,15 +1375,15 @@ html.no-anim .proclamation {
   min-width: 0;
 }
 
-/* Cursor tilt, shared by every card-shaped tile on the site: the work/
+/* Pointer tilt, shared by every card-shaped tile on the site: the work/
    project cards, the logo tiles on Logos and Task Yeti, the standalone
    "screenshot pending" tiles that sit directly in a logo grid or the
    About hobbies scroller, the case-study system/ecosystem tiles, the
    next-project block, and Eagle Quality's screenshot and logo figures.
-   --tilt-x/--tilt-y are set from JS on mousemove (how far the cursor
-   sits from the tile's center); --tilt-lift only changes via a :hover
-   rule. Defaults keep everything flat when JS hasn't touched it (no-JS,
-   or motion off) or the cursor isn't over it.
+   --tilt-x/--tilt-y are set from JS (how far the cursor, or a pressing
+   finger, sits from the tile's center); --tilt-lift only changes via the
+   :hover / .is-tilting rule below. Defaults keep everything flat when JS
+   hasn't touched it (no-JS, or motion off) or nothing is pointing at it.
 
    Deliberately NOT on .decision-block: those are full-width content
    sections rather than tiles, and each one holds a drag slider that
@@ -1412,7 +1412,11 @@ a.work-card {
     background-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
 }
 
-a.work-card:hover {
+/* .is-tilting is the touch stand-in for :hover — JS adds it for the life
+   of a press-and-drag on a card (see the tilt block in main.js), so a
+   press on a phone gets the same lift, glow and border a cursor gets. */
+a.work-card:hover,
+a.work-card.is-tilting {
   border-color: rgba(var(--accent-rgb), 0.45);
   /* No background swap here: --bg-raised is itself translucent, so
      swapping to it on hover washed the whole card out and let the photo
@@ -1426,7 +1430,8 @@ a.work-card:hover {
   box-shadow: 0 20px 48px -16px rgba(var(--accent-rgb), 0.3), 0 0 32px -6px rgba(var(--accent-rgb), 0.25);
 }
 
-a.work-card:hover .view-link__label {
+a.work-card:hover .view-link__label,
+a.work-card.is-tilting .view-link__label {
   color: var(--accent);
 }
 
@@ -1575,7 +1580,8 @@ a.work-card:hover .view-link__label {
   transition: background-color var(--motion-fast) ease;
 }
 
-a.work-card:hover .work-card__body {
+a.work-card:hover .work-card__body,
+a.work-card.is-tilting .work-card__body {
   background-color: rgba(var(--bg-card-rgb), 0.95);
 }
 
@@ -3049,7 +3055,8 @@ html[data-motion="off"] *::after {
     transition: transform 0.3s ease;
   }
 
-  a.work-card:hover .view-link__bar {
+  a.work-card:hover .view-link__bar,
+  a.work-card.is-tilting .view-link__bar {
     transform: scaleX(1);
   }
 

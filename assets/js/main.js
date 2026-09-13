@@ -375,7 +375,7 @@
   // Placeholder copy/glyph until the real castle/pencil/sword mark lands —
   // swap SEAL_TEXT and the center glyph then, nothing else should need to
   // change.
-  var SEAL_TEXT = "PRINCIPAL PRODUCT DESIGNER ✦ JACKSONVILLE, FL ✦ ";
+  var SEAL_TEXT = "PRINCIPAL PRODUCT DESIGNER • JACKSONVILLE, FL • ";
   document.querySelectorAll(".seal-badge").forEach(function (badge, badgeIndex) {
     var size = 128;
     var r = size / 2 - 14;
@@ -605,11 +605,31 @@
     // no transform whenever the in-page motion toggle is off, since this
     // sets inline transforms directly rather than through a CSS class the
     // motion-off stylesheet rule could otherwise neutralize on its own.
+    // After a tap, a touch browser replays the gesture as compatibility
+    // mouse events (mousemove/mousedown/mouseup/click) so mouse-only pages
+    // keep working. That breaks any hover effect driven by mousemove: the
+    // synthetic mousemove applies the effect, and because there's no real
+    // cursor, no mouseleave ever arrives to take it back off — a tapped
+    // card would sit there tilted until you touched something else.
+    //
+    // So: remember when a touch last happened and have the mouse handlers
+    // sit out the window in which those synthetic events arrive. A drag
+    // suppresses them on its own, which is why this only bites on taps.
+    var lastTouchAt = 0;
+    function markTouch() {
+      lastTouchAt = Date.now();
+    }
+    document.addEventListener("touchstart", markTouch, { passive: true, capture: true });
+    document.addEventListener("touchend", markTouch, { passive: true, capture: true });
+    function isSyntheticMouse() {
+      return Date.now() - lastTouchAt < 700;
+    }
+
     var magneticEls = document.querySelectorAll("[data-magnetic]");
     magneticEls.forEach(function (el) {
       var strength = 0.3;
       el.addEventListener("mousemove", function (e) {
-        if (isMotionOff()) return;
+        if (isMotionOff() || isSyntheticMouse()) return;
         var rect = el.getBoundingClientRect();
         var x = e.clientX - (rect.left + rect.width / 2);
         var y = e.clientY - (rect.top + rect.height / 2);
@@ -621,9 +641,10 @@
     });
 
     // Card tilt: every card-shaped tile on the site leans toward
-    // wherever the cursor sits over it, like the corner nearest the
-    // pointer is being pulled up to meet it. On top of whatever
-    // lift/glow that tile's own :hover already adds. The tile's
+    // wherever the pointer sits over it — a cursor, or a finger pressing
+    // and dragging on touch — like the corner nearest it is being pulled
+    // up to meet it. On top of whatever lift/glow that tile's own
+    // :hover (or .is-tilting, its touch counterpart) adds. The tile's
     // --tilt-x/--tilt-y custom properties (declared in style.css, on the
     // matching selector list) drive the rotation; this just keeps them
     // in sync with the pointer. --tilt-lift stays a plain CSS :hover
@@ -648,18 +669,94 @@
     // forward, and cursor right of center (px > 0) a negative rotateY.
     var tiltMax = 10; // degrees, at the card's edge
     document.querySelectorAll(TILT_SELECTOR).forEach(function (el) {
-      el.addEventListener("mousemove", function (e) {
-        if (isMotionOff()) return;
+      function tiltTo(clientX, clientY) {
         var rect = el.getBoundingClientRect();
-        var px = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
-        var py = (e.clientY - rect.top) / rect.height - 0.5; // -0.5..0.5
+        var px = (clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+        var py = (clientY - rect.top) / rect.height - 0.5; // -0.5..0.5
         el.style.setProperty("--tilt-y", (px * -2 * tiltMax).toFixed(2) + "deg");
         el.style.setProperty("--tilt-x", (py * 2 * tiltMax).toFixed(2) + "deg");
-      });
-      el.addEventListener("mouseleave", function () {
+      }
+      function release() {
+        el.classList.remove("is-tilting");
         el.style.setProperty("--tilt-x", "0deg");
         el.style.setProperty("--tilt-y", "0deg");
+      }
+
+      el.addEventListener("mousemove", function (e) {
+        if (isMotionOff() || isSyntheticMouse()) return;
+        tiltTo(e.clientX, e.clientY);
       });
+      el.addEventListener("mouseleave", release);
+
+      // Touch: the same lean, driven by a press-and-drag. The card tips
+      // toward the finger the moment it lands and follows it around, so
+      // a press alone is enough to get the effect and a drag steers it.
+      //
+      // Every listener here is passive and nothing calls preventDefault,
+      // which keeps the two things a card owes a touch user intact: a tap
+      // still follows the link (these tiles are mostly anchors), and a
+      // swipe still scrolls the page. The cost of staying passive is that
+      // a scroll gesture starting on a card would otherwise drag the tilt
+      // along with it, so the first move decides: past a small threshold
+      // and mostly vertical reads as a scroll, and the card drops the
+      // tilt and sits out the rest of the gesture.
+      //
+      // The lift rides on .is-tilting rather than :hover, since touch
+      // browsers deliver :hover erratically and tend to strand it on the
+      // last-tapped element.
+      var touchId = null;
+      var startX = 0;
+      var startY = 0;
+      var scrolling = false;
+
+      el.addEventListener(
+        "touchstart",
+        function (e) {
+          if (isMotionOff() || touchId !== null) return;
+          var t = e.changedTouches[0];
+          touchId = t.identifier;
+          startX = t.clientX;
+          startY = t.clientY;
+          scrolling = false;
+          el.classList.add("is-tilting");
+          tiltTo(t.clientX, t.clientY);
+        },
+        { passive: true }
+      );
+
+      el.addEventListener(
+        "touchmove",
+        function (e) {
+          if (touchId === null || scrolling) return;
+          var t = null;
+          for (var i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === touchId) t = e.changedTouches[i];
+          }
+          if (!t) return;
+          var dx = t.clientX - startX;
+          var dy = t.clientY - startY;
+          if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) {
+            scrolling = true;
+            release();
+            return;
+          }
+          tiltTo(t.clientX, t.clientY);
+        },
+        { passive: true }
+      );
+
+      function endTouch(e) {
+        if (touchId === null) return;
+        for (var i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchId) {
+            touchId = null;
+            release();
+            return;
+          }
+        }
+      }
+      el.addEventListener("touchend", endTouch, { passive: true });
+      el.addEventListener("touchcancel", endTouch, { passive: true });
     });
 
   }
