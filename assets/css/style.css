@@ -834,6 +834,26 @@ body.menu-open {
   gap: 16px;
 }
 
+/* The name, sitting between the eyebrow and the headline. Deliberately
+   not display-sized: the headline is the thing that should land first,
+   and a name set large enough to compete with it makes the visitor do
+   the work of figuring out why they should care. This is big enough to
+   be read rather than skimmed past the way a header wordmark is, and
+   small enough to stay an introduction. */
+.hero__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.25px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.hero-shell .hero__name {
+  color: var(--parchment);
+}
+
 .hero__title {
   max-width: 700px;
 }
