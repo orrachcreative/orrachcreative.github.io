@@ -47,6 +47,31 @@
     return root.getAttribute("data-motion") === "off";
   }
 
+  // After a tap, a touch browser replays the gesture as compatibility
+  // mouse events (mousemove/mousedown/mouseup/click) so mouse-only pages
+  // keep working. That breaks any hover effect driven by mousemove: the
+  // synthetic mousemove applies the effect, and because there's no real
+  // cursor, no mouseleave ever arrives to take it back off — a tapped
+  // card would sit there tilted until you touched something else.
+  //
+  // So: remember when a touch last happened and have the mouse handlers
+  // sit out the window in which those synthetic events arrive. A drag
+  // suppresses them on its own, which is why this only bites on taps.
+  //
+  // Lives at this scope, not inside the motion block below, because the
+  // closing CTA's cursor-follow needs it too — it was defined in there
+  // and the CTA threw a ReferenceError on every mousemove, silently
+  // killing the effect.
+  var lastTouchAt = 0;
+  function markTouch() {
+    lastTouchAt = Date.now();
+  }
+  document.addEventListener("touchstart", markTouch, { passive: true, capture: true });
+  document.addEventListener("touchend", markTouch, { passive: true, capture: true });
+  function isSyntheticMouse() {
+    return Date.now() - lastTouchAt < 700;
+  }
+
   function syncMotionUI() {
     var off = isMotionOff();
     document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {
@@ -491,91 +516,60 @@
     }, 7000);
   }
 
-  // Archery range in the closing CTA: click anywhere in the panel and an
-  // arrow flies in and sticks where you aimed. Hit the target and it
-  // jumps somewhere new.
-  //
-  // Decorative throughout — the range is aria-hidden, built only when
-  // motion is on, and every listener steps aside for real controls, so
-  // the section's actual job (that mailto) is never blocked by a game.
+  // Closing CTA: the email turns into a button that follows the cursor
+  // around the panel while it is open. Decorative movement only — the
+  // link keeps its place in the flow and its own focus/tab behaviour, so
+  // it stays reachable for anyone not using a pointer at all.
   document.querySelectorAll(".cta").forEach(function (cta) {
-    if (isMotionOff()) return;
+    var link = cta.querySelector(".cta__email");
+    if (!link) return;
 
-    var range = document.createElement("div");
-    range.className = "cta__range";
-    range.setAttribute("aria-hidden", "true");
-
-    var target = document.createElement("div");
-    target.className = "cta__target";
-    range.appendChild(target);
-
-    var score = document.createElement("p");
-    score.className = "cta__score";
-    score.textContent = "Take a shot";
-    range.appendChild(score);
-
-    cta.insertBefore(range, cta.firstChild);
-
-    var hits = 0;
-    var shots = 0;
-    var arrows = [];
-
-    function placeTarget() {
-      target.style.left = (10 + Math.random() * 80).toFixed(1) + "%";
-      target.style.top = (16 + Math.random() * 64).toFixed(1) + "%";
+    function reset() {
+      link.style.transform = "";
     }
-    placeTarget();
 
-    cta.addEventListener("click", function (e) {
-      if (isMotionOff()) return;
-      // Never swallow a click meant for something real.
-      if (e.target.closest("a, button, input, textarea")) return;
-
-      var box = cta.getBoundingClientRect();
-      var x = e.clientX - box.left;
-      var y = e.clientY - box.top;
-
-      var arrow = document.createElement("span");
-      arrow.className = "cta__arrow";
-      arrow.style.left = x + "px";
-      arrow.style.top = y + "px";
-      // Loosed from off the lower-left, with enough jitter that repeated
-      // shots don't all trace the same line.
-      var fx = -(220 + Math.random() * 120);
-      var fy = 150 + Math.random() * 120;
-      arrow.style.setProperty("--fx", fx.toFixed(0) + "px");
-      arrow.style.setProperty("--fy", fy.toFixed(0) + "px");
-      arrow.style.setProperty(
-        "--angle",
-        ((Math.atan2(-fy, -fx) * 180) / Math.PI).toFixed(1) + "deg"
-      );
-      range.appendChild(arrow);
-
-      // Cap the quiver so a determined clicker can't pile up nodes.
-      arrows.push(arrow);
-      while (arrows.length > 14) {
-        var old = arrows.shift();
-        if (old.parentNode) old.remove();
-      }
-
-      shots += 1;
-
-      var t = target.getBoundingClientRect();
-      var dx = x - (t.left + t.width / 2 - box.left);
-      var dy = y - (t.top + t.height / 2 - box.top);
-      var hit = Math.sqrt(dx * dx + dy * dy) <= t.width / 2;
-
-      if (hit) {
-        hits += 1;
-        target.classList.add("is-hit");
-        setTimeout(function () {
-          target.classList.remove("is-hit");
-          placeTarget();
-        }, 320);
-      }
-
-      score.textContent = hits + (hits === 1 ? " hit" : " hits") + " / " + shots;
+    // One flag both the type scale and the button styling follow, rather
+    // than each re-deriving "is the panel open" from a hover query and a
+    // reveal class separately. Desktop opens it on hover; tablet and
+    // phone on arrival, which the scroll-reveal observer signals.
+    cta.addEventListener("mouseenter", function () {
+      cta.classList.add("is-open");
     });
+    cta.addEventListener("mouseleave", function () {
+      cta.classList.remove("is-open");
+      reset();
+    });
+
+    if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+      var sync = function () {
+        if (cta.classList.contains("is-revealed")) cta.classList.add("is-open");
+      };
+      sync();
+      new MutationObserver(sync).observe(cta, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }
+
+    cta.addEventListener("mousemove", function (e) {
+      if (isMotionOff() || isSyntheticMouse()) return;
+      // Only chase while the panel is actually open, so the button does
+      // not drift around inside the collapsed strip.
+      if (!cta.classList.contains("is-open")) return;
+      var box = link.getBoundingClientRect();
+      var dx = e.clientX - (box.left + box.width / 2);
+      var dy = e.clientY - (box.top + box.height / 2);
+      // Eased rather than pinned to the cursor: at 1:1 it would sit under
+      // the pointer permanently and never read as a thing being chased.
+      var pull = 0.55;
+      var maxX = cta.clientWidth / 2 - box.width / 2 - 24;
+      var maxY = cta.clientHeight / 2 - box.height / 2 - 24;
+      var x = Math.max(-maxX, Math.min(maxX, dx * pull));
+      var y = Math.max(-maxY, Math.min(maxY, dy * pull));
+      link.style.transform = "translate(" + x.toFixed(1) + "px, " + y.toFixed(1) + "px)";
+    });
+
+    cta.addEventListener("mouseleave", reset);
   });
 
   // Esc closes the decree, the one convention people reach for on
@@ -774,26 +768,6 @@
     // no transform whenever the in-page motion toggle is off, since this
     // sets inline transforms directly rather than through a CSS class the
     // motion-off stylesheet rule could otherwise neutralize on its own.
-    // After a tap, a touch browser replays the gesture as compatibility
-    // mouse events (mousemove/mousedown/mouseup/click) so mouse-only pages
-    // keep working. That breaks any hover effect driven by mousemove: the
-    // synthetic mousemove applies the effect, and because there's no real
-    // cursor, no mouseleave ever arrives to take it back off — a tapped
-    // card would sit there tilted until you touched something else.
-    //
-    // So: remember when a touch last happened and have the mouse handlers
-    // sit out the window in which those synthetic events arrive. A drag
-    // suppresses them on its own, which is why this only bites on taps.
-    var lastTouchAt = 0;
-    function markTouch() {
-      lastTouchAt = Date.now();
-    }
-    document.addEventListener("touchstart", markTouch, { passive: true, capture: true });
-    document.addEventListener("touchend", markTouch, { passive: true, capture: true });
-    function isSyntheticMouse() {
-      return Date.now() - lastTouchAt < 700;
-    }
-
     var magneticEls = document.querySelectorAll("[data-magnetic]");
     magneticEls.forEach(function (el) {
       var strength = 0.3;
