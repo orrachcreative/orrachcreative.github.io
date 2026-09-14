@@ -647,11 +647,6 @@ html:not([data-motion="off"]) .motion-toggle:focus-visible .mtk-body {
   color: var(--black);
 }
 
-.site-header.is-menu-open .motion-toggle {
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* Menu toggle: closed state is the "menu 2 / Default" chip (hamburger +
    MENU label on an Ash card, baked into the SVG itself); open state swaps
    to a bordered close icon so the same button stays in the same spot while
@@ -2071,7 +2066,9 @@ a.work-card--horizontal:hover .work-card__cta {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 68vh;
+  /* Rests at its natural height — the panel only claims the screen while
+     it is actually being engaged with, never just for sitting there. */
+  min-height: 0;
   padding-top: 24px;
   padding-bottom: 24px;
   background: #1e221e;
@@ -2278,7 +2275,7 @@ html.no-anim .cta__range {
     order: 2;
   }
 
-  .site-footer__theme-toggle {
+  .site-footer__controls {
     order: 3;
   }
 }
@@ -2288,6 +2285,27 @@ html.no-anim .cta__range {
   flex-direction: column;
   gap: 2px;
   align-items: center;
+}
+
+/* REVISIT: temporary home for the motion toggle, parked next to the
+   theme toggle. The knight needs about 34px to stay legible while the
+   theme chip is 24px to match the social icons, so the two are visibly
+   mismatched — see the note in footer.html. */
+.site-footer__controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.site-footer__motion-toggle {
+  width: 36px;
+  height: 36px;
+  padding: 1px;
+}
+
+.site-footer__motion-toggle svg {
+  width: 34px;
+  height: 34px;
 }
 
 .site-footer__theme-toggle {
@@ -2346,6 +2364,10 @@ html.no-anim .cta__range {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     text-align: center;
+  }
+
+  .site-footer__controls {
+    justify-self: start;
   }
 
   .site-footer__theme-toggle {
