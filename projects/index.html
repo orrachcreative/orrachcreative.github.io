@@ -21,6 +21,14 @@ permalink: /projects/
   </section>
 </div>
 
+<div class="shell">
+  <div class="card-grid card-grid--2x2" style="padding-bottom: 72px; padding-top: 56px;">
+    {% for item in site.data.projects %}
+      {% include work-card.html item=item variant="vertical" %}
+    {% endfor %}
+  </div>
+</div>
+
 <div class="marquee-band" aria-hidden="true">
   <div class="marquee-band__track">
     <span class="marquee-band__item">No client brief</span>
@@ -31,14 +39,6 @@ permalink: /projects/
     <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
     <span class="marquee-band__item">Self-directed work</span>
     <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
-  </div>
-</div>
-
-<div class="shell">
-  <div class="card-grid card-grid--2x2" style="padding-bottom: 72px; padding-top: 56px;">
-    {% for item in site.data.projects %}
-      {% include work-card.html item=item variant="vertical" %}
-    {% endfor %}
   </div>
 </div>
 
