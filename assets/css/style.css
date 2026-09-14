@@ -1884,15 +1884,19 @@ html.no-anim .decree__close {
      them. Nudging the badge's offset per breakpoint was the wrong tool —
      it fixed one width and broke three, since what the circle collides
      with depends on how the copy happens to rewrap. */
-  /* Reserves the seal's corner. 56 rather than the old 76: the badge is
-     smaller now, and the supplied greeting is about three times longer
-     than the copy this was first tuned against, so a wide reserve turns
-     it into a column of stubs. At this width a line or two still passes
-     behind the seal at some viewports — acceptable, because the badge
-     sits under the type (z-index below) and the words stay legible. */
-  .home-hero__top .eyebrow,
-  .home-hero .hero__name {
+  /* Reserves the seal's corner on the eyebrow, which sits above it. */
+  .home-hero__top .eyebrow {
     padding-right: 56px;
+  }
+
+  /* The greeting stops at three quarters of the hero instead. A padding
+     reserve had to be retuned every time the badge or the copy changed;
+     a proportional measure holds on its own, and it keeps the line clear
+     of the seal at every width in this range rather than at the couple I
+     happened to test. */
+  .home-hero .hero__name {
+    max-width: 75%;
+    padding-right: 0;
   }
 }
 
