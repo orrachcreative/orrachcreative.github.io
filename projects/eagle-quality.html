@@ -5,15 +5,107 @@ nav: projects
 permalink: /projects/eagle-quality/
 gallery: true
 ---
+{% include proclamation.html %}
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <div class="shell">
   <section class="hero">
     <div class="case-hero__nav">
       <a href="{{ '/projects/' | relative_url }}">{% include icon.html name="arrow-left" %} All projects</a>
       <a href="{{ '/projects/task-yeti/' | relative_url }}">Next project {% include icon.html name="arrow-right" %}</a>
     </div>
-    <h1 class="display-2 hero__title">Eagle Quality</h1>
-    <p class="body-lg hero__subtitle">[Placeholder: project page not built yet — share the Figma frame link for this page.]</p>
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <h1 class="display-2 hero__title">Eagle Quality</h1>
+        <p class="body-lg hero__subtitle">A full website for Eagle Quality Components, a <span class="accent-word">family-owned</span> CNC precision machining shop &mdash; industrial photography, bold condensed type, and a dark, no-nonsense feel that matches a shop floor rather than a generic corporate template.</p>
+      </div>
+      <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+        <span class="seal-badge__center" aria-hidden="true"></span>
+      </button>
+    </div>
   </section>
+</div>
+
+<div class="shell">
+  <div class="case-meta" style="margin-bottom: 40px;">
+    <div class="case-meta__item">
+      <p class="meta-label">Client</p>
+      <p class="case-meta__value">Eagle Quality Components</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Type</p>
+      <p class="case-meta__value">Manufacturing &bull; Website</p>
+    </div>
+    <div class="case-meta__item">
+      <p class="meta-label">Pages</p>
+      <p class="case-meta__value">Home, Services, Equipment, Quality Control, Gallery, About</p>
+    </div>
+  </div>
+
+  <div class="shot-stack">
+    <figure class="shot-stack__item">
+      <img src="{{ '/assets/images/projects/eagle-quality/home-desktop.webp' | relative_url }}" alt="Eagle Quality Components homepage: dark hero with CNC machining photography and a Quality Assurance headline" loading="lazy">
+      <figcaption>Home</figcaption>
+    </figure>
+    <figure class="shot-stack__item">
+      <img src="{{ '/assets/images/projects/eagle-quality/equipment-desktop.webp' | relative_url }}" alt="Equipment page showing a Haas CNC machine in the shop, with a CNC Machines gallery below" loading="lazy">
+      <figcaption>Equipment</figcaption>
+    </figure>
+    <figure class="shot-stack__item">
+      <img src="{{ '/assets/images/projects/eagle-quality/about-desktop.webp' | relative_url }}" alt="About Us page with shop-floor photography and a Why We Are The Best section" loading="lazy">
+      <figcaption>About</figcaption>
+    </figure>
+  </div>
+
+  <p class="eyebrow" style="margin: 32px 0 16px;">Responsive</p>
+  <div class="shot-stack shot-stack--mobile">
+    <figure class="shot-stack__item shot-stack__item--phone">
+      <img src="{{ '/assets/images/projects/eagle-quality/home-mobile.png' | relative_url }}" alt="Eagle Quality Components homepage on mobile" loading="lazy">
+      <figcaption>Home &mdash; mobile</figcaption>
+    </figure>
+    <figure class="shot-stack__item shot-stack__item--phone">
+      <img src="{{ '/assets/images/projects/eagle-quality/about-mobile.png' | relative_url }}" alt="Eagle Quality Components about page on mobile, Family Owned & Operated section" loading="lazy">
+      <figcaption>About &mdash; mobile</figcaption>
+    </figure>
+  </div>
+
+  <div style="margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--line);">
+    <p class="eyebrow">Unofficial &mdash; personal exploration</p>
+    <h2 class="heading-1" style="margin: 8px 0 12px;">A bolder brand identity concept</h2>
+    <p class="body-lg" style="max-width: 68ch; margin-bottom: 24px;">Not commissioned or adopted by the client &mdash; a self-directed rebrand exploring a bolder identity for Eagle Quality: a gear-toothed seal, an eagle mark built from crossed wrenches, and a stacked lockup with more attitude than the current site's logo. UI could follow if this direction sticks.</p>
+    <div class="logo-showcase">
+      <figure class="logo-showcase__item">
+        <img src="{{ '/assets/images/projects/eagle-quality/rebrand-wordmark.webp' | relative_url }}" alt="Concept wordmark: eagle-and-wrench mark inside a gear-toothed circle, next to an Eagle Quality condensed logotype" loading="lazy">
+        <figcaption>Horizontal lockup</figcaption>
+      </figure>
+      <figure class="logo-showcase__item">
+        <img src="{{ '/assets/images/projects/eagle-quality/rebrand-lockup.png' | relative_url }}" alt="Concept stacked lockup: the gear-toothed eagle mark above the Eagle Quality logotype" loading="lazy">
+        <figcaption>Stacked lockup</figcaption>
+      </figure>
+      <figure class="logo-showcase__item">
+        <img src="{{ '/assets/images/projects/eagle-quality/rebrand-seal.png' | relative_url }}" alt="Concept circular seal with Eagle Quality Components set around the border of the gear-toothed eagle mark" loading="lazy">
+        <figcaption>Seal</figcaption>
+      </figure>
+      <figure class="logo-showcase__item">
+        <img src="{{ '/assets/images/projects/eagle-quality/rebrand-eq-badge.png' | relative_url }}" alt="Concept EQ monogram badge in a speech-bubble shape" loading="lazy">
+        <figcaption>EQ monogram</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Full website &mdash; brand to build</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Unofficial rebrand included</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+    <span class="marquee-band__item">Full website &mdash; brand to build</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Unofficial rebrand included</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+  </div>
 </div>
 
 {% include cta.html %}

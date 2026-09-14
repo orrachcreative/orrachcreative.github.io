@@ -4,16 +4,41 @@ title: Work
 nav: work
 permalink: /work/
 ---
+{% include proclamation.html %}
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <div class="shell">
   <section class="hero" style="padding-bottom: 72px;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <p class="eyebrow">Selected work</p>
+      <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+        <span class="seal-badge__center" aria-hidden="true"></span>
+      </button>
+    </div>
     <h1 class="display-2 hero__title">Senior product design, shown through how the decisions got made.</h1>
-    <p class="body-lg hero__subtitle">Real projects, still in draft. Placeholder copy is being replaced section by section.</p>
+    <p class="body-lg hero__subtitle"><span class="accent-word">Three real products</span>. Every case study below breaks down the ask, the constraints, and the specific tradeoffs I made to ship &mdash; not just the finished screens.</p>
   </section>
+</div>
 
-  <div class="card-grid card-grid--row" style="padding-bottom: 72px;">
+<div class="shell">
+  <div class="card-grid card-grid--row" style="padding-bottom: 72px; padding-top: 56px;">
     {% for item in site.data.work %}
       {% include work-card.html item=item variant="vertical" %}
     {% endfor %}
+  </div>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Three real products</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Ask, constraints, tradeoffs</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+    <span class="marquee-band__item">Three real products</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Ask, constraints, tradeoffs</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
   </div>
 </div>
 

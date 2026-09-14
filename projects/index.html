@@ -1,19 +1,44 @@
 ---
 layout: default
-title: Projects
+title: Craft
 nav: projects
 permalink: /projects/
 ---
+{% include proclamation.html %}
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <div class="shell">
   <section class="hero" style="padding-bottom: 72px;">
-    <h1 class="display-2 hero__title">Self-directed work.</h1>
-    <p class="body-lg hero__subtitle">Branding exercises, logo studies, and illustration. No client brief behind these, made to explore a direction on my own terms.</p>
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <p class="eyebrow">Also &mdash; self-directed work</p>
+      <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+        <span class="seal-badge__center" aria-hidden="true"></span>
+      </button>
+    </div>
+    <h1 class="display-2 hero__title">Craft.</h1>
+    <p class="body-lg hero__subtitle">Branding exercises, logo studies, and illustration &mdash; no client brief behind these, made to explore a direction on <span class="accent-word">my own terms</span>. The product work is <a href="{{ '/work/' | relative_url }}" style="color: var(--accent); text-decoration: underline;">over here</a>.</p>
   </section>
+</div>
 
-  <div class="card-grid card-grid--row" style="padding-bottom: 72px;">
+<div class="shell">
+  <div class="card-grid card-grid--2x2" style="padding-bottom: 72px; padding-top: 56px;">
     {% for item in site.data.projects %}
       {% include work-card.html item=item variant="vertical" %}
     {% endfor %}
+  </div>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">No client brief</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Self-directed work</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+    <span class="marquee-band__item">No client brief</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Self-directed work</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
   </div>
 </div>
 

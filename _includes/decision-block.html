@@ -15,20 +15,19 @@
     </div>
   </div>
   <p>{{ include.tradeoff }}</p>
-  <div class="compare">
-    <div class="compare__panes">
-      <div class="compare__pane compare__pane--reject">
-        <div class="compare__media"><p>{{ include.reject_text | default: "[PLACEHOLDER: single linear onboarding form, same questions for every user type]" }}</p></div>
-        <div class="compare__caption">Rejected</div>
+  <div class="compare-slider" style="--compare-seed: {{ include.title | size }};">
+    <div class="compare-slider__frame">
+      <div class="compare-slider__pane compare-slider__pane--before">
+        <p>{{ include.reject_text | default: "What this replaced" }}</p>
+        <span class="compare-slider__tag compare-slider__tag--reject">Rejected</span>
       </div>
-      <div class="compare__pane compare__pane--ship">
-        <div class="compare__media"><p>{{ include.ship_text | default: "[PLACEHOLDER: branching onboarding flow diagram, entry-point aware]" }}</p></div>
-        <div class="compare__caption">Shipped</div>
+      <div class="compare-slider__pane compare-slider__pane--after">
+        <p>{{ include.ship_text | default: "What shipped instead" }}</p>
+        <span class="compare-slider__tag compare-slider__tag--ship">Shipped</span>
       </div>
+      <div class="compare-slider__handle" aria-hidden="true">{% include icon.html name="drag" %}</div>
     </div>
-    <span class="compare__cta">
-      <span class="compare__cta-label">Compare with slider</span>
-      {% include icon.html name="arrow-right" %}
-    </span>
+    <label class="visually-hidden" for="{{ include.title | slugify }}-compare">Drag to compare the rejected and shipped versions</label>
+    <input type="range" class="compare-slider__input" id="{{ include.title | slugify }}-compare" min="0" max="100" value="50">
   </div>
 </div>

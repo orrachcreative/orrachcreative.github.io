@@ -5,41 +5,49 @@ nav: work
 permalink: /work/homeasap/
 gallery: true
 ---
+{% include proclamation.html %}
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <section class="case-hero shell">
   <div class="case-hero__nav">
     <a href="{{ '/work/' | relative_url }}">{% include icon.html name="arrow-left" %} All work</a>
     <a href="{{ '/work/high5/' | relative_url }}">Next study {% include icon.html name="arrow-right" %}</a>
   </div>
-  <div class="case-hero__copy">
-    <h1 class="case-hero__title">HomeASAP</h1>
-    <p class="case-hero__desc">A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture.</p>
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+    <div class="case-hero__copy">
+      <h1 class="case-hero__title">HomeASAP</h1>
+      <p class="case-hero__desc"><span class="accent-word">Thirteen years</span> at one company, from Senior Visual Designer to Principal Product Designer &mdash; growing with it from a small team into owning design across the product suite that drives the majority of its revenue.</p>
+    </div>
+    <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+      <span class="seal-badge__center" aria-hidden="true"></span>
+    </button>
   </div>
 
   <div class="case-meta">
     <div class="case-meta__item">
       <p class="meta-label">Role</p>
-      <p class="case-meta__value">Lead Visual Designer</p>
+      <p class="case-meta__value">Senior Visual Designer &rarr; Principal Product Designer</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Tools</p>
-      <p class="case-meta__value">Adobe + Figma + Wordpress</p>
+      <p class="case-meta__value">Figma + Adobe Suite + WordPress</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Type</p>
-      <p class="case-meta__value">Websites</p>
+      <p class="case-meta__value">SaaS &bull; Real Estate Tech</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Timeline</p>
-      <p class="case-meta__value">Jan 2022 &ndash; Dec 2024</p>
+      <p class="case-meta__value">June 2013 &ndash; Present</p>
     </div>
   </div>
 
   <div class="case-hero__shot">
-    <div class="work-card__media">
-      <span>[IMAGE: the finished product at a glance]</span>
-    </div>
+    {% include media-placeholder.html label="The finished product at a glance" tall=true %}
   </div>
 </section>
+
 
 <div class="case-shell shell">
   {% include case-sidebar.html %}
@@ -47,70 +55,53 @@ gallery: true
   <div class="case-content">
     <section class="case-section" id="the-ask">
       <h2 class="case-section__title">The ask</h2>
-      <p>What did you actually walk into on HomeASAP? A vague brief, a half-finished file, a verbal ask, nothing at all? This project spans over a decade, so this might be less a single &ldquo;ask&rdquo; and more how the relationship started.</p>
-      <p>What didn&rsquo;t you have that you&rsquo;d normally expect &mdash; a spec, research, existing patterns, someone who could tell you what &ldquo;done&rdquo; looked like?</p>
+      <p>Take a real estate product, give it a brand, then build the marketing site that sells it, checkout included. Then do it again. And again. HomeASAP had a full lineup of real estate products, and I got to give each one its own identity and its own place to buy it.</p>
     </section>
 
     <section class="case-section" id="the-problem">
       <h2 class="case-section__title">The real problem</h2>
-      <p>Who were the different people HomeASAP had to work for? Name the user types, not just &ldquo;users.&rdquo;</p>
-      <p>What real-world rules, constraints, or limits shaped what you could do &mdash; legal, technical, business? Over this many years, constraints likely changed. Note if they did.</p>
-      <p>What made this genuinely hard to figure out, not just hard to build?</p>
+      <p>The hard part wasn&rsquo;t any single site. It was the volume. Every product meant its own brand, its own site, its own checkout flow, all running on WordPress, sharing nothing between them to start.</p>
     </section>
 
     <section class="case-section" id="working-it-out">
       <h2 class="case-section__title">Working it out</h2>
 
       {% include decision-block.html
-        title="Decision 1: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 1: FAQ placement"
+        first_attempt="The FAQs were either non-existent or buried at the bottom of the page, well past the point where someone had already decided."
+        landed_on="I moved the FAQs up, right next to the checkout step, so the questions that stall a purchase got answered at the exact moment someone was deciding whether to buy."
+        tradeoff="Conversion went up on the individual product sites, one of those small moves that pays off more than you&rsquo;d expect."
+        reject_text="FAQs away from the buying decision"
+        ship_text="FAQs beside the checkout step"
       %}
+
       {% include decision-block.html
-        title="Decision 2: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
-      %}
-      {% include decision-block.html
-        title="Decision 3: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 2: One theme or twelve"
+        first_attempt="Each product site got built on its own, from scratch, as if it were the only site that existed."
+        landed_on="I pushed to put every site on Divi and build a shared Divi Library, so a section built for one product could get reused across the rest instead of rebuilt from scratch each time."
+        tradeoff="Once it was in place, building a new product site stopped feeling like starting over."
+        reject_text="Every site built from scratch"
+        ship_text="One theme, one shared library"
       %}
     </section>
 
     <section class="case-section" id="the-system">
       <h2 class="case-section__title">The system</h2>
-      <p>Did you build or extend a design system, pattern library, or component set over these years? What&rsquo;s worth showing?</p>
-      <div class="work-card__media">
-        <span>[IMAGE: system/component overview &mdash; the shared components or patterns worth showing]</span>
-      </div>
+      <p>Underneath all of it sat a design system for the HomeASAP brand, the thing that let every product site feel like it came from the same company even with its own identity layered on top. I led a team of three, myself included, and together we built the corporate site that tied it all together: 20-plus pages.</p>
+      {% include media-placeholder.html label="System/component overview" tall=true %}
     </section>
 
     <section class="case-section" id="the-ecosystem">
       <h2 class="case-section__title">The ecosystem</h2>
-      <p>Is HomeASAP more than one product or surface? List each one and who it&rsquo;s for. Flag anything that was a reskin/reuse rather than an original decision.</p>
-      <div class="grid-items">
-        <div class="grid-item">
-          <div class="grid-item__media"></div>
-          <p class="grid-item__title">[Surface name]</p>
-          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
-        </div>
-        <div class="grid-item">
-          <div class="grid-item__media"></div>
-          <p class="grid-item__title">[Surface name]</p>
-          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
-        </div>
-      </div>
+      <p>The product sites weren&rsquo;t standalone. They connected back through a Facebook app called Real Estate Agent Directory, which tied the whole lineup together.</p>
     </section>
 
     <section class="case-section" id="outcome">
       <h2 class="case-section__title">Outcome</h2>
-      <p>What happened after it shipped, and what&rsquo;s happened since &mdash; this one&rsquo;s still ongoing. Soft signals count.</p>
-      <p>Any real numbers &mdash; adoption, timeline, revenue? If not, say so plainly rather than implying them.</p>
+      <p>Conversions went up on the individual product sites once the FAQ change shipped. And once the team moved to one shared theme with a shared component library, building and improving new sites got faster and more consistent, for the sites already live and every one built after.</p>
+      <p>That&rsquo;s the part I&rsquo;m proudest of, it kept paying off long after the project was done.</p>
     </section>
+
   </div>
 </div>
 
@@ -118,6 +109,19 @@ gallery: true
   <p class="next-project__label">Next project</p>
   <p class="next-project__title">High5</p>
   <a class="workflow-link" href="{{ '/work/high5/' | relative_url }}">View case study {% include icon.html name="arrow-right" %}</a>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">Thirteen years, one company, four roles</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Majority of company revenue</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+    <span class="marquee-band__item">Thirteen years, one company, four roles</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">Majority of company revenue</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+  </div>
 </div>
 
 {% include cta.html %}

@@ -8,6 +8,9 @@ baseurl: ""
 markdown: kramdown
 permalink: pretty
 
+plugins:
+  - jekyll-sitemap
+
 sass:
   style: compressed
 

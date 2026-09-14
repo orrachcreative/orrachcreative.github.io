@@ -1,11 +1,13 @@
 - title: Eagle Quality
-  status: "Branding exercise · Website"
-  desc: "[Replace: one line on what this exercise explores.]"
+  status: "Website design · Client"
+  desc: "A full website for a family-owned CNC precision machining shop — industrial photography, bold condensed type, teal accent."
   url: /projects/eagle-quality/
   cta: View case study
+  image: /assets/images/projects/eagle-quality/home-desktop.webp
+  image_alt: "Eagle Quality Components homepage, dark hero with CNC machining photography"
 - title: Task Yeti
   status: "Branding exercise · App"
-  desc: "[Replace: one line on what this exercise explores.]"
+  desc: "A playful brand and app-icon concept for a task manager, built to feel less corporate than the category default."
   url: /projects/task-yeti/
   cta: View case study
 - title: Logos

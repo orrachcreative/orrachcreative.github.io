@@ -1,4 +1,25 @@
 <footer class="site-footer">
+  {%- comment -%}
+    REVISIT: the motion toggle is parked here beside the theme toggle as
+    a temporary home. The two do not sit well together yet — the knight
+    needs roughly 34px to read at all (below that the horse, rider and
+    sword fuse into one smudge), while the theme toggle is a 24px chip
+    matching the social icons, so the pair is visibly mismatched. Decide
+    later whether they both grow, the knight gets its own spot, or the
+    footer controls become their own sized cluster.
+
+    The wrapper is not decoration: the desktop footer is a three-column
+    grid that places by source order, so a fourth direct child would wrap
+    onto its own row instead of sitting where it was put.
+  {%- endcomment -%}
+  <div class="site-footer__controls">
+    <button class="theme-toggle site-footer__theme-toggle" data-theme-toggle type="button" aria-pressed="false" aria-label="Switch to light theme">
+      <span data-theme-icon>{% include icon.html name="moon" %}</span>
+    </button>
+    <button class="motion-toggle site-footer__motion-toggle" data-motion-toggle type="button" aria-pressed="false" aria-label="Turn off site animations">
+      <span data-motion-icon>{% include icon.html name="motion-on" %}</span>
+    </button>
+  </div>
   <div class="site-footer__meta">
     <p class="site-footer__copy">&copy; {{ 'now' | date: "%Y" }} Anthony Orrach Creative LLC.</p>
     <p class="site-footer__location">Jacksonville, Florida</p>

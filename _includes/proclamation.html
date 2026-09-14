@@ -1,0 +1,40 @@
+{%- comment -%}
+  The seal's easter egg, staged as a cut scene: the page dims, heraldic
+  confetti falls, and a scroll unrolls between two rods.
+
+  Lives in one include rather than pasted into all 11 pages, so the copy
+  has a single home — same reason the ring's wording sits in one
+  SEAL_TEXT string instead of in the markup.
+
+  The scrim, the confetti layer (added by main.js) and the scroll are all
+  children of this element on purpose: that keeps them in one stacking
+  context, so the confetti falls in front of the dimmed page but behind
+  the scroll, without any of them fighting over z-index with the header.
+{%- endcomment -%}
+<div class="proclamation" data-proclamation role="status" aria-live="polite">
+  <div class="proclamation__scrim" aria-hidden="true"></div>
+  <div class="decree">
+    <span class="decree__rod" aria-hidden="true"></span>
+    <div class="decree__sheet">
+      <div class="decree__clip">
+        <div class="decree__content">
+          <p class="decree__kicker">By royal decree</p>
+          <p class="decree__title">Thou hast clicked the seal thrice.</p>
+          <p class="decree__body">Consider thyself knighted. Now go forth and hire one.</p>
+          <a class="decree__cta" href="mailto:orrachcreative@gmail.com">orrachcreative@gmail.com</a>
+          {%- comment -%}
+            Anthony's ten-year crest, affixed like a seal at the foot of
+            the decree. Painted as a background rather than an <img> on
+            purpose: this include sits inside <main>, and the lightbox on
+            gallery pages adopts every <img> in there — an image element
+            would join the photo gallery and swallow clicks meant for the
+            decree.
+          {%- endcomment -%}
+          <span class="decree__crest" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+    <span class="decree__rod" aria-hidden="true"></span>
+    <button type="button" class="decree__close" data-proclamation-close aria-label="Dismiss">&times;</button>
+  </div>
+</div>

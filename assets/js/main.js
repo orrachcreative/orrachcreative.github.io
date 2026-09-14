@@ -10,6 +10,11 @@
     var isLight = root.getAttribute("data-theme") === "light";
     document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
       btn.setAttribute("aria-pressed", String(isLight));
+      // Was a static "Toggle light and dark theme" label — aria-pressed
+      // changed but nothing told a screen-reader user which state that
+      // referred to. Name the action that pressing it will take next,
+      // same pattern the motion toggle already uses correctly.
+      btn.setAttribute("aria-label", isLight ? "Switch to dark theme" : "Switch to light theme");
       var icon = btn.querySelector("[data-theme-icon]");
       if (icon) icon.innerHTML = isLight ? SUN_SVG : MOON_SVG;
     });
@@ -32,6 +37,68 @@
 
   syncToggleUI();
 
+  // Explicit in-page motion toggle. Independent of (and layered on top of)
+  // the OS-level prefers-reduced-motion query already handled by the head
+  // script + the CSS in style.css: this lets a visitor who hasn't set that
+  // OS preference still turn off this specific site's parallax/tilt/
+  // cursor-glow. Setting data-motion="off" on <html> is the single switch
+  // every motion-driven rule (CSS and JS) checks.
+  function isMotionOff() {
+    return root.getAttribute("data-motion") === "off";
+  }
+
+  // After a tap, a touch browser replays the gesture as compatibility
+  // mouse events (mousemove/mousedown/mouseup/click) so mouse-only pages
+  // keep working. That breaks any hover effect driven by mousemove: the
+  // synthetic mousemove applies the effect, and because there's no real
+  // cursor, no mouseleave ever arrives to take it back off — a tapped
+  // card would sit there tilted until you touched something else.
+  //
+  // So: remember when a touch last happened and have the mouse handlers
+  // sit out the window in which those synthetic events arrive. A drag
+  // suppresses them on its own, which is why this only bites on taps.
+  //
+  // Lives at this scope, not inside the motion block below, because the
+  // closing CTA's cursor-follow needs it too — it was defined in there
+  // and the CTA threw a ReferenceError on every mousemove, silently
+  // killing the effect.
+  var lastTouchAt = 0;
+  function markTouch() {
+    lastTouchAt = Date.now();
+  }
+  document.addEventListener("touchstart", markTouch, { passive: true, capture: true });
+  document.addEventListener("touchend", markTouch, { passive: true, capture: true });
+  function isSyntheticMouse() {
+    return Date.now() - lastTouchAt < 700;
+  }
+
+  function syncMotionUI() {
+    var off = isMotionOff();
+    document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(off));
+      btn.setAttribute("aria-label", off ? "Turn on site animations" : "Turn off site animations");
+    });
+    // No icon swap: it's one knight either way, and CSS stops him
+    // prancing off the same data-motion attribute this sets.
+  }
+
+  document.querySelectorAll("[data-motion-toggle]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var next = isMotionOff() ? "on" : "off";
+      if (next === "off") {
+        root.setAttribute("data-motion", "off");
+      } else {
+        root.removeAttribute("data-motion");
+      }
+      try {
+        localStorage.setItem("aoc-motion", next);
+      } catch (e) {}
+      syncMotionUI();
+    });
+  });
+
+  syncMotionUI();
+
   // Full-screen slide-out menu
   var menuToggle = document.querySelector("[data-menu-toggle]");
   var menuIcon = document.querySelector("[data-menu-icon]");
@@ -46,6 +113,16 @@
 
   if (menuToggle && menuIcon && menu && header) {
     var isMenuOpen = false;
+    var mainEl2 = document.querySelector("main");
+    var footerEl = document.querySelector(".site-footer");
+    // Deliberately just these two, not their parent .site-header__actions
+    // — the menu's own close button (menuToggle) lives in that same
+    // container, and inert-ing the parent would make the close button
+    // itself keyboard-unreachable while the menu it closes is open.
+    var inertOnMenuOpen = [
+      document.querySelector("[data-motion-toggle]"),
+      document.querySelector("[data-theme-toggle]"),
+    ].filter(Boolean);
 
     var openMenu = function () {
       isMenuOpen = true;
@@ -62,6 +139,18 @@
       menuIcon.innerHTML = MENU_CLOSE_INNER;
       if (backdrop) backdrop.classList.add("is-open");
       document.body.classList.add("menu-open");
+      // The overlay covers <main>/<footer> visually (via transform + the
+      // header/backdrop's stacking), but neither was ever actually taken
+      // out of the tab order — a keyboard user tabbing through the open
+      // menu's links continued straight into homepage content sitting
+      // invisibly underneath it. Theme/motion toggles were the same: CSS
+      // already hides them (opacity:0; pointer-events:none) while the
+      // menu is open, but that alone doesn't stop Tab from reaching them.
+      if (mainEl2) mainEl2.setAttribute("inert", "");
+      if (footerEl) footerEl.setAttribute("inert", "");
+      inertOnMenuOpen.forEach(function (el) {
+        el.setAttribute("inert", "");
+      });
     };
 
     var closeMenu = function () {
@@ -75,6 +164,11 @@
       menuIcon.innerHTML = MENU_OPEN_INNER;
       if (backdrop) backdrop.classList.remove("is-open");
       document.body.classList.remove("menu-open");
+      if (mainEl2) mainEl2.removeAttribute("inert");
+      if (footerEl) footerEl.removeAttribute("inert");
+      inertOnMenuOpen.forEach(function (el) {
+        el.removeAttribute("inert");
+      });
     };
 
     menuToggle.addEventListener("click", function () {
@@ -161,18 +255,13 @@
     };
 
     document.addEventListener("scroll", setActive, { passive: true });
-    // For a first-time visitor the password gate hides <main> (display:
-    // none) until they submit it, so any layout read before then — this
-    // call included — sees offsetTop 0 for every section and lands on the
-    // last one. Real root fix is gate.js dispatching "gate:unlocked" once
-    // <main> is actually visible; requestAnimationFrame/fonts.ready are
-    // just cheap extra passes for the already-unlocked-session case where
-    // fonts still swap in and reflow the page after first layout.
+    // Fonts swap in and reflow the page after first layout, which can move
+    // section offsets enough to change the active link — cheap extra
+    // passes to catch that.
     requestAnimationFrame(setActive);
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(setActive);
     }
-    window.addEventListener("gate:unlocked", setActive);
   }
 
   // Image lightbox: case-study, project, logos, and illustrations pages
@@ -279,6 +368,237 @@
     }
   }
 
+  // Before/after compare slider: a real implementation of the "Compare
+  // with slider" affordance the original decision-block markup promised
+  // but never built. Not gated behind js-anim, same reasoning as the
+  // lightbox above — this is a content-reveal control, not decorative
+  // motion, so reduced-motion visitors still need it to work (just without
+  // any animated transition on drag, which the CSS leaves instant for
+  // them anyway). The range input is the real control: native keyboard
+  // support (arrow keys), a screen-reader label, and its value drives a
+  // CSS custom property that clips the "shipped" layer over the
+  // "rejected" one underneath.
+  document.querySelectorAll(".compare-slider").forEach(function (slider) {
+    var input = slider.querySelector(".compare-slider__input");
+    var afterLayer = slider.querySelector(".compare-slider__pane--after");
+    if (!input || !afterLayer) return;
+
+    var setPos = function () {
+      var v = input.value;
+      slider.style.setProperty("--pos", v + "%");
+      afterLayer.style.clipPath = "inset(0 " + (100 - v) + "% 0 0)";
+    };
+
+    input.addEventListener("input", setPos);
+    setPos();
+  });
+
+  // Seal badge: draws the rotating circular text on an SVG path, then
+  // doubles as an easter-egg trigger. Text-on-path is generated here
+  // rather than hardcoded in the HTML so the copy only lives in one place
+  // and the radius always matches the badge's actual rendered size.
+  // The copy lives here and nowhere else; the center mark is painted by
+  // .seal-badge__center in style.css.
+  // Non-breaking spaces around the bullets, not plain ones: SVG collapses
+  // regular whitespace, and the trailing one at the seam gets trimmed
+  // outright, which is what butted the closing bullet against the opening
+  // "S" where the ring wraps.
+  var SEAL_TEXT = "SENIOR PRODUCT DESIGNER • JACKSONVILLE, FL • ";
+  document.querySelectorAll(".seal-badge").forEach(function (badge, badgeIndex) {
+    var size = 128;
+    var r = size / 2 - 14;
+    var cx = size / 2;
+    var cy = size / 2;
+    var pathId = "seal-ring-path-" + badgeIndex;
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("class", "seal-badge__ring");
+    svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+    svg.setAttribute("aria-hidden", "true");
+
+    var defs = document.createElementNS(svgNS, "defs");
+    var path = document.createElementNS(svgNS, "path");
+    path.setAttribute("id", pathId);
+    // Full circle drawn as two arcs — a single 360deg arc command is
+    // degenerate (start === end) and most renderers just drop it.
+    path.setAttribute(
+      "d",
+      "M " + cx + "," + (cy - r) +
+        " A " + r + "," + r + " 0 1 1 " + cx + "," + (cy + r) +
+        " A " + r + "," + r + " 0 1 1 " + cx + "," + (cy - r)
+    );
+    defs.appendChild(path);
+    svg.appendChild(defs);
+
+    var text = document.createElementNS(svgNS, "text");
+    text.setAttribute("font-size", "8.6");
+    text.setAttribute("font-family", "var(--font-mono)");
+    text.setAttribute("font-weight", "600");
+    var textPath = document.createElementNS(svgNS, "textPath");
+    textPath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + pathId);
+    textPath.setAttribute("href", "#" + pathId);
+    textPath.textContent = SEAL_TEXT;
+    text.appendChild(textPath);
+    svg.appendChild(text);
+
+    badge.insertBefore(svg, badge.firstChild);
+
+    // Fit the phrase to exactly one lap of the ring. Repeating the string
+    // and letting the path clip whatever didn't fit was what put a second,
+    // half-finished "PRINCIPAL" next to the first one: the phrase's natural
+    // width has no reason to divide evenly into the circumference. Pinning
+    // textLength to the path's own length instead means it always closes
+    // the loop on itself and reads once, cleanly, at any badge size.
+    // lengthAdjust "spacing" opens the gaps between letters and leaves the
+    // letterforms alone — "spacingAndGlyphs" would stretch the type itself.
+    // (The trailing space in SEAL_TEXT is what keeps the final bullet off
+    // the leading "P" where the ring meets.)
+    text.setAttribute("textLength", path.getTotalLength());
+    text.setAttribute("lengthAdjust", "spacing");
+
+    // Easter egg: a few clicks on the seal knights you. Gated at 3 clicks
+    // so a single curious tap doesn't immediately throw a decree over the
+    // page. No auto-dismiss timer any more — there's a mailto in the card
+    // now, and yanking it away mid-read would be its own small betrayal.
+    var proclamation = document.querySelector("[data-proclamation]");
+    if (!proclamation) return;
+    var clickCount = 0;
+    badge.addEventListener("click", function () {
+      clickCount += 1;
+      if (clickCount < 3) return;
+      clickCount = 0;
+      proclamation.classList.add("is-shown");
+      throwConfetti(proclamation);
+    });
+  });
+
+  // Heraldic confetti behind the decree — Anthony's two marks, flung
+  // across the screen. Decorative only, so it is skipped entirely when
+  // motion is off, and it cleans itself up rather than leaving a few
+  // hundred nodes parked in the DOM.
+  function throwConfetti(proclamation) {
+    if (isMotionOff()) return;
+    var existing = proclamation.querySelector(".seal-confetti");
+    if (existing) existing.remove();
+
+    var layer = document.createElement("div");
+    layer.className = "seal-confetti";
+    layer.setAttribute("aria-hidden", "true");
+
+    // Spread across the whole width. This used to scatter around the
+    // badge, which put nearly all of it down the right-hand side, since
+    // that is where the seal sits — it read as a leak rather than a
+    // celebration. Columns with a jittered offset rather than pure
+    // random, so no stretch of the screen is left bare by chance.
+    var count = 64;
+    for (var i = 0; i < count; i++) {
+      var bit = document.createElement("span");
+      bit.className =
+        "seal-confetti__bit seal-confetti__bit--" + (i % 2 ? "swords" : "castle");
+      var column = (i / count) * 106 - 3;
+      bit.style.left = (column + (Math.random() - 0.5) * 3.4).toFixed(2) + "%";
+      bit.style.setProperty("--spin", (Math.random() * 900 - 450).toFixed(0) + "deg");
+      var scale = 0.6 + Math.random() * 0.9;
+      bit.style.width = (22 * scale).toFixed(1) + "px";
+      bit.style.height = (22 * scale).toFixed(1) + "px";
+      bit.style.animationDuration = (2.4 + Math.random() * 2.2).toFixed(2) + "s";
+      bit.style.animationDelay = (Math.random() * 1.1).toFixed(2) + "s";
+      bit.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
+      layer.appendChild(bit);
+    }
+
+    // Into the proclamation rather than the body: that puts it in the
+    // same stacking context as the scrim and the scroll, so it falls in
+    // front of the dimmed page and behind the parchment.
+    proclamation.insertBefore(layer, proclamation.querySelector(".decree"));
+    setTimeout(function () {
+      if (layer.parentNode) layer.remove();
+    }, 7000);
+  }
+
+  // Closing CTA: the email turns into a button that follows the cursor
+  // around the panel while it is open. Decorative movement only — the
+  // link keeps its place in the flow and its own focus/tab behaviour, so
+  // it stays reachable for anyone not using a pointer at all.
+  document.querySelectorAll(".cta").forEach(function (cta) {
+    var link = cta.querySelector(".cta__email");
+    if (!link) return;
+
+    function reset() {
+      link.style.transform = "";
+    }
+
+    // One flag both the type scale and the button styling follow, rather
+    // than each re-deriving "is the panel open" from a hover query and a
+    // reveal class separately. Desktop opens it on hover; tablet and
+    // phone on arrival, which the scroll-reveal observer signals.
+    cta.addEventListener("mouseenter", function () {
+      cta.classList.add("is-open");
+    });
+    cta.addEventListener("mouseleave", function () {
+      cta.classList.remove("is-open");
+      reset();
+    });
+
+    if (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+      var sync = function () {
+        if (cta.classList.contains("is-revealed")) cta.classList.add("is-open");
+      };
+      sync();
+      new MutationObserver(sync).observe(cta, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }
+
+    cta.addEventListener("mousemove", function (e) {
+      if (isMotionOff() || isSyntheticMouse()) return;
+      // Only chase while the panel is actually open, so the button does
+      // not drift around inside the collapsed strip.
+      if (!cta.classList.contains("is-open")) return;
+      var box = link.getBoundingClientRect();
+      var dx = e.clientX - (box.left + box.width / 2);
+      var dy = e.clientY - (box.top + box.height / 2);
+      // Eased rather than pinned to the cursor: at 1:1 it would sit under
+      // the pointer permanently and never read as a thing being chased.
+      var pull = 0.55;
+      var maxX = cta.clientWidth / 2 - box.width / 2 - 24;
+      var maxY = cta.clientHeight / 2 - box.height / 2 - 24;
+      var x = Math.max(-maxX, Math.min(maxX, dx * pull));
+      var y = Math.max(-maxY, Math.min(maxY, dy * pull));
+      link.style.transform = "translate(" + x.toFixed(1) + "px, " + y.toFixed(1) + "px)";
+    });
+
+    cta.addEventListener("mouseleave", reset);
+  });
+
+  // Esc closes the decree, the one convention people reach for on
+  // anything that covers the page.
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll("[data-proclamation].is-shown").forEach(function (p) {
+      p.classList.remove("is-shown");
+    });
+  });
+
+  document.querySelectorAll("[data-proclamation-close]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var proclamation = btn.closest("[data-proclamation]");
+      if (proclamation) proclamation.classList.remove("is-shown");
+    });
+  });
+
+  // Clicking away closes it too — but only on the padding around the
+  // scroll or the scrim itself, never on a click that landed on the
+  // parchment, which holds the mailto.
+  document.querySelectorAll("[data-proclamation]").forEach(function (p) {
+    p.addEventListener("click", function (e) {
+      if (e.target === p || e.target.classList.contains("proclamation__scrim")) {
+        p.classList.remove("is-shown");
+      }
+    });
+  });
+
   // Motion: page crossfade, scroll-reveal, and background parallax.
   // Everything here is skipped for reduced-motion users — root.classList
   // only carries "js-anim" when the head script already found no
@@ -345,8 +665,14 @@
     // entirely without ever intersecting the viewport and stay invisible
     // forever. This selector only covers content reached by ordinary
     // top-to-bottom scrolling, where that failure mode can't happen.
+    // .cta is here so it learns when it has actually been reached: on
+    // tablet and phone the panel opens up a little on .is-revealed, since
+    // there's no hover to open it with the way there is on desktop.
+    // The attribute is set below rather than written into the markup on
+    // purpose — [data-reveal] starts an element invisible, so hardcoding
+    // it would strand the whole closing CTA if this script never ran.
     var revealEls = document.querySelectorAll(
-      ".work-card, .about-row, .logo-grid__item, .closing-cta, .gallery-scroll > .work-card__media"
+      ".work-card, .about-row, .logo-grid__item, .closing-cta, .cta, .gallery-scroll > .work-card__media"
     );
 
     if (revealEls.length && "IntersectionObserver" in window) {
@@ -411,6 +737,13 @@
     if (parallaxEls.length) {
       var ticking = false;
       var updateParallax = function () {
+        if (isMotionOff()) {
+          parallaxEls.forEach(function (el) {
+            el.style.backgroundPosition = "";
+          });
+          ticking = false;
+          return;
+        }
         parallaxEls.forEach(function (el) {
           var offset = el.getBoundingClientRect().top * 0.15;
           el.style.backgroundPosition = "center calc(50% + " + -offset + "px)";
@@ -429,5 +762,145 @@
       );
       updateParallax();
     }
+
+    // Magnetic hover: primary CTAs (opted in via [data-magnetic]) nudge
+    // toward the cursor within a small radius, then spring back. Reset to
+    // no transform whenever the in-page motion toggle is off, since this
+    // sets inline transforms directly rather than through a CSS class the
+    // motion-off stylesheet rule could otherwise neutralize on its own.
+    var magneticEls = document.querySelectorAll("[data-magnetic]");
+    magneticEls.forEach(function (el) {
+      var strength = 0.3;
+      el.addEventListener("mousemove", function (e) {
+        if (isMotionOff() || isSyntheticMouse()) return;
+        var rect = el.getBoundingClientRect();
+        var x = e.clientX - (rect.left + rect.width / 2);
+        var y = e.clientY - (rect.top + rect.height / 2);
+        el.style.transform = "translate(" + x * strength + "px, " + y * strength + "px)";
+      });
+      el.addEventListener("mouseleave", function () {
+        el.style.transform = "";
+      });
+    });
+
+    // Card tilt: every card-shaped tile on the site leans toward
+    // wherever the pointer sits over it — a cursor, or a finger pressing
+    // and dragging on touch — like the corner nearest it is being pulled
+    // up to meet it. On top of whatever lift/glow that tile's own
+    // :hover (or .is-tilting, its touch counterpart) adds. The tile's
+    // --tilt-x/--tilt-y custom properties (declared in style.css, on the
+    // matching selector list) drive the rotation; this just keeps them
+    // in sync with the pointer. --tilt-lift stays a plain CSS :hover
+    // value, not JS — it doesn't depend on cursor position.
+    //
+    // Keep in sync with the grouped tilt selector in style.css.
+    var TILT_SELECTOR = [
+      ".work-card",
+      ".logo-grid__item",
+      ".logo-grid > .work-card__media",
+      ".gallery-scroll > .work-card__media",
+      ".grid-item",
+      ".next-project",
+      ".shot-stack__item",
+      ".logo-showcase__item",
+    ].join(",");
+    //
+    // Signs: a positive rotateX pushes the top edge away from the viewer
+    // and a positive rotateY pushes the right edge away, so leaning
+    // *toward* the cursor means negating both — cursor above center
+    // (py < 0) has to produce a negative rotateX to bring the top edge
+    // forward, and cursor right of center (px > 0) a negative rotateY.
+    var tiltMax = 10; // degrees, at the card's edge
+    document.querySelectorAll(TILT_SELECTOR).forEach(function (el) {
+      function tiltTo(clientX, clientY) {
+        var rect = el.getBoundingClientRect();
+        var px = (clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+        var py = (clientY - rect.top) / rect.height - 0.5; // -0.5..0.5
+        el.style.setProperty("--tilt-y", (px * -2 * tiltMax).toFixed(2) + "deg");
+        el.style.setProperty("--tilt-x", (py * 2 * tiltMax).toFixed(2) + "deg");
+      }
+      function release() {
+        el.classList.remove("is-tilting");
+        el.style.setProperty("--tilt-x", "0deg");
+        el.style.setProperty("--tilt-y", "0deg");
+      }
+
+      el.addEventListener("mousemove", function (e) {
+        if (isMotionOff() || isSyntheticMouse()) return;
+        tiltTo(e.clientX, e.clientY);
+      });
+      el.addEventListener("mouseleave", release);
+
+      // Touch: the same lean, driven by a press-and-drag. The card tips
+      // toward the finger the moment it lands and follows it around, so
+      // a press alone is enough to get the effect and a drag steers it.
+      //
+      // Every listener here is passive and nothing calls preventDefault,
+      // which keeps the two things a card owes a touch user intact: a tap
+      // still follows the link (these tiles are mostly anchors), and a
+      // swipe still scrolls the page. The cost of staying passive is that
+      // a scroll gesture starting on a card would otherwise drag the tilt
+      // along with it, so the first move decides: past a small threshold
+      // and mostly vertical reads as a scroll, and the card drops the
+      // tilt and sits out the rest of the gesture.
+      //
+      // The lift rides on .is-tilting rather than :hover, since touch
+      // browsers deliver :hover erratically and tend to strand it on the
+      // last-tapped element.
+      var touchId = null;
+      var startX = 0;
+      var startY = 0;
+      var scrolling = false;
+
+      el.addEventListener(
+        "touchstart",
+        function (e) {
+          if (isMotionOff() || touchId !== null) return;
+          var t = e.changedTouches[0];
+          touchId = t.identifier;
+          startX = t.clientX;
+          startY = t.clientY;
+          scrolling = false;
+          el.classList.add("is-tilting");
+          tiltTo(t.clientX, t.clientY);
+        },
+        { passive: true }
+      );
+
+      el.addEventListener(
+        "touchmove",
+        function (e) {
+          if (touchId === null || scrolling) return;
+          var t = null;
+          for (var i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === touchId) t = e.changedTouches[i];
+          }
+          if (!t) return;
+          var dx = t.clientX - startX;
+          var dy = t.clientY - startY;
+          if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) {
+            scrolling = true;
+            release();
+            return;
+          }
+          tiltTo(t.clientX, t.clientY);
+        },
+        { passive: true }
+      );
+
+      function endTouch(e) {
+        if (touchId === null) return;
+        for (var i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchId) {
+            touchId = null;
+            release();
+            return;
+          }
+        }
+      }
+      el.addEventListener("touchend", endTouch, { passive: true });
+      el.addEventListener("touchcancel", endTouch, { passive: true });
+    });
+
   }
 })();

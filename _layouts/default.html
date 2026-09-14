@@ -5,47 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/logo/AOC-favicon.svg' | relative_url }}">
+
+  {%- comment -%}
+    Open Graph / Twitter Card: previously absent entirely, so pasting this
+    URL into LinkedIn/Slack/email (exactly how a recruiter would share or
+    revisit it) produced a blank, title-less preview. No og:image yet —
+    that needs a real hero screenshot, not a placeholder graphic pretending
+    to be one; add one here once that exists.
+  {%- endcomment -%}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}">
+  <meta property="og:description" content="{{ page.description | default: site.description }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}">
+  <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ site.author }}",
+    "jobTitle": "Senior Product Designer",
+    "url": "{{ site.url }}",
+    "email": "mailto:{{ site.email }}",
+    "sameAs": [
+      "https://www.linkedin.com/in/anthony-orrach-b51b7238/",
+      "https://dribbble.com/anthonyorrach"
+    ]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@400;500;600;700&family=Archivo:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Text:wght@400;500;600;700&family=Archivo:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500;1,9..144,600&family=Germania+One&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <script>
     (function () {
       var root = document.documentElement;
-      root.classList.add('gate-locked');
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         root.classList.add('js-anim');
       }
       try {
         var theme = localStorage.getItem('aoc-theme');
         if (theme) root.setAttribute('data-theme', theme);
+        // Independent of the OS reduced-motion query above: a visitor who
+        // previously switched the in-page motion toggle off should land
+        // with motion already off, not flash it on for one frame first.
+        var motion = localStorage.getItem('aoc-motion');
+        if (motion === 'off') root.setAttribute('data-motion', 'off');
       } catch (e) {}
     })();
   </script>
 </head>
 <body>
-  <div class="gate" id="preview-gate">
-    <div class="gate__panel">
-      <div>
-        <p class="eyebrow">Work in progress</p>
-        <h1 class="heading-2">Anthony Orrach Creative</h1>
-      </div>
-      <form class="gate__form" id="preview-gate-form" autocomplete="off">
-        <label class="visually-hidden" for="preview-gate-input">Password</label>
-        <input class="gate__input" id="preview-gate-input" type="password" placeholder="Password" required>
-        <button class="gate__submit" type="submit">Enter</button>
-        <p class="gate__error" id="preview-gate-error" hidden>Wrong password — try again.</p>
-      </form>
-    </div>
-  </div>
-  <script src="{{ '/assets/js/gate.js' | relative_url }}"></script>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
   {% include nav.html %}
 
-  <main{% if page.gallery %} class="has-gallery"{% endif %}{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
+  {%- assign main_classes = "" | split: "" -%}
+  {%- if page.gallery -%}{%- assign main_classes = main_classes | push: "has-gallery" -%}{%- endif -%}
+  {%- if page.nav == 'home' -%}{%- assign main_classes = main_classes | push: "home-bg" -%}{%- endif -%}
+  <main id="main-content" tabindex="-1"{% if main_classes.size > 0 %} class="{{ main_classes | join: ' ' }}"{% endif %}{% if page.nav == 'home' %} style="background-image: url('{{ '/assets/images/about/Stone-wall.jpg' | relative_url }}');"{% endif %}>
     {{ content }}
   </main>
 

@@ -8,27 +8,41 @@
    ========================================================================== */
 
 :root {
-  /* Palette (from Figma: Components / Typography pages) */
+  /* Palette (from Figma: Components / Typography pages).
+     v2: --bronze and --emerald-2 were retuned for phase 2 — both failed
+     WCAG AA text contrast against parchment at their original values
+     (bronze ~2.2:1, emerald-2 ~4.3:1 for body text; measured against the
+     actual rendered token pairs, see the design audit). Deepened both
+     until they clear 4.5:1 with margin; the darker, less-saccharine tone
+     also reads less "artisan brand," more editorial. */
   --ivory: #f5ecde;
   --parchment: #fffaf3;
   --emerald: #5cce59;
-  --emerald-2: #438541;
-  --black: #1a1a1a;
+  --emerald-2: #3a7238;
+  --black: #131313;
   --dark-forest: #1e221e;
   --gold: #e7c642;
-  --bronze: #c9aa2e;
+  --bronze: #8a6812;
 
   /* Semantic tokens (dark mode) */
   --bg: var(--black);
   --bg-raised: rgba(245, 236, 222, 0.08);
   --bg-card: var(--dark-forest);
+  /* RGB triplet of --bg-card, for the work-card body panel, which needs
+     a real alpha so the page's background photo reads through it. Same
+     reason --accent-rgb exists: rgba() can't take the hex token. */
+  --bg-card-rgb: 30, 34, 30;
   --ink: var(--ivory);
   --ink-strong: var(--parchment);
   --ink-soft: #e6dfd3;
-  --ink-faint: #8a8377;
+  --ink-faint: #94897a;
   --accent: var(--emerald);
   --accent-2: var(--emerald-2);
   --accent-label: var(--emerald);
+  /* RGB triplet of --accent, for building translucent glows/borders that
+     can't be made from the solid hex token alone (rgba()/color-mix() both
+     need this in a component that has to work in both themes). */
+  --accent-rgb: 92, 206, 89;
   --line: rgba(254, 245, 234, 0.1);
   --line-strong: rgba(254, 245, 234, 0.25);
   --placeholder-bg: var(--ivory);
@@ -37,24 +51,55 @@
   --reject-ink: rgba(254, 245, 234, 0.6);
   --ship: var(--emerald);
   --shadow-nav: 0 8px 12px rgba(28, 25, 19, 0.6);
+  --focus-ring: var(--gold);
+  --focus-ring-offset: var(--black);
+  --draft-ink: var(--gold);
 
   /* Type */
   --font-display: "Big Shoulders Text", "Archivo Narrow", sans-serif;
   --font-body: "Archivo", sans-serif;
   --font-mono: "Space Grotesk", sans-serif;
+  /* Accent serif — mixed-weight pairing (bold condensed sans + italic
+     serif) used sparingly for one word/phrase at a time, the way
+     eszterbial.com pairs a bold grotesk with an italic serif for
+     personality. Not a body or heading workhorse font. */
+  --font-accent: "Fraunces", Georgia, serif;
+  /* Blackletter, used in exactly one place: the decree the seal's easter
+     egg unrolls. It is a costume, not a typeface for the site — legible
+     only in short bursts at display size, which is all it ever gets. */
+  --font-decree: "Germania One", "Big Shoulders Text", serif;
 
   /* Layout */
   --content-max: 1152px;
-  --gutter-desktop: 144px;
+  --gutter-desktop: 92px;
   --gutter-mobile: 20px;
   --header-h: 80px;
   --radius: 8px;
+
+  /* Motion (see prefers-reduced-motion + [data-motion="off"] below — every
+     hand-written animation/transition duration in this file should read
+     through one of these two custom properties, not a literal, so both
+     the OS setting and the in-page motion toggle can kill it centrally). */
+  --motion-fast: 0.15s;
+  --motion-med: 0.6s;
 }
 
 [data-theme="light"] {
-  --bg: var(--parchment);
+  /* Parchment knocked back 15% toward the warm dark ink (#1f1c16), so
+     the page reads as a warm off-white rather than near-white. Only the
+     page ground moves — --parchment itself stays pure, since it's still
+     the ivory the cards and the always-dark hero text are made of. That
+     separation is the point: at full parchment the 85% ivory card panels
+     were sitting on an identical ivory ground and had no visible edge of
+     their own. */
+  --bg: #ddd9d2;
   --bg-raised: rgba(31, 28, 22, 0.08);
   --bg-card: rgba(31, 28, 22, 0.05);
+  /* Parchment rather than the faint dark tint --bg-card uses here: at
+     85% this is an actual light panel sitting over the ivory-washed
+     photo, where 85% of a 5% dark tint would be indistinguishable from
+     the background behind it. */
+  --bg-card-rgb: 255, 250, 243;
   --ink: #1e1e1e;
   --ink-strong: #000000;
   --ink-soft: #1f1c16;
@@ -62,6 +107,7 @@
   --accent: var(--emerald-2);
   --accent-2: var(--emerald);
   --accent-label: var(--bronze);
+  --accent-rgb: 58, 114, 56;
   --line: rgba(101, 101, 115, 0.1);
   --line-strong: rgba(101, 101, 115, 0.25);
   --placeholder-bg: #efe8da;
@@ -70,6 +116,13 @@
   --reject-ink: var(--ink-faint);
   --ship: var(--emerald-2);
   --shadow-nav: 0 4px 10px rgba(28, 25, 19, 0.1);
+  --focus-ring: var(--emerald-2);
+  --focus-ring-offset: var(--parchment);
+  /* var(--gold) (#e7c642) is a light color and reads fine on the always-
+     dark surfaces it's used on elsewhere (menu, decision-block), but the
+     draft-flag banner appears on ordinary page background, which is light
+     here — reuse the already-contrast-checked bronze instead of gold. */
+  --draft-ink: var(--bronze);
 }
 
 * {
@@ -93,6 +146,13 @@ body {
   font-size: 16px;
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+  /* Theme flip crossfade — CSS custom properties don't interpolate on
+     their own, so this transitions the actual computed properties that
+     read from them. Automatically becomes instant under reduced-motion
+     or the in-page motion toggle, same as everything else reading
+     var(--motion-med): both paths force every transition-duration to
+     0.01ms !important site-wide. */
+  transition: background-color var(--motion-med) ease, color var(--motion-med) ease;
 }
 
 img,
@@ -138,6 +198,68 @@ button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ==========================================================================
+   Focus visibility (WCAG 2.4.7 / 2.4.11) — sitewide, on-brand.
+   Nothing in the original build styled keyboard focus except the gate
+   input, so every interactive element fell back to (or in a few cases,
+   like the gate input, actively suppressed) the browser default. This is
+   the single ring/underline system every focusable element in the site
+   should resolve to; component-specific CSS should not add its own
+   competing :focus rule. Mouse/touch clicks never trigger :focus-visible,
+   so this never shows up as "unwanted boxes" from pointer interaction. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Full-bleed / dark-surface controls sit on their own background rather
+   than the page background, so the ring needs a matching offset shadow to
+   stay legible instead of blending into whatever's directly behind it. */
+.menu-toggle:focus-visible,
+.theme-toggle:focus-visible,
+.motion-toggle:focus-visible,
+a.work-card:focus-visible {
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring-offset);
+}
+
+/* .work-card--horizontal clips its own box with overflow:hidden (needed
+   for the media panel's rounded/flush edges), which also clips the
+   offset halo above — verified via keyboard testing, only a thin ring
+   flush with the edge was rendering. Inset ring instead, which can't be
+   clipped by the element's own overflow regardless of ancestor stacking. */
+a.work-card--horizontal:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--focus-ring);
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 12px 18px;
+  background: var(--accent);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  transform: translateY(-140%);
+  transition: transform var(--motion-fast) ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline-offset: 4px;
 }
 
 /* ==========================================================================
@@ -366,9 +488,163 @@ button {
   background: var(--gold);
 }
 
-.site-header.is-menu-open .theme-toggle {
-  opacity: 0;
-  pointer-events: none;
+/* Explicit in-page motion control, independent of the OS-level
+   prefers-reduced-motion setting (see the design audit / field research on
+   why a heavily-animated site shouldn't rely on the media query alone). */
+.motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  color: var(--ink-strong);
+  flex: none;
+  transition: opacity var(--motion-fast) ease, transform var(--motion-fast) ease, background-color var(--motion-fast) ease;
+}
+
+.motion-toggle svg {
+  /* Sized to sit with the 48px menu button beside it. A mounted knight
+     carries far more detail than the single figure that used to live
+     here, and below about 34px the horse, rider and sword collapse into
+     one smudge — so the button grew to fit the icon rather than the icon
+     being shrunk to fit the button. */
+  width: 40px;
+  height: 40px;
+  /* Rearing swings the figure past the viewBox, and an SVG clips to its
+     viewBox by default — which lopped off the tail and the tip of the
+     sword. The rear is shifted back inside below; this is the guarantee
+     that nothing ever gets cut whatever the pose. */
+  overflow: visible;
+}
+
+/* The knight rides while site motion is on, rears onto his hind legs
+   when you point at him, and stands still once motion is off — the
+   control demonstrating the thing it controls.
+
+   Two nested groups per leg: .mtk-swing carries the walk, .mtk-leg the
+   hover tuck. They cannot be the same element, because a running
+   animation beats a plain transform on that element and the tuck would
+   simply never show. */
+.mtk-fig,
+.mtk-body,
+.mtk-leg,
+.mtk-swing {
+  transform-box: view-box;
+}
+
+.mtk-fig {
+  transform-origin: 11px 35px; /* the hind hoof he pivots on */
+  transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mtk-leg {
+  transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Each leg turns about its own hip/shoulder, not the icon's center. */
+.mtk-leg--hf { transform-origin: 11.5px 24.5px; }
+.mtk-leg--hn { transform-origin: 13.6px 25.2px; }
+.mtk-leg--ff { transform-origin: 22.6px 25.4px; }
+.mtk-leg--fn { transform-origin: 24.8px 25px; }
+.mtk-swing { transform-origin: inherit; }
+
+/* Gated exactly like every other animation here: the OS preference
+   first, then the in-page toggle, so turning motion off genuinely
+   halts him rather than just hiding the movement. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Diagonal pairs move together, which is what a real walk looks like
+     — legs swinging in unison reads as a rocking horse. */
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--hf .mtk-swing,
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--fn .mtk-swing {
+    animation: mtk-stride-a 0.8s ease-in-out infinite;
+  }
+
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--hn .mtk-swing,
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--ff .mtk-swing {
+    animation: mtk-stride-b 0.8s ease-in-out infinite;
+  }
+
+  /* Half the stride's duration: the body dips once per step, not once
+     per full cycle. */
+  html:not([data-motion="off"]) .motion-toggle .mtk-body {
+    animation: mtk-bob 0.4s ease-in-out infinite;
+  }
+
+  @keyframes mtk-stride-a {
+    0%,
+    100% {
+      transform: rotate(14deg);
+    }
+    50% {
+      transform: rotate(-14deg);
+    }
+  }
+
+  @keyframes mtk-stride-b {
+    0%,
+    100% {
+      transform: rotate(-14deg);
+    }
+    50% {
+      transform: rotate(14deg);
+    }
+  }
+
+  @keyframes mtk-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.4px);
+    }
+  }
+}
+
+/* Rearing up. The whole figure pivots on the hind hoof while the front
+   legs tuck, and the walk pauses for as long as he's up — a horse on two
+   legs is not mid-stride. Kept on :hover and :focus-visible together so
+   it is reachable from the keyboard as well as the cursor. */
+/* Pivoting on the hind hoof alone throws him up and to the left, well
+   outside the icon's box. The scale and nudge put him back inside it, so
+   he rears in place instead of climbing out of his own button. */
+.motion-toggle:hover .mtk-fig,
+.motion-toggle:focus-visible .mtk-fig {
+  transform: translateX(5.2px) rotate(-24deg) scale(0.9);
+}
+
+.motion-toggle:hover .mtk-leg--ff,
+.motion-toggle:focus-visible .mtk-leg--ff {
+  transform: rotate(-36deg);
+}
+
+.motion-toggle:hover .mtk-leg--fn,
+.motion-toggle:focus-visible .mtk-leg--fn {
+  transform: rotate(-52deg);
+}
+
+/* These carry the full html:not([data-motion]) prefix, and name .mtk-leg
+   on the way down, purely to outrank the walk rules above. Those use the
+   `animation` shorthand, which resets animation-play-state to running, so
+   a lower-specificity `paused` here is silently overruled — he reared but
+   kept walking in mid-air. */
+html:not([data-motion="off"]) .motion-toggle:hover .mtk-leg .mtk-swing,
+html:not([data-motion="off"]) .motion-toggle:focus-visible .mtk-leg .mtk-swing,
+html:not([data-motion="off"]) .motion-toggle:hover .mtk-body,
+html:not([data-motion="off"]) .motion-toggle:focus-visible .mtk-body {
+  animation-play-state: paused;
+}
+
+.motion-toggle:hover {
+  opacity: 0.8;
+}
+
+.motion-toggle[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--black);
 }
 
 /* Menu toggle: closed state is the "menu 2 / Default" chip (hamburger +
@@ -507,6 +783,48 @@ button {
   transform: scaleX(1);
 }
 
+.site-menu__secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 250, 243, 0.12);
+}
+
+.site-menu__secondary-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 250, 243, 0.4);
+}
+
+/* Was a 0.95rem muted-white footnote — read as an afterthought next to
+   the Home/Work/About links above it, when the craft work deserves real
+   billing too. Not matched to the primary links' full display-heading
+   scale (this is still the secondary group), but bumped enough in size,
+   weight, and full-opacity color to read as a real destination rather
+   than a whispered aside. */
+.site-menu__secondary-link {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.375rem, 1.1rem + 1.2vw, 1.75rem);
+  line-height: 1.3;
+  text-align: right;
+  color: var(--parchment);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.site-menu__secondary-link:hover,
+.site-menu__secondary-link.is-active {
+  color: var(--emerald);
+  border-color: var(--emerald);
+}
+
 .site-menu__footer {
   display: flex;
   flex-direction: column;
@@ -584,9 +902,18 @@ button {
     text-align: left;
   }
 
+  /* Match the main site footer's left-to-right order (copyright block,
+     then social) — this section's markup keeps social first for a
+     sensible reading order, so the swap happens here via `order` rather
+     than in the DOM. */
   .site-menu__meta {
-    align-items: flex-end;
-    text-align: right;
+    order: 1;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .site-menu__social {
+    order: 2;
   }
 }
 
@@ -605,6 +932,37 @@ body.menu-open {
   gap: 16px;
 }
 
+/* The name, sitting between the eyebrow and the headline. Deliberately
+   not display-sized: the headline is the thing that should land first,
+   and a name set large enough to compete with it makes the visitor do
+   the work of figuring out why they should care. This is big enough to
+   be read rather than skimmed past the way a header wordmark is, and
+   small enough to stay an introduction. */
+.hero__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.25px;
+  /* No narrow cap: 24ch was sized for the old short greeting and turns
+     the longer introduction into a column of stubs. The shell's own
+     content-max bounds it instead, which lands it on one line at desktop
+     and two as the viewport narrows. */
+  max-width: 100%;
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+/* The greeting carries the name, so the name itself gets the accent —
+   the sentence around it stays quiet enough not to rival the headline. */
+.hero__name-self {
+  color: var(--accent);
+}
+
+.hero-shell .hero__name {
+  color: var(--parchment);
+}
+
 .hero__title {
   max-width: 700px;
 }
@@ -618,10 +976,646 @@ body.menu-open {
   color: var(--parchment);
 }
 
+/* ==========================================================================
+   Home hero — kinetic headline + proof strip
+   ========================================================================== */
+
+.home-hero {
+  gap: 24px;
+  padding: 96px 0 64px;
+}
+
+.kinetic-title {
+  max-width: 920px;
+  font-size: clamp(2.75rem, 2rem + 4.2vw, 5.5rem);
+  line-height: 1.05;
+}
+
+.kinetic-title-inner {
+  display: block;
+}
+
+.kinetic-word {
+  display: inline-block;
+}
+
+.kinetic-word--accent {
+  color: var(--emerald);
+}
+
+.hero-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(254, 245, 234, 0.18);
+}
+
+.hero-proof__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-proof__num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.75rem;
+  color: var(--parchment);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-proof__label {
+  max-width: 22ch;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  color: rgba(254, 245, 234, 0.65);
+}
+
+@media (max-width: 640px) {
+  .home-hero {
+    padding: 56px 0 40px;
+  }
+
+  .hero-proof {
+    gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion="off"] .kinetic-word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .kinetic-word {
+    opacity: 0;
+    transform: translateY(0.5em);
+    animation: kinetic-word-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 0.06s + 0.15s);
+  }
+
+  .kinetic-word:nth-child(1) { --i: 1; }
+  .kinetic-word:nth-child(2) { --i: 2; }
+  .kinetic-word:nth-child(3) { --i: 3; }
+  .kinetic-word:nth-child(4) { --i: 4; }
+  .kinetic-word:nth-child(5) { --i: 5; }
+  .kinetic-word:nth-child(6) { --i: 6; }
+  .kinetic-word:nth-child(7) { --i: 7; }
+
+  @keyframes kinetic-word-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
 @media (max-width: 640px) {
   .hero {
     padding: 32px 0 0;
   }
+}
+
+/* ==========================================================================
+   Homepage v2 prototype — badge/seal motif, marquee band, device mockup,
+   corner label, accent-serif word, and the proclamation easter egg.
+   Scoped to the homepage for now (per the "prototype one page first" call)
+   — not yet part of the shared system other pages use.
+   ========================================================================== */
+
+.accent-word {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Vertical corner label, running bottom-to-top along the left edge —
+   an "editorial margin note" device that showed up independently across
+   all three reference sites (63 Visual's rotated section labels,
+   eszterbial.com's "W. / Honors" tab, its own corner masthead). */
+.corner-label {
+  position: fixed;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(254, 245, 234, 0.35);
+  z-index: 5;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .corner-label {
+    display: none;
+  }
+}
+
+/* Rotating circular seal badge — the recurring motif across all three
+   references (Made By James's own circular logomark, eszterbial.com's
+   "VIEW LIVE SITE" spinning stamp, and it echoes Anthony's own Eagle
+   Quality gear-seal rebrand concept). Placeholder center glyph until the
+   real castle/pencil/sword mark exists — also doubles as the easter-egg
+   trigger, see main.js.
+   Structure: <button class="seal-badge"><svg text on a circular path>
+   with a static center glyph layered on top via absolute positioning. */
+.seal-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 170px;
+  height: 170px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dark-forest);
+  border: 1px solid rgba(254, 245, 234, 0.18);
+  cursor: pointer;
+  /* Sits cocked a few degrees like a stamp pressed by hand, and pulls
+     itself straight when you point at it. Rotation and scale go through
+     their own custom properties so hover and :active can each change one
+     without having to restate the other — a plain transform on :active
+     would drop the tilt the moment you pressed it on a touch screen,
+     where there is no hover to hold it at zero. */
+  --seal-rot: -7deg;
+  --seal-scale: 1;
+  transform: rotate(var(--seal-rot)) scale(var(--seal-scale));
+  transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--motion-fast) ease;
+}
+
+.seal-badge:hover,
+.seal-badge:focus-visible {
+  border-color: var(--emerald);
+  --seal-rot: 0deg;
+  --seal-scale: 1.04;
+}
+
+.seal-badge:active {
+  --seal-scale: 0.97;
+}
+
+.seal-badge svg.seal-badge__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--emerald);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .seal-badge__ring {
+    animation: seal-spin 14s linear infinite;
+  }
+
+  @keyframes seal-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* Anthony's castle/pencil logomark at the middle of the seal, inside the
+   ring of rotating text. Painted as a background rather than an <img> on
+   purpose: the lightbox on gallery pages adopts every <img> inside
+   <main>, so an image element here would join the gallery and hijack the
+   badge's own click handler. A background keeps the mark's real greens,
+   which a currentColor mask would flatten to one tone. */
+.seal-badge__center {
+  position: relative;
+  z-index: 1;
+  height: 101px;
+  aspect-ratio: 231 / 449;
+  background-image: url("/assets/images/logo/AOC-Logomark.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Marquee band — a full-bleed scrolling strip of repeating text, the
+   rhythm device eszterbial.com uses between sections ("contact ❀ contact
+   ❀ co…"). Duplicated content + a 50%-shift keyframe is the standard
+   seamless-loop trick: track is twice the visible content, animating
+   exactly half its own width loops with no visible seam. */
+.marquee-band {
+  overflow: hidden;
+  background: var(--emerald);
+  padding: 14px 0;
+  white-space: nowrap;
+}
+
+.marquee-band__track {
+  display: inline-flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .marquee-band__track {
+    animation: marquee-scroll 22s linear infinite;
+  }
+
+  @keyframes marquee-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.marquee-band__item {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  padding: 0 24px;
+  flex: none;
+}
+
+/* The marks between phrases are Anthony's own castle/pencil and crossed
+   swords icons, painted as masks rather than dropped in as <img>. The
+   mask takes its color from the band's text, so the icons can never
+   drift from the words beside them, and one cached file serves all the
+   repeats the scrolling track needs.
+
+   Each icon gets its own box size because the two files ink differently
+   inside their square canvases — the swords fill 78% of theirs, the
+   castle 90%. Equal boxes would render the castle visibly taller, so
+   the sizes below are set to land both on the same ink height as the
+   text rather than on the same nominal size. */
+.marquee-band__icon {
+  display: inline-block;
+  /* content-box so the shared 24px item padding stays spacing and does
+     not eat into the icon's own width — under the global border-box it
+     would clamp the box to the padding and squash the mark. */
+  box-sizing: content-box;
+  width: var(--icon-box, 1em);
+  height: var(--icon-box, 1em);
+  align-self: center;
+  background-color: currentColor;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.marquee-band__icon--castle {
+  --icon-box: 1.35em;
+  -webkit-mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+  mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+}
+
+.marquee-band__icon--swords {
+  --icon-box: 1.55em;
+  -webkit-mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+  mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+}
+
+/* Device mockup — stages a real screenshot inside a simple laptop bezel
+   instead of a bare crop, the way eszterbial.com and 63 Visual both
+   present client work. Pure CSS, no image asset. */
+.device-mockup {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.device-mockup__screen {
+  border: 10px solid #1b1b1b;
+  border-bottom-width: 18px;
+  border-radius: 10px 10px 4px 4px;
+  background: #1b1b1b;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.5);
+}
+
+.device-mockup__screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.device-mockup__base {
+  height: 12px;
+  margin: 0 -6px;
+  background: linear-gradient(180deg, #2a2a2a, #151515);
+  border-radius: 0 0 8px 8px;
+}
+
+.device-mockup__base::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  margin: 0 auto;
+  background: #0a0a0a;
+  border-radius: 0 0 4px 4px;
+}
+
+/* Easter egg: clicking the seal badge a few times raises this banner.
+   Themed to the castle/sword brand direction; swap the copy once the
+   real brand voice/assets exist. */
+/* The seal's easter egg, staged as a cut scene: the page dims, confetti
+   falls, and a scroll unrolls between two rods.
+
+   Not a real modal on purpose — it never traps focus, because it is a
+   joke someone stumbled into rather than a task they have to finish.
+   Pointer events are off while hidden so it can never swallow a click on
+   the page behind it. */
+.proclamation {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-med) ease;
+}
+
+.proclamation.is-shown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The dim. A sibling rather than a backdrop on the parent so the
+   confetti layer can sit between it and the scroll. */
+.proclamation__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 14, 12, 0.82);
+}
+
+.decree {
+  position: relative;
+  z-index: 2;
+  width: min(680px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(-1.2deg) scale(0.88);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proclamation.is-shown .decree {
+  transform: rotate(-1.2deg) scale(1);
+}
+
+/* The two rods the parchment is wound on. Wider than the sheet so they
+   read as something the paper hangs from rather than a border. */
+.decree__rod {
+  position: relative;
+  width: calc(100% + 30px);
+  height: 16px;
+  flex: none;
+  border-radius: 999px;
+  /* Five stops rather than three: a hard specular line near the top and a
+     fast falloff underneath is what makes a bar read as a cylinder. */
+  background: linear-gradient(
+    180deg,
+    #4b6147 0%,
+    #35472f 22%,
+    #24321f 50%,
+    #16200f 78%,
+    #0e150a 100%
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Turned caps at each end, so the rod reads as an object the paper is
+   wound onto rather than a stripe sitting behind it. */
+.decree__rod::before,
+.decree__rod::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  width: 10px;
+  height: 20px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f3e2a4 0%, var(--gold) 45%, #8a7020 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.decree__rod::before {
+  left: -4px;
+}
+
+.decree__rod::after {
+  right: -4px;
+}
+
+/* The unroll. grid-template-rows 0fr -> 1fr animates to the content's
+   natural height, which a plain height transition cannot do without a
+   hardcoded pixel target. Where it is unsupported the rows simply snap
+   to 1fr, so the decree still opens — it just doesn't unroll. */
+.decree__sheet {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 0fr;
+  background:
+    /* the paper curling away where it leaves each rod */
+    linear-gradient(180deg, rgba(74, 58, 30, 0.34) 0, rgba(74, 58, 30, 0) 20px),
+    linear-gradient(0deg, rgba(74, 58, 30, 0.34) 0, rgba(74, 58, 30, 0) 20px),
+    /* a touch of shade down both torn edges */
+    linear-gradient(90deg, rgba(74, 58, 30, 0.16) 0, rgba(74, 58, 30, 0) 16px),
+    linear-gradient(270deg, rgba(74, 58, 30, 0.16) 0, rgba(74, 58, 30, 0) 16px),
+    /* laid-paper fibre */
+    repeating-linear-gradient(
+      180deg,
+      rgba(92, 72, 38, 0.05) 0px,
+      rgba(92, 72, 38, 0.05) 1px,
+      transparent 1px,
+      transparent 6px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(92, 72, 38, 0.035) 0px,
+      rgba(92, 72, 38, 0.035) 1px,
+      transparent 1px,
+      transparent 28px
+    ),
+    linear-gradient(180deg, #fffaf3 0%, #f7efe0 46%, #eee2cc 100%);
+  /* Hand-torn left and right edges. Deliberately shallow — a few pixels
+     of wander reads as paper, while anything larger reads as a graphic
+     of a scroll. */
+  clip-path: polygon(
+    0.7% 0%, 99.3% 0%,
+    100% 9%, 98.8% 19%, 99.7% 29%, 98.9% 41%, 99.8% 53%,
+    99.0% 65%, 99.6% 77%, 98.8% 89%, 99.4% 100%,
+    0.6% 100%, 1.2% 89%, 0.3% 77%, 1.0% 65%, 0.2% 53%,
+    1.1% 41%, 0.3% 29%, 1.2% 19%, 0% 9%
+  );
+  /* drop-shadow rather than box-shadow: a filter follows the clipped
+     silhouette, where a box-shadow is drawn from the untorn rectangle and
+     then clipped away with it. */
+  filter: drop-shadow(0 26px 48px rgba(0, 0, 0, 0.6));
+  transition: grid-template-rows 0.95s cubic-bezier(0.22, 1, 0.28, 1) 0.2s;
+}
+
+.proclamation.is-shown .decree__sheet {
+  grid-template-rows: 1fr;
+}
+
+.decree__clip {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Held back until the parchment has most of the way unrolled, so the
+   words appear on the scroll rather than stretching open with it. */
+.decree__content {
+  padding: 52px 40px 46px;
+  text-align: center;
+  color: var(--black);
+  opacity: 0;
+  transition: opacity 0.35s ease 0.62s;
+}
+
+.proclamation.is-shown .decree__content {
+  opacity: 1;
+}
+
+.decree__kicker {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(34, 30, 31, 0.72);
+  margin-bottom: 18px;
+}
+
+.decree__title {
+  font-family: var(--font-decree);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 1.7rem + 3.4vw, 4rem);
+  line-height: 0.98;
+  margin-bottom: 18px;
+}
+
+.decree__body {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  line-height: 1.4;
+  margin-bottom: 30px;
+}
+
+.decree__cta {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+/* The ten-year crest, affixed at the foot of the decree in place of a
+   wax seal. Its own artwork already carries the emerald, ivory and dark
+   ink, so it needs no tinting — just a shadow so it sits on the paper
+   rather than in it, and a slight tilt so it reads as placed by hand. */
+.decree__crest {
+  display: block;
+  height: 152px;
+  aspect-ratio: 391 / 700;
+  margin: 28px auto 0;
+  background-image: url("/assets/images/logo/AOC-10year-banner-v1.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: rotate(-3deg);
+  filter: drop-shadow(0 8px 14px rgba(60, 44, 20, 0.45));
+}
+
+.decree__close {
+  position: absolute;
+  top: -42px;
+  right: -4px;
+  background: none;
+  border: none;
+  color: var(--parchment);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.7s;
+}
+
+.proclamation.is-shown .decree__close {
+  opacity: 1;
+}
+
+/* Heraldic confetti: the castle and crossed-swords marks thrown across
+   the screen when the decree unrolls. A child of .proclamation, so it
+   falls in front of the dimmed page but behind the scroll without
+   needing a z-index that competes with the header. Purely decorative, so
+   it is built only when motion is on and removed when the decree
+   closes. */
+.seal-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.seal-confetti__bit {
+  position: absolute;
+  top: -60px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--emerald);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: seal-confetti-fall linear forwards;
+}
+
+.seal-confetti__bit--castle {
+  -webkit-mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+  mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+}
+
+.seal-confetti__bit--swords {
+  -webkit-mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+  mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+}
+
+@keyframes seal-confetti-fall {
+  to {
+    transform: translateY(105vh) rotate(var(--spin, 540deg));
+    opacity: 0;
+  }
+}
+
+html[data-motion="off"] .proclamation,
+html.no-anim .proclamation,
+html[data-motion="off"] .decree,
+html.no-anim .decree,
+html[data-motion="off"] .decree__sheet,
+html.no-anim .decree__sheet,
+html[data-motion="off"] .decree__content,
+html.no-anim .decree__content,
+html[data-motion="off"] .decree__close,
+html.no-anim .decree__close {
+  transition-duration: 0.01ms;
+  transition-delay: 0s;
 }
 
 /* Reusable background-image treatment: add alongside any section's own
@@ -644,17 +1638,88 @@ body.menu-open {
   z-index: -1;
   background: linear-gradient(
     180deg,
-    rgba(20, 17, 14, var(--scrim-top, 0.55)) 0%,
-    rgba(20, 17, 14, var(--scrim-bottom, 0.8)) 100%
+    rgba(20, 17, 14, var(--scrim-top, 0.42)) 0%,
+    rgba(20, 17, 14, var(--scrim-bottom, 0.62)) 100%
   );
 }
 
+/* No light-mode override here, unlike main.home-bg below: every
+   .bg-image-section instance (the About hero-shell, which wraps both
+   the hero heading and the bio paragraph beneath it) pairs this dark
+   scrim with text that's hardcoded to var(--parchment) — not a
+   theme-aware ink token — specifically because it's designed to always
+   read against this same dark photo, independent of site theme. That
+   combination already works in both themes; the actual bug this was
+   chasing lives in main.home-bg below, where the home page's
+   background photo has ordinary theme-aware text sitting on it with
+   no scrim protecting it at all. */
 .home-hero-shell::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background: none;
+}
+
+/* In light mode, main.home-bg::before (below) washes the whole page's
+   photo ivory to protect the theme-aware text sitting on it further
+   down the page — but this hero's own headline/proof-strip text is
+   hardcoded to var(--parchment) (permanently light, see .hero-shell
+   .hero__title etc.), same reasoning as the About hero-shell above.
+   Left at "none" it would inherit that ivory wash from main and its
+   permanently-light text would vanish into it. Reinstating the same
+   dark gradient .bg-image-section normally uses — only here, only in
+   light mode — keeps this one region dark regardless of site theme,
+   matching what it already looks like today in dark mode. */
+[data-theme="light"] .home-hero-shell::before {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 17, 14, var(--scrim-top, 0.42)) 0%,
+    rgba(20, 17, 14, var(--scrim-bottom, 0.62)) 100%
+  );
+}
+
+/* The home page's background photo is set directly on <main> (it spans
+   the whole page, not just the hero), so it never went through
+   .bg-image-section's scrim at all — dark mode happened to still read
+   fine without one, but light mode had no protection against the same
+   dark-photo/dark-text collision described above. Dark mode is left
+   alone here (no scrim change, matching what's already shipped); only
+   light mode gets the ivory wash. */
+/* An inset box-shadow rather than the ::before + z-index:-1 scrim used
+   by .bg-image-section: an inset shadow paints above the element's own
+   background image but below its content, with no stacking context
+   involved. The pseudo-element version needs `isolation: isolate` on
+   the parent to render at all — and isolating <main> traps the
+   .proclamation banner (z-index: 90) inside it, so it can no longer
+   paint over the header (z-index: 30) that sits outside <main>. */
+[data-theme="light"] main.home-bg {
+  box-shadow: inset 0 0 0 100vmax rgba(255, 250, 243, 0.58);
+}
+
+/* Both photo hero-shells stay dark in either theme (see the two scrim
+   rules above), so in light mode their contents need the dark palette
+   rather than the page's. Re-pointing the tokens here covers every
+   descendant at once — otherwise each one needs its own hardcoded
+   var(--parchment), which is what .about-hero .display-1 already does
+   and .display-2 next to it doesn't, leaving "Solo. Senior. Shipped."
+   nearly black on a dark photo. */
+[data-theme="light"] .home-hero-shell,
+[data-theme="light"] .about-hero-shell {
+  --ink: var(--ivory);
+  --ink-strong: var(--parchment);
+  --ink-soft: #e6dfd3;
+  --ink-faint: #94897a;
+  --accent: var(--emerald);
+  --accent-label: var(--emerald);
+  --line: rgba(254, 245, 234, 0.1);
+  --line-strong: rgba(254, 245, 234, 0.25);
+  /* Re-resolve `color` here too: body's own `color: var(--ink)` was
+     already computed against the page palette, and inherits down as a
+     finished color rather than a live token reference — so re-pointing
+     --ink alone leaves anything that merely inherits (the .display-2
+     next to .display-1's explicit parchment, for one) still dark. */
+  color: var(--ink);
 }
 
 .about-hero .eyebrow {
@@ -727,29 +1792,172 @@ body.menu-open {
   }
 }
 
+/* Craft index: a fixed 2x2 grid of the four project cards, instead of
+   .card-grid--row's single row. */
+.card-grid--2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .card-grid--2x2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 .work-card {
   display: flex;
-  background: #1e221e;
+  /* Transparent, not --bg-card: the body panel below carries the card's
+     fill at a real alpha so the page's background photo reads through
+     it. An opaque fill here would sit behind that panel and cancel the
+     alpha out. The media half doesn't need this one — it's always
+     covered by either a screenshot or the placeholder's own gradient. */
+  background: transparent;
   border-radius: var(--radius);
   flex: 1;
   min-width: 0;
 }
 
+/* On a phone the seal drops below the eyebrow and takes a whole row of
+   its own, pushing the greeting and headline down the page. Lifting it
+   out of the flow hands that row back: the badge keeps the same spot it
+   already occupied, 30px lower, and grows 6%.
+
+   The size change is width/height rather than a transform scale, so the
+   ring text scales with it and the tap target grows too — a scaled
+   transform would leave a 170px hit area on a 180px badge. It also stays
+   clear of --seal-scale, which the hover and press states own.
+
+   Deliberate consequence: the hero tightens up by roughly the badge's
+   height, and the badge now overlays whatever sits beneath it rather
+   than reserving space. */
+@media (max-width: 900px) {
+  .home-hero__top {
+    position: relative;
+  }
+
+  .home-hero__top .seal-badge {
+    position: absolute;
+    /* Anchored to the right and allowed to run off the edge.
+       Measured, not guessed: the hero's text column runs the full
+       content width, so a 180px seal cannot clear every line box at
+       every phone width without being ~80% off-screen — chasing that
+       with per-width offsets fixed one size and broke three others.
+       This offset keeps it off the greeting and the headline at common
+       widths and reads as a seal bleeding off the corner; where a line
+       does reach under it, the z-index below keeps the type on top and
+       fully legible. */
+    left: auto;
+    /* 20px further right, and 10px smaller on every side.
+       The inset moves in by the same 10 the box loses (right -38 + 10,
+       top 18 + 10) so the shrink happens around the seal's centre
+       instead of pulling it off the corner it was placed on. */
+    /* Shrunk from the top-right corner, not around the centre. Holding
+       the centre pushed the seal down into the headline's band, and the
+       headline has no reserved column — so no amount of padding on the
+       greeting could clear it. Anchored here, the smaller badge simply
+       occupies less of the corner. */
+    right: -28px;
+    top: 28px;
+    width: 118px;
+    height: 118px;
+    /* Behind the words. Out of the flow it lands right across the
+       greeting and the headline, and it was covering his own name —
+       which is the one thing the greeting exists to say. Sitting under
+       the type it reads as a medallion watermarked into the hero
+       instead. */
+    z-index: 0;
+  }
+
+  .home-hero .hero__name,
+  .home-hero .hero__title,
+  .home-hero .hero__subtitle,
+  .home-hero .hero-proof {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Reserve the seal's column instead of trying to dodge it. Only the
+     two elements that sit in its band wrap short; the headline and
+     everything below keep the full width, because the badge ends above
+     them. Nudging the badge's offset per breakpoint was the wrong tool —
+     it fixed one width and broke three, since what the circle collides
+     with depends on how the copy happens to rewrap. */
+  /* Reserves the seal's corner on the eyebrow, which sits above it. */
+  .home-hero__top .eyebrow {
+    padding-right: 56px;
+  }
+
+  /* The greeting stops at three quarters of the hero instead. A padding
+     reserve had to be retuned every time the badge or the copy changed;
+     a proportional measure holds on its own, and it keeps the line clear
+     of the seal at every width in this range rather than at the couple I
+     happened to test. */
+  .home-hero .hero__name {
+    max-width: 75%;
+    padding-right: 0;
+  }
+}
+
+/* Pointer tilt, shared by every card-shaped tile on the site: the work/
+   project cards, the logo tiles on Logos and Task Yeti, the standalone
+   "screenshot pending" tiles that sit directly in a logo grid or the
+   About hobbies scroller, the case-study system/ecosystem tiles, the
+   next-project block, and Eagle Quality's screenshot and logo figures.
+   --tilt-x/--tilt-y are set from JS (how far the cursor, or a pressing
+   finger, sits from the tile's center); --tilt-lift only changes via the
+   :hover / .is-tilting rule below. Defaults keep everything flat when JS
+   hasn't touched it (no-JS, or motion off) or nothing is pointing at it.
+
+   Deliberately NOT on .decision-block: those are full-width content
+   sections rather than tiles, and each one holds a drag slider that
+   tilting the container underneath would fight.
+
+   Keep this selector list in sync with TILT_SELECTOR in main.js. */
+.work-card,
+.logo-grid__item,
+.logo-grid > .work-card__media,
+.gallery-scroll > .work-card__media,
+.grid-item,
+.next-project,
+.shot-stack__item,
+.logo-showcase__item {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --tilt-lift: 0px;
+  transform: perspective(900px) translateY(var(--tilt-lift)) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition: transform var(--motion-fast) ease;
+}
+
 a.work-card {
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+  transition: border-color var(--motion-fast) ease, transform var(--motion-fast) ease,
+    background-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
 }
 
-a.work-card:hover {
-  border-color: rgba(92, 206, 89, 0.5);
-  background: #2f322d;
-  transform: translateY(-10px);
-  box-shadow: 0 4px 32px -8px #5cce59;
+/* .is-tilting is the touch stand-in for :hover — JS adds it for the life
+   of a press-and-drag on a card (see the tilt block in main.js), so a
+   press on a phone gets the same lift, glow and border a cursor gets. */
+a.work-card:hover,
+a.work-card.is-tilting {
+  border-color: rgba(var(--accent-rgb), 0.45);
+  /* No background swap here: --bg-raised is itself translucent, so
+     swapping to it on hover washed the whole card out and let the photo
+     through — the opposite of the body panel firming up from 85% to 95%
+     below. Hover feedback is that panel, the lift, the glow and the
+     border. */
+  --tilt-lift: -10px;
+  /* A soft ambient glow instead of the previous solid-color outline/hard
+     shadow — two translucent layers (a wide soft one, a tighter one close
+     to the edge) read as a glow rather than a drop shadow. */
+  box-shadow: 0 20px 48px -16px rgba(var(--accent-rgb), 0.3), 0 0 32px -6px rgba(var(--accent-rgb), 0.25);
 }
 
-a.work-card:hover .view-link__label {
-  color: #5cce59;
+a.work-card:hover .view-link__label,
+a.work-card.is-tilting .view-link__label {
+  color: var(--accent);
 }
 
 .work-card--horizontal {
@@ -762,7 +1970,10 @@ a.work-card:hover .view-link__label {
 
 .work-card--vertical {
   flex-direction: column;
-  border: 2px solid rgba(245, 236, 222, 0.1);
+  border: 2px solid var(--line);
+  /* box-shadow specifically: a.work-card (higher specificity) already
+     transitions border-color/background-color/transform. */
+  transition: box-shadow var(--motion-fast) ease;
 }
 
 @media (max-width: 900px) {
@@ -773,16 +1984,23 @@ a.work-card:hover .view-link__label {
 
 .work-card__media {
   flex: 1;
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-start;
   min-height: 220px;
-  padding: 20px;
-  background: #f5ecde;
-  border: 1px dashed rgba(254, 245, 234, 0.25);
+  aspect-ratio: 16 / 10;
   border-radius: 2px;
   text-align: center;
   overflow: hidden;
+}
+
+.work-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .work-card--vertical .work-card__media {
@@ -795,17 +2013,101 @@ a.work-card:hover .view-link__label {
   border-radius: 0;
 }
 
-.work-card__media span {
+/* Placeholder swatch system: five deterministic gradient/pattern
+   treatments, picked per-item from its title (see work-card.html). Reads
+   as an intentional design choice — a "screenshot pending" state — rather
+   than a broken image, and shares the exact aspect-ratio a real <img>
+   will use, so nothing shifts on layout when one is added. */
+.work-card__media--placeholder {
+  padding: 16px;
+}
+
+.work-card__media--placeholder[data-swatch="1"] {
+  background: linear-gradient(135deg, #2c3a2b 0%, var(--dark-forest) 100%);
+}
+
+.work-card__media--placeholder[data-swatch="2"] {
+  background: linear-gradient(135deg, #3a2f14 0%, #1a1610 100%);
+}
+
+.work-card__media--placeholder[data-swatch="3"] {
+  background: linear-gradient(135deg, #1c2b2a 0%, #101716 100%);
+}
+
+.work-card__media--placeholder[data-swatch="4"] {
+  background: linear-gradient(135deg, #2b2420 0%, #171310 100%);
+}
+
+.work-card__media--placeholder[data-swatch="5"] {
+  background: linear-gradient(135deg, #202a33 0%, #10161b 100%);
+}
+
+.work-card__media--placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(254, 245, 234, 0.05) 0,
+    rgba(254, 245, 234, 0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.work-card__media--tall {
+  aspect-ratio: 16 / 10;
+  min-height: 360px;
+}
+
+.work-card__media-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(254, 245, 234, 0.18);
+  z-index: 0;
+}
+
+.work-card__media-icon svg {
+  width: 56px;
+  height: 56px;
+}
+
+[data-theme="light"] .work-card__media-icon {
+  color: rgba(31, 28, 22, 0.12);
+}
+
+.work-card__media-tag {
+  position: relative;
+  z-index: 1;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(19, 19, 19, 0.55);
+  backdrop-filter: blur(4px);
   font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.75px;
-  color: #1e221e;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--ivory);
 }
 
 .work-card__body {
   display: flex;
   flex-direction: column;
   padding: 28px;
+  /* The card's fill lives here, at 85% so the background photo reads
+     through it, going to 95% on hover (below) so the panel firms up
+     under the cursor. Alpha on background-color rather than `opacity`
+     on the element: opacity would fade the title and description along
+     with the panel, where a background-color always paints behind an
+     element's own content and leaves the text at full strength. */
+  background-color: rgba(var(--bg-card-rgb), 0.85);
+  transition: background-color var(--motion-fast) ease;
+}
+
+a.work-card:hover .work-card__body,
+a.work-card.is-tilting .work-card__body {
+  background-color: rgba(var(--bg-card-rgb), 0.95);
 }
 
 .work-card--horizontal .work-card__body {
@@ -814,9 +2116,36 @@ a.work-card:hover .view-link__label {
   justify-content: space-between;
 }
 
+/* Once the card stacks, that 345px stops being a column measure and just
+   keeps the panel from reaching the card's edges — too narrow on a wide
+   tablet, leaving a strip of the page showing through beside the copy,
+   and too wide on a small phone, where it overhung the card by 10px.
+
+   This has to sit after the rule above, not up with the flex-direction
+   switch where it belongs logically: both selectors carry the same
+   specificity, so the later one wins and an override placed earlier in
+   the file silently loses. */
+@media (max-width: 900px) {
+  .work-card--horizontal .work-card__body {
+    width: 100%;
+  }
+}
+
 .work-card--vertical .work-card__body {
   width: 100%;
   gap: 32px;
+}
+
+/* A card whose body is its only child — the "What I offer" pair — has
+   nothing else to fill the height the row stretches it to, so the panel
+   stopped at its own content and the leftover strip showed the page
+   through the bottom of the card.
+
+   Scoped with :only-child rather than to vertical cards generally: where
+   there IS a media panel, that already carries flex:1, and handing the
+   body the same would make the two fight over the space. */
+.work-card__body:only-child {
+  flex: 1;
 }
 
 .work-card__text {
@@ -826,14 +2155,22 @@ a.work-card:hover .view-link__label {
 }
 
 .work-card .eyebrow {
-  color: var(--bronze);
+  /* Was hardcoded to var(--bronze) directly, bypassing the theme-aware
+     --accent-label indirection. That happened to pass contrast against
+     the card's always-dark background before phase 2 darkened --bronze
+     to fix a *light-mode* contrast failure elsewhere (see the design
+     audit) — but the raw token is shared, so darkening it there silently
+     broke this dark-background usage (~3:1, fails AA). Routing through
+     --accent-label fixes both: emerald in dark mode, the corrected
+     bronze in light mode, each already tuned for its own background. */
+  color: var(--accent-label);
 }
 
 .work-card__title {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 2.25rem;
-  color: #fffaf3;
+  color: var(--ink-strong);
   text-transform: capitalize;
 }
 
@@ -841,7 +2178,7 @@ a.work-card:hover .view-link__label {
   font-family: var(--font-body);
   font-size: 0.875rem;
   letter-spacing: 0.25px;
-  color: #f5ecde;
+  color: var(--ink-soft);
 }
 
 .view-link {
@@ -857,7 +2194,8 @@ a.work-card:hover .view-link__label {
   font-size: 0.875rem;
   letter-spacing: 0.75px;
   text-transform: uppercase;
-  color: #f5ecde;
+  color: var(--ink-soft);
+  transition: color var(--motion-fast) ease;
 }
 
 .view-link__bar {
@@ -885,13 +2223,13 @@ a.work-card:hover .view-link__label {
   font-size: 1rem;
   letter-spacing: 0.75px;
   text-transform: capitalize;
-  color: #f5ecde;
+  color: var(--ink-strong);
 }
 
 .work-card__cta svg {
   width: 20px;
   height: 20px;
-  color: #f5ecde;
+  color: var(--ink-strong);
 }
 
 a.work-card--horizontal:hover .work-card__cta {
@@ -903,14 +2241,57 @@ a.work-card--horizontal:hover .work-card__cta {
    CTA
    ========================================================================== */
 
+/* The last thing on every page, and the one that matters, so it gets
+   real estate: a panel that opens out to most of the screen once you
+   reach it. It is also an archery range — see the block in main.js. */
 .cta {
+  position: relative;
+  /* Arrows and the target are absolutely placed inside, and a stray shot
+     near an edge would otherwise lengthen the page. */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Rests at its natural height — the panel only claims the screen while
+     it is actually being engaged with, never just for sitting there. */
+  min-height: 0;
   padding-top: 24px;
   padding-bottom: 24px;
   background: #1e221e;
   text-align: center;
+  transition: min-height var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Desktop opens it on hover, since there is a pointer to open it with. */
+@media (min-width: 901px) and (hover: hover) {
+  .cta:hover {
+    min-height: 80vh;
+  }
+}
+
+/* .is-open is set alongside both triggers so the type and the button
+   have one state to follow, rather than each re-deriving "is the panel
+   open" from a hover query and a reveal class separately. */
+.cta.is-open {
+  min-height: 80vh;
+}
+
+/* Tablet and phone have no hover, so arriving is the trigger — the
+   shared scroll-reveal observer adds .is-revealed when it comes in. */
+@media (max-width: 900px) {
+  .cta.is-revealed {
+    min-height: 80vh;
+  }
+}
+
+html[data-motion="off"] .cta,
+html.no-anim .cta {
+  transition-duration: 0.01ms;
 }
 
 .cta__inner {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -924,16 +2305,56 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .cta__email {
+  display: inline-block;
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 1.25rem;
   letter-spacing: 0.8px;
   color: #5cce59;
+  transition: transform var(--motion-fast) ease;
 }
 
 .cta__email:hover {
   text-decoration: underline;
 }
+
+/* Opening the panel scales the whole pitch up, and turns the address
+   from a text link into a button that chases the cursor around the
+   section (the transform comes from main.js; the easing here is what
+   makes it read as chasing rather than snapping). */
+.cta__title,
+.cta__email {
+  transition: font-size var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.3, 1),
+    background-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    padding var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cta.is-open .cta__title {
+  font-size: clamp(3.25rem, 2.4rem + 3.6vw, 6rem);
+}
+
+.cta.is-open .cta__email {
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  padding: 18px 34px;
+  border-radius: 999px;
+  background: var(--emerald);
+  color: var(--black);
+  text-decoration: none;
+  box-shadow: 0 14px 32px -12px rgba(var(--accent-rgb), 0.55);
+}
+
+.cta.is-open .cta__email:hover {
+  text-decoration: none;
+}
+
+html[data-motion="off"] .cta__title,
+html.no-anim .cta__title,
+html[data-motion="off"] .cta__email,
+html.no-anim .cta__email {
+  transition-duration: 0.01ms;
+}
+
 
 /* Home / Work page closing CTA row */
 .closing-cta {
@@ -960,7 +2381,7 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .site-footer {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 24px;
@@ -970,11 +2391,60 @@ a.work-card--horizontal:hover .work-card__cta {
   text-align: center;
 }
 
+/* Mobile stacking order, independent of source order (kept as
+   toggle/meta/social in the markup for a sensible reading/tab order):
+   social on top, then the copyright block, then the theme toggle at the
+   bottom. Scoped to the mobile breakpoint only — the desktop grid below
+   relies on plain source order for its left-to-right placement, and
+   `order` would override that the same way it does here. */
+@media (max-width: 900px) {
+  .site-footer__social {
+    order: 1;
+  }
+
+  .site-footer__meta {
+    order: 2;
+  }
+
+  .site-footer__controls {
+    order: 3;
+  }
+}
+
 .site-footer__meta {
   display: flex;
   flex-direction: column;
   gap: 2px;
   align-items: center;
+}
+
+/* REVISIT: temporary home for the motion toggle, parked next to the
+   theme toggle. The knight needs about 34px to stay legible while the
+   theme chip is 24px to match the social icons, so the two are visibly
+   mismatched — see the note in footer.html. */
+.site-footer__controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.site-footer__motion-toggle {
+  width: 36px;
+  height: 36px;
+  padding: 1px;
+}
+
+.site-footer__motion-toggle svg {
+  width: 34px;
+  height: 34px;
+}
+
+.site-footer__theme-toggle {
+  /* Base .theme-toggle is a 24px chip sized for the header; the footer's
+     own icons (.site-footer__social) run 24px too, so this matches them
+     rather than reusing the header's sizing by coincidence. */
+  width: 24px;
+  height: 24px;
 }
 
 .site-footer__copy {
@@ -1014,20 +2484,111 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 @media (min-width: 901px) {
+  /* A 3-column grid instead of flex row + space-between: the toggle and
+     social block naturally differ in width, so space-between alone can't
+     put the copyright block in the true center between them — the grid's
+     center column can, regardless of how wide its neighbors are. Source
+     order already matches left-to-right (toggle, meta, social), so no
+     `order` overrides are needed here (those above are mobile-only). */
   .site-footer {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    text-align: center;
   }
 
-  .site-footer__meta {
-    align-items: flex-start;
+  .site-footer__controls {
+    justify-self: start;
+  }
+
+  .site-footer__theme-toggle {
+    justify-self: start;
+  }
+
+  .site-footer__social {
+    justify-self: end;
   }
 }
 
 /* ==========================================================================
    Case study
    ========================================================================== */
+
+/* Draft-content flag: phase 2 case-study copy for High5 and HomeASAP was
+   written from case-meta facts, not from Anthony's own account, per his
+   explicit choice to draft-now-verify-later rather than ship empty
+   prompts. This banner exists so nothing drafted this way is mistaken for
+   verified fact while reviewing this branch — pull both the banner and
+   every inline .draft-note before this merges to main. */
+.draft-flag {
+  margin-top: 24px;
+  padding: 10px 16px;
+  background: rgba(231, 198, 66, 0.14);
+  border: 1px solid rgba(231, 198, 66, 0.4);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2px;
+  color: var(--draft-ink);
+}
+
+.draft-note {
+  color: var(--draft-ink);
+  font-weight: 600;
+}
+
+/* Fact-check items pulled OUT of the narrative prose (an earlier pass had
+   these embedded mid-sentence via .draft-note, which read as "the numbers
+   on this page are made up" right inside the Outcome section — see
+   design-critic review). Grouped instead as one clearly-internal note at
+   the end of the case content. */
+/* Copy that is still waiting on a real number or fact. Deliberately
+   loud: a placeholder that blends in is a placeholder that ships. */
+.draft-mark {
+  background: rgba(231, 198, 66, 0.18);
+  color: var(--gold);
+  border-bottom: 1px dashed var(--gold);
+  padding: 0 4px;
+  border-radius: 2px;
+  font-style: italic;
+}
+
+.verify-list {
+  margin: 8px 0 44px;
+  padding: 16px 20px;
+  background: rgba(231, 198, 66, 0.08);
+  border: 1px dashed rgba(231, 198, 66, 0.4);
+  border-radius: 8px;
+}
+
+.verify-list__title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--draft-ink);
+  margin-bottom: 8px;
+}
+
+.verify-list ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.verify-list li {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  padding-left: 16px;
+  position: relative;
+}
+
+.verify-list li::before {
+  content: "\2022";
+  position: absolute;
+  left: 0;
+  color: var(--draft-ink);
+}
 
 .case-hero {
   padding-top: 48px;
@@ -1305,14 +2866,17 @@ a.work-card--horizontal:hover .work-card__cta {
   flex-direction: column;
   gap: 20px;
   padding: 24px;
-  background: #1e221e;
-  border: 1px solid rgba(255, 250, 243, 0.1);
+  /* Same fix as .work-card: was hardcoded dark regardless of theme. */
+  background: var(--bg-card);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   width: 100%;
 }
 
 .decision-block .eyebrow {
-  color: var(--gold);
+  /* Was var(--gold) directly — fails contrast on this card's light-mode
+     background (~1.6:1). --accent-label is already tuned per-theme. */
+  color: var(--accent-label);
 }
 
 .decision-block__title {
@@ -1320,15 +2884,15 @@ a.work-card--horizontal:hover .work-card__cta {
   font-weight: 600;
   font-size: 1.875rem;
   letter-spacing: 0.6px;
-  color: var(--parchment);
+  color: var(--ink-strong);
 }
 
 .decision-block__grid {
   display: flex;
   gap: 16px;
   padding: 16px 0;
-  border-top: 1px solid rgba(255, 250, 243, 0.3);
-  border-bottom: 1px solid rgba(255, 250, 243, 0.3);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
 }
 
 @media (max-width: 640px) {
@@ -1347,72 +2911,87 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .decision-block__col p,
 .decision-block > p {
-  color: #e6dfd3;
+  color: var(--ink-soft);
 }
 
-.compare {
+/* ==========================================================================
+   Compare slider — a real implementation of the before/after affordance
+   the original template only promised in copy. Two full-bleed panes
+   stacked in the same box; the "after" (shipped) pane is clipped by
+   --pos, which a full-size <input type="range"> (the actual, keyboard-
+   operable control — see main.js) drives. The visible line-plus-grip
+   handle is purely decorative, positioned off the same --pos value.
+   ========================================================================== */
+
+.compare-slider {
+  --pos: 50%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-.compare__panes {
-  display: flex;
-  gap: 10px;
-  height: 220px;
+.compare-slider__frame {
+  position: relative;
+  height: 240px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(254, 245, 234, 0.25);
 }
 
 @media (max-width: 640px) {
-  .compare__panes {
-    flex-direction: column;
-    height: auto;
+  .compare-slider__frame {
+    height: 300px;
   }
 }
 
-.compare__pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid rgba(254, 245, 234, 0.25);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.compare__media {
-  flex: 1;
+.compare-slider__pane {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  min-height: 140px;
+  padding: 24px;
+  text-align: center;
 }
 
-.compare__media p {
+.compare-slider__pane p {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
   margin: 0;
+  max-width: 30ch;
 }
 
-.compare__pane--reject .compare__media {
-  background: rgba(254, 245, 234, 0.6);
+.compare-slider__pane--before {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(254, 245, 234, 0.55),
+    rgba(254, 245, 234, 0.55) 10px,
+    rgba(254, 245, 234, 0.4) 10px,
+    rgba(254, 245, 234, 0.4) 20px
+  );
 }
 
-.compare__pane--reject .compare__media p {
-  color: #fffaf3;
+.compare-slider__pane--before p {
+  color: #2a2620;
 }
 
-.compare__pane--ship .compare__media {
-  background: #5cce59;
+.compare-slider__pane--after {
+  background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-2) 100%);
+  clip-path: inset(0 50% 0 0);
 }
 
-.compare__pane--ship .compare__media p {
-  color: rgba(254, 245, 234, 0.6);
+.compare-slider__pane--after p {
+  color: var(--black);
 }
 
-.compare__caption {
-  padding: 8px 12px;
-  border-top: 1px solid rgba(254, 245, 234, 0.25);
+.compare-slider__tag {
+  position: absolute;
+  bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.625rem;
@@ -1420,44 +2999,76 @@ a.work-card--horizontal:hover .work-card__cta {
   text-transform: uppercase;
 }
 
-.compare__pane--reject .compare__caption {
-  color: rgba(254, 245, 234, 0.6);
+.compare-slider__tag--reject {
+  left: 12px;
+  background: rgba(42, 38, 32, 0.15);
+  color: #2a2620;
 }
 
-.compare__pane--ship .compare__caption {
-  color: #5cce59;
+.compare-slider__tag--ship {
+  right: 12px;
+  background: rgba(19, 19, 19, 0.2);
+  color: var(--black);
 }
 
-.compare__cta {
-  display: inline-flex;
+.compare-slider__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--parchment);
+  display: flex;
   align-items: center;
-  gap: 8px;
-  width: max-content;
-  padding: 14px 20px;
-  border-radius: var(--radius);
-  border: 2px solid rgba(92, 206, 89, 0.5);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.compare__cta:hover {
-  border-color: #5cce59;
-  background: rgba(92, 206, 89, 0.1);
+.compare-slider__handle svg {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 999px;
+  background: var(--parchment);
+  color: var(--black);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-.compare__cta-label {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.75px;
-  text-transform: capitalize;
-  color: #f5ecde;
+.compare-slider__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: ew-resize;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
 }
 
-.compare__cta svg {
-  width: 20px;
-  height: 20px;
-  color: #f5ecde;
+.compare-slider__input::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+.compare-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  border: none;
+}
+
+.compare-slider__input::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+.compare-slider__input::-moz-range-thumb {
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  border: none;
 }
 
 .pill {
@@ -1501,6 +3112,14 @@ a.work-card--horizontal:hover .work-card__cta {
   gap: 16px;
 }
 
+.about-credential {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  color: rgba(254, 245, 234, 0.55);
+}
+
 /* ==========================================================================
    About page
    ========================================================================== */
@@ -1529,6 +3148,13 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .about-row__media .work-card__media {
+  /* Explicit width, not just "block fills container": a block with
+     aspect-ratio set and no width derives an intrinsic width from
+     min-height × ratio when asked for one (e.g. by the flex-layout
+     ancestor above), which was overflowing this 368px column out into
+     the copy text next to it. Width:100% pins it to the actual column
+     regardless of that intrinsic calculation. */
+  width: 100%;
   min-height: 375px;
 }
 
@@ -1593,6 +3219,20 @@ a.work-card--horizontal:hover .work-card__cta {
   gap: 24px;
 }
 
+/* "What I offer" is weighted, not two equal choices — product/UX is the
+   pitch, brand & craft is the secondary note (see the phase 2 IA decision
+   to stop giving self-directed branding work equal billing with product
+   design leadership). */
+.offer-grid--weighted .offer-grid__primary {
+  flex: 1.6;
+  border-color: var(--accent);
+}
+
+.offer-grid--weighted > .work-card:not(.offer-grid__primary) {
+  flex: 1;
+  opacity: 0.88;
+}
+
 @media (max-width: 900px) {
   .offer-grid {
     flex-direction: column;
@@ -1604,6 +3244,90 @@ a.work-card--horizontal:hover .work-card__cta {
   gap: 16px;
   overflow-x: auto;
   padding-bottom: 4px;
+}
+
+/* Logo/brand-mark showcase — unlike .logo-grid (square crops, object-fit:
+   cover, meant for finished square lockup tiles), these cards preserve
+   each mark's real proportions (a wide wordmark, a tall stacked lockup,
+   a square seal) via object-fit: contain on a fixed light card, since
+   logo marks are drawn to sit on white/light regardless of site theme. */
+.logo-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.logo-showcase__item {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.logo-showcase__item img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  padding: 24px;
+}
+
+.logo-showcase__item figcaption {
+  padding: 10px 16px;
+  background: var(--bg-card);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.4px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+}
+
+/* Real project screenshots (unlike .logo-grid's square logo tiles) —
+   full-width, natural aspect ratio, no forced cropping. */
+.shot-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.shot-stack__item {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+.shot-stack__item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.shot-stack__item figcaption {
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.4px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+}
+
+.shot-stack--mobile {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.shot-stack__item--phone {
+  flex: none;
+  width: 280px;
+}
+
+@media (max-width: 640px) {
+  .shot-stack__item--phone {
+    width: 100%;
+  }
 }
 
 .logo-grid {
@@ -1680,9 +3404,29 @@ a.work-card--horizontal:hover .work-card__cta {
 }
 
 .grid-item__media {
-  height: 228px;
-  background: var(--placeholder-bg);
-  border-radius: 2px;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  border-radius: 4px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--dark-forest) 0%, #10120f 100%);
+}
+
+.grid-item__media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(254, 245, 234, 0.05) 0,
+    rgba(254, 245, 234, 0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+[data-theme="light"] .grid-item__media {
+  background: linear-gradient(135deg, #e7ddc7 0%, var(--placeholder-bg) 100%);
 }
 
 .grid-item__title {
@@ -1818,82 +3562,15 @@ a.work-card--horizontal:hover .work-card__cta {
   height: 16px;
 }
 
-/* ==========================================================================
-   Preview password gate
-   ========================================================================== */
-
-html.gate-locked body > *:not(#preview-gate) {
-  display: none;
-}
-
-.gate {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--black);
-}
-
-.gate__panel {
-  width: 100%;
-  max-width: 360px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
-}
-
-.gate__form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.gate__input {
-  width: 100%;
-  padding: 12px 14px;
-  background: var(--dark-forest);
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  color: var(--ink-strong);
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  text-align: center;
-}
-
-.gate__input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.gate__submit {
-  padding: 12px 14px;
-  background: var(--accent);
-  color: var(--black);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.75px;
-  text-transform: uppercase;
-}
-
-.gate__submit:hover {
-  background: var(--accent-2);
-}
-
-.gate__error {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: #e06b5f;
-}
-
-
 /* Global safety net: force every animation/transition to be instant for
    anyone who has asked the OS for reduced motion, regardless of which rule
-   below would otherwise apply. */
+   below would otherwise apply. Phase 2 adds a second, equally strong path
+   to the same result — the in-page motion toggle (`data-motion="off"` on
+   <html>, set by main.js and persisted) — because the accessibility
+   research behind this rebuild is explicit that prefers-reduced-motion
+   alone isn't treated as sufficient once a site's motion budget goes up
+   this much: a visitor may not have set the OS preference but still want
+   the parallax/tilt/cursor-glow off on this specific site. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1903,6 +3580,15 @@ html.gate-locked body > *:not(#preview-gate) {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* ==========================================================================
@@ -1948,8 +3634,11 @@ html.gate-locked body > *:not(#preview-gate) {
     transform: none;
   }
 
-  /* Hero entrance: runs immediately on load, no JS/scroll needed. */
-  .hero__title,
+  /* Hero entrance: runs immediately on load, no JS/scroll needed.
+     .kinetic-title (the home hero's headline) is excluded — its own
+     .kinetic-word children each run their own staggered reveal, and
+     layering this whole-element fade on top of that just muddies it. */
+  .hero__title:not(.kinetic-title),
   .hero__subtitle,
   .about-hero .eyebrow,
   .about-hero .display-1,
@@ -1991,14 +3680,12 @@ html.gate-locked body > *:not(#preview-gate) {
   /* Arrow-icon nudge: a small rightward slide on hover, layered on top of
      each component's existing hover state. */
   .pill svg,
-  .work-card__cta svg,
-  .compare__cta svg {
+  .work-card__cta svg {
     transition: transform 0.2s ease;
   }
 
   .pill:hover svg,
-  a.work-card--horizontal:hover .work-card__cta svg,
-  .compare__cta:hover svg {
+  a.work-card--horizontal:hover .work-card__cta svg {
     transform: translateX(3px);
   }
 
@@ -2019,7 +3706,11 @@ html.gate-locked body > *:not(#preview-gate) {
      this to look right instead of bleeding past rounded corners — already
      true for .logo-grid__item and .work-card__media. */
   img:not(.lightbox__img) {
-    transition: transform 0.3s ease;
+    /* Was 0.3s ease — read as an instant snap rather than a deliberate
+       zoom. var(--motion-med) plus an ease-out-expo curve (the same one
+       .proclamation uses) draws the motion out and lets it settle instead
+       of linearly ramping the whole way. */
+    transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   img:not(.lightbox__img):hover {
@@ -2033,15 +3724,16 @@ html.gate-locked body > *:not(#preview-gate) {
     transition: transform 0.3s ease;
   }
 
-  a.work-card:hover .view-link__bar {
+  a.work-card:hover .view-link__bar,
+  a.work-card.is-tilting .view-link__bar {
     transform: scaleX(1);
   }
 
   /* Gentle press feedback on the main tappable chips/buttons. */
   .pill:active,
-  .compare__cta:active,
   .menu-toggle:active,
-  .theme-toggle:active {
+  .theme-toggle:active,
+  .motion-toggle:active {
     transform: scale(0.96);
   }
 }
@@ -2052,7 +3744,14 @@ html.gate-locked body > *:not(#preview-gate) {
 
 main.has-gallery img {
   cursor: zoom-in;
-  transition: opacity 0.15s ease;
+  /* `transition` is a shorthand — declaring it here for opacity alone
+     was silently replacing the img:not(.lightbox__img) rule's transform
+     transition on every gallery page (this selector is more specific,
+     so it wins the whole property, not just the parts it mentions).
+     That's why the hover zoom read as instant on exactly the pages with
+     real images: it had no transition running at all there. Both listed
+     together so neither rule quietly cancels the other's. */
+  transition: opacity 0.15s ease, transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 main.has-gallery img:hover {

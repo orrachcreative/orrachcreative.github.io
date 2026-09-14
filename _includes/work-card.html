@@ -1,12 +1,27 @@
 {%- comment -%}
-  Params: item (hash with title, status, desc, url, cta), variant ("horizontal" | "vertical")
+  Params: item (hash with title, status, desc, url, cta, image), variant ("horizontal" | "vertical")
   The whole card is a single link (not a nested anchor around the "View case
   study" bit) so the entire surface is clickable.
+
+  Imagery: item.image (a real screenshot path) is optional and doesn't
+  exist on any project yet. Until it does, the media slot renders a
+  deliberate placeholder — a swatch/pattern derived from the title, not
+  "[IMAGE: placeholder]" text pretending to be a broken image — with a
+  reserved aspect-ratio so swapping in a real screenshot later never shifts
+  layout. Swatch is picked from title length so it's stable per item
+  without threading a loop index through every call site.
 {%- endcomment -%}
 <a class="work-card work-card--{{ include.variant }}" href="{{ include.item.url | relative_url }}">
+  {%- if include.item.image %}
   <div class="work-card__media">
-    <span>[IMAGE: placeholder]</span>
+    <img src="{{ include.item.image | relative_url }}" alt="{{ include.item.image_alt | default: include.item.title }}" loading="lazy">
   </div>
+  {%- else %}
+  <div class="work-card__media work-card__media--placeholder" data-swatch="{{ include.item.title | size | modulo: 5 | plus: 1 }}">
+    <span class="work-card__media-icon">{% include icon.html name="image-pending" %}</span>
+    <span class="work-card__media-tag">Screenshot pending</span>
+  </div>
+  {%- endif %}
   <div class="work-card__body">
     <div class="work-card__text">
       <p class="eyebrow">{{ include.item.status }}</p>

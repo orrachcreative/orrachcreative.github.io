@@ -5,41 +5,50 @@ nav: work
 permalink: /work/high5/
 gallery: true
 ---
+{% include proclamation.html %}
+
+<p class="corner-label">Jacksonville, FL &middot; Est. 2013 &middot; Orrach</p>
+
 <section class="case-hero shell">
   <div class="case-hero__nav">
     <a href="{{ '/work/' | relative_url }}">{% include icon.html name="arrow-left" %} All work</a>
     <a href="{{ '/work/afordal/' | relative_url }}">Next study {% include icon.html name="arrow-right" %}</a>
   </div>
-  <div class="case-hero__copy">
-    <h1 class="case-hero__title">High5</h1>
-    <p class="case-hero__desc">A real estate platform for buyers, sellers, agents, and loan officers, taken from two unfinished wireframes to a shipped, live product, since reused as the foundation for a separate commercial real estate joint venture.</p>
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+    <div class="case-hero__copy">
+      <h1 class="case-hero__title">High5</h1>
+      <p class="case-hero__desc">Brand and creative direction for a talent marketplace serving <span class="accent-word">1,600+ companies</span> worldwide &mdash; as both the lead designer shaping the brand and the account manager holding a 4&ndash;5-person international design team to the CMO's timeline.</p>
+    </div>
+    <button type="button" class="seal-badge" aria-label="There's something hidden here." title="Click a few times">
+      <span class="seal-badge__center" aria-hidden="true"></span>
+    </button>
   </div>
 
   <div class="case-meta">
     <div class="case-meta__item">
       <p class="meta-label">Role</p>
-      <p class="case-meta__value">Art Director + Account Manager</p>
+      <p class="case-meta__value">Lead Designer + Account Manager (freelance)</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Tools</p>
-      <p class="case-meta__value">Figma + Wordpress</p>
+      <p class="case-meta__value">Figma + Adobe Suite</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Type</p>
-      <p class="case-meta__value">Saas &bull; CRM</p>
+      <p class="case-meta__value">Talent marketplace &bull; Brand</p>
     </div>
     <div class="case-meta__item">
       <p class="meta-label">Timeline</p>
-      <p class="case-meta__value">September 2021 &ndash; September 2023</p>
+      <p class="case-meta__value">2021 &ndash; 2023</p>
     </div>
   </div>
 
   <div class="case-hero__shot">
-    <div class="work-card__media">
-      <span>[IMAGE: the finished product at a glance]</span>
-    </div>
+    {% include media-placeholder.html label="The finished product at a glance" tall=true %}
   </div>
 </section>
+
+<p class="draft-flag shell">DRAFT &mdash; role, timeline, and scope below are real (from Anthony's resume). The specific decisions and their tradeoffs are a plausible reconstruction of how that scope of work usually gets solved, not a verified account &mdash; needs Anthony's fact-check before this goes live.</p>
 
 <div class="case-shell shell">
   {% include case-sidebar.html %}
@@ -47,70 +56,83 @@ gallery: true
   <div class="case-content">
     <section class="case-section" id="the-ask">
       <h2 class="case-section__title">The ask</h2>
-      <p>What did you actually walk into on High5? A vague brief, a half-finished file, a verbal ask, nothing at all?</p>
-      <p>What didn&rsquo;t you have that you&rsquo;d normally expect &mdash; a spec, research, existing patterns, someone who could tell you what &ldquo;done&rdquo; looked like?</p>
+      <p>A new company was getting ready to launch and needed everything at once: brand identity, a website, paid advertising, video, and a pitch deck running close to 200 pages. I took it on as a subcontractor outside my role at HomeASAP, reporting directly to the company&rsquo;s CMO, and got to build out a team of three to five people to cover the range of work. I ran it as both art director and account manager: the one making the creative calls and the one the client actually talked to.</p>
     </section>
 
     <section class="case-section" id="the-problem">
       <h2 class="case-section__title">The real problem</h2>
-      <p>Who were the different people High5 had to work for? Name the user types, not just &ldquo;users.&rdquo;</p>
-      <p>What real-world rules, constraints, or limits shaped what you could do &mdash; legal, technical, business?</p>
-      <p>What made this genuinely hard to figure out, not just hard to build?</p>
+      <p>Launching a company from scratch means there&rsquo;s no existing brand to react to and no prior campaign to learn from. Every piece had to hold together and say the same thing, even though different hands were building it on different timelines.</p>
+      <p>With a team this size and a client this involved, someone had to be the last stop before anything went out the door. That job was mine: deciding what was good enough to show the CMO and what wasn&rsquo;t.</p>
     </section>
 
     <section class="case-section" id="working-it-out">
       <h2 class="case-section__title">Working it out</h2>
 
       {% include decision-block.html
-        title="Decision 1: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 1: A team spread across countries and timezones risked four different interpretations of the same brand."
+        first_attempt="Review each designer's work after delivery and correct drift case by case."
+        landed_on="A documented brand and style reference every designer worked from before starting, not after."
+        tradeoff="More of my own time went into documentation instead of production up front, in exchange for far less rework from a team that never sat in the same room to compare notes informally."
+        reject_text="Correct drift after delivery"
+        ship_text="Shared reference before work starts"
       %}
       {% include decision-block.html
-        title="Decision 2: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 2: The brand had to flex across web, video, social, and large-format signage without fragmenting."
+        first_attempt="Treat each deliverable type as its own creative brief, built to fit its format first."
+        landed_on="One flexible brand system &mdash; type, color, logo lockups &mdash; built to extend cleanly to any format instead of being redesigned for each one."
+        tradeoff="Less bespoke customization per format, in exchange for instant recognition wherever High5 showed up, from a convention banner to a social post."
+        reject_text="Bespoke brief per deliverable type"
+        ship_text="One system, extended per format"
       %}
       {% include decision-block.html
-        title="Decision 3: [name the problem with no obvious right answer]"
-        first_attempt="[Replace: what you tried first, and specifically why it didn’t work.]"
-        landed_on="[Replace: what shipped instead.]"
-        tradeoff="[Replace: the tradeoff you accepted, stated plainly.]"
+        title="Decision 3: Being both creative lead and account manager meant creative calls and client-relationship stakes were often the same decision."
+        first_attempt="Escalate every scope or direction question straight to the CMO."
+        landed_on="An internal creative-direction framework I owned, so routine calls didn't need to go up the chain."
+        tradeoff="Real risk taken on making creative calls solo, in exchange for a team that moved at its own pace instead of waiting on approval for every choice &mdash; and a CMO whose time went to the decisions that actually needed her."
+        reject_text="Escalate every call to the CMO"
+        ship_text="Owned framework, escalate what matters"
       %}
     </section>
 
     <section class="case-section" id="the-system">
       <h2 class="case-section__title">The system</h2>
-      <p>Did you build or extend a design system, pattern library, or component set? What&rsquo;s worth showing? Skip this section entirely if there&rsquo;s nothing to show here.</p>
-      <div class="work-card__media">
-        <span>[IMAGE: system/component overview &mdash; the shared components or patterns worth showing]</span>
-      </div>
+      <p>The brand reference from Decision 1 became the backbone for the corporate site (built with a dev team), ad campaigns, social content, video storyboards, internal comms, and convention signage &mdash; one visual language instead of five separately-branded deliverables.</p>
+      {% include media-placeholder.html label="Brand system overview" tall=true %}
     </section>
 
     <section class="case-section" id="the-ecosystem">
-      <h2 class="case-section__title">The ecosystem</h2>
-      <p>Is High5 more than one product or surface? List each one and who it&rsquo;s for, or delete this section if it was a single product.</p>
+      <h2 class="case-section__title">Where the brand showed up</h2>
       <div class="grid-items">
         <div class="grid-item">
           <div class="grid-item__media"></div>
-          <p class="grid-item__title">[Surface name]</p>
-          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
+          <p class="grid-item__title">Corporate site</p>
+          <p class="grid-item__desc">Led a dev team to build it &mdash; the primary surface for the brand system.</p>
         </div>
         <div class="grid-item">
           <div class="grid-item__media"></div>
-          <p class="grid-item__title">[Surface name]</p>
-          <p class="grid-item__desc">[Who it&rsquo;s for, and whether it was original work or a reskin/reuse.]</p>
+          <p class="grid-item__title">Campaigns &amp; social</p>
+          <p class="grid-item__desc">Ad campaigns and social content, produced across the distributed design team.</p>
+        </div>
+        <div class="grid-item">
+          <div class="grid-item__media"></div>
+          <p class="grid-item__title">Video &amp; events</p>
+          <p class="grid-item__desc">Storyboards handed to animators, plus large-format signage for trade-show conventions.</p>
         </div>
       </div>
     </section>
 
     <section class="case-section" id="outcome">
       <h2 class="case-section__title">Outcome</h2>
-      <p>What happened after it shipped? Soft signals count &mdash; still in production, reused elsewhere, adopted by another team. This project ended September 2023, so also note why/how it wrapped up if relevant.</p>
-      <p>Any real numbers &mdash; adoption, timeline, revenue? If not, say so plainly rather than implying them.</p>
+      <p>High5 operated as a consulting talent marketplace serving 1,600+ companies worldwide throughout the engagement. I led the brand and the account relationship for the full two years, 2021 to 2023.</p>
     </section>
+
+    <aside class="verify-list">
+      <p class="verify-list__title">To verify before this goes live</p>
+      <ul>
+        <li>The three decisions above are a plausible reconstruction of the real responsibilities on the resume (distributed team, brand-building, account management) &mdash; swap in the actual decisions and tradeoffs.</li>
+        <li>Whether any real outcome metrics exist beyond company count (team retention, campaign results, timeline record) worth citing here.</li>
+      </ul>
+    </aside>
   </div>
 </div>
 
@@ -118,6 +140,19 @@ gallery: true
   <p class="next-project__label">Next project</p>
   <p class="next-project__title">Afordal</p>
   <a class="workflow-link" href="{{ '/work/afordal/' | relative_url }}">View case study {% include icon.html name="arrow-right" %}</a>
+</div>
+
+<div class="marquee-band" aria-hidden="true">
+  <div class="marquee-band__track">
+    <span class="marquee-band__item">1,600+ companies worldwide</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">4&ndash;5 person distributed team</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+    <span class="marquee-band__item">1,600+ companies worldwide</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--castle"></span>
+    <span class="marquee-band__item">4&ndash;5 person distributed team</span>
+    <span class="marquee-band__item marquee-band__icon marquee-band__icon--swords"></span>
+  </div>
 </div>
 
 {% include cta.html %}
