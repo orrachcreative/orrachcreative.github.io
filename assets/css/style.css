@@ -1975,11 +1975,64 @@ a.work-card--horizontal:hover .work-card__cta {
    CTA
    ========================================================================== */
 
+/* The last thing on every page, so it is built as a destination rather
+   than a footer strip: a panel tall enough to land on, that opens up a
+   little further once you actually reach it.
+
+   The growth is small on purpose. This sits directly above the footer,
+   so expanding it pushes the page's own bottom downward — overdo it and
+   a reader scrolling toward the end feels the end moving away from them.
+   A step of roughly 10vh registers without ever fighting the scroll. */
 .cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34vh;
   padding-top: 24px;
   padding-bottom: 24px;
   background: #1e221e;
   text-align: center;
+  transition: min-height var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+  /* The theme nod: a sword follows you across the panel. SVG cursors are
+     ignored by some browsers (Safari among them), which is why a plain
+     keyword is kept as the fallback rather than being the only styling
+     carrying the effect. */
+  cursor: url("/assets/images/icons/cursor-sword.svg") 3 3, default;
+}
+
+/* Desktop: it opens on hover, since there is a pointer to open it with. */
+@media (min-width: 901px) and (hover: hover) {
+  .cta:hover {
+    min-height: 44vh;
+  }
+}
+
+/* Tablet and phone: no hover to rely on, so reaching it is the trigger —
+   the shared scroll-reveal observer adds .is-revealed when it comes into
+   view. */
+@media (max-width: 900px) {
+  .cta {
+    min-height: 52vh;
+  }
+
+  .cta.is-revealed {
+    min-height: 64vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .cta {
+    min-height: 54vh;
+  }
+
+  .cta.is-revealed {
+    min-height: 68vh;
+  }
+}
+
+html[data-motion="off"] .cta,
+html.no-anim .cta {
+  transition-duration: 0.01ms;
 }
 
 .cta__inner {
@@ -2007,6 +2060,13 @@ a.work-card--horizontal:hover .work-card__cta {
 
 .cta__email:hover {
   text-decoration: underline;
+}
+
+/* Keeps the sword over the address itself — inheriting the panel's
+   cursor would otherwise be fine, but the fallback needs to be `pointer`
+   here rather than `default`, since this one is actually clickable. */
+.cta__email {
+  cursor: url("/assets/images/icons/cursor-sword.svg") 3 3, pointer;
 }
 
 /* Home / Work page closing CTA row */

@@ -577,8 +577,14 @@
     // entirely without ever intersecting the viewport and stay invisible
     // forever. This selector only covers content reached by ordinary
     // top-to-bottom scrolling, where that failure mode can't happen.
+    // .cta is here so it learns when it has actually been reached: on
+    // tablet and phone the panel opens up a little on .is-revealed, since
+    // there's no hover to open it with the way there is on desktop.
+    // The attribute is set below rather than written into the markup on
+    // purpose — [data-reveal] starts an element invisible, so hardcoding
+    // it would strand the whole closing CTA if this script never ran.
     var revealEls = document.querySelectorAll(
-      ".work-card, .about-row, .logo-grid__item, .closing-cta, .gallery-scroll > .work-card__media"
+      ".work-card, .about-row, .logo-grid__item, .closing-cta, .cta, .gallery-scroll > .work-card__media"
     );
 
     if (revealEls.length && "IntersectionObserver" in window) {
