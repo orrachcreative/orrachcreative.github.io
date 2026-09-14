@@ -47,6 +47,9 @@
   <script>
     (function () {
       var root = document.documentElement;
+      // Locked before first paint so the site never flashes into view
+      // behind the gate. gate.js removes this once the password checks out.
+      root.classList.add('gate-locked');
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         root.classList.add('js-anim');
       }
@@ -63,6 +66,22 @@
   </script>
 </head>
 <body>
+  <div class="gate" id="preview-gate">
+    <div class="gate__panel">
+      <div>
+        <p class="eyebrow">Work in progress</p>
+        <h1 class="heading-2">Anthony Orrach Creative</h1>
+      </div>
+      <form class="gate__form" id="preview-gate-form" autocomplete="off">
+        <label class="visually-hidden" for="preview-gate-input">Password</label>
+        <input class="gate__input" id="preview-gate-input" type="password" placeholder="Password" required>
+        <button class="gate__submit" type="submit">Enter</button>
+        <p class="gate__error" id="preview-gate-error" hidden>Wrong password &mdash; try again.</p>
+      </form>
+    </div>
+  </div>
+  <script src="{{ '/assets/js/gate.js' | relative_url }}"></script>
+
   <a class="skip-link" href="#main-content">Skip to content</a>
 
   {% include nav.html %}
