@@ -64,6 +64,10 @@
      eszterbial.com pairs a bold grotesk with an italic serif for
      personality. Not a body or heading workhorse font. */
   --font-accent: "Fraunces", Georgia, serif;
+  /* Blackletter, used in exactly one place: the decree the seal's easter
+     egg unrolls. It is a costume, not a typeface for the site — legible
+     only in short bursts at display size, which is all it ever gets. */
+  --font-decree: "Germania One", "Big Shoulders Text", serif;
 
   /* Layout */
   --content-max: 1152px;
@@ -1321,14 +1325,13 @@ body.menu-open {
 /* Easter egg: clicking the seal badge a few times raises this banner.
    Themed to the castle/sword brand direction; swap the copy once the
    real brand voice/assets exist. */
-/* The seal's easter egg: a decree that drops into the middle of the
-   screen, rather than the thin top banner this used to be. Kept as a
-   centered card so the payoff for finding it feels like an event.
+/* The seal's easter egg, staged as a cut scene: the page dims, confetti
+   falls, and a scroll unrolls between two rods.
 
-   Not a real modal on purpose — it never traps focus or blocks the page
-   underneath, because it is a joke someone stumbled into, not a task
-   they have to finish. Pointer events are off while hidden so it can
-   never swallow a click on the page behind it. */
+   Not a real modal on purpose — it never traps focus, because it is a
+   joke someone stumbled into rather than a task they have to finish.
+   Pointer events are off while hidden so it can never swallow a click on
+   the page behind it. */
 .proclamation {
   position: fixed;
   inset: 0;
@@ -1347,76 +1350,151 @@ body.menu-open {
   pointer-events: auto;
 }
 
-.proclamation__card {
+/* The dim. A sibling rather than a backdrop on the parent so the
+   confetti layer can sit between it and the scroll. */
+.proclamation__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 14, 12, 0.72);
+}
+
+.decree {
   position: relative;
-  max-width: 460px;
+  z-index: 2;
+  width: min(520px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(-1.2deg) scale(0.96);
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proclamation.is-shown .decree {
+  transform: rotate(-1.2deg) scale(1);
+}
+
+/* The two rods the parchment is wound on. Wider than the sheet so they
+   read as something the paper hangs from rather than a border. */
+.decree__rod {
+  width: calc(100% + 26px);
+  height: 13px;
+  flex: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #6b4b2a 0%, #3d2a16 55%, #241708 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* The unroll. grid-template-rows 0fr -> 1fr animates to the content's
+   natural height, which a plain height transition cannot do without a
+   hardcoded pixel target. Where it is unsupported the rows simply snap
+   to 1fr, so the decree still opens — it just doesn't unroll. */
+.decree__sheet {
   width: 100%;
-  padding: 40px 36px 34px;
+  display: grid;
+  grid-template-rows: 0fr;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(120, 88, 46, 0.045) 0px,
+      rgba(120, 88, 46, 0.045) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    linear-gradient(180deg, #f3e4c4 0%, #efdcb6 42%, #e7d0a4 100%);
+  box-shadow: inset 0 10px 14px -10px rgba(88, 60, 26, 0.55),
+    inset 0 -10px 14px -10px rgba(88, 60, 26, 0.55),
+    0 18px 40px rgba(0, 0, 0, 0.45);
+  transition: grid-template-rows 0.75s cubic-bezier(0.22, 1, 0.28, 1) 0.18s;
+}
+
+.proclamation.is-shown .decree__sheet {
+  grid-template-rows: 1fr;
+}
+
+.decree__clip {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Held back until the parchment has most of the way unrolled, so the
+   words appear on the scroll rather than stretching open with it. */
+.decree__content {
+  padding: 34px 30px 30px;
   text-align: center;
-  color: var(--black);
-  background: var(--emerald);
-  border: 2px solid var(--black);
-  box-shadow: 14px 14px 0 rgba(20, 17, 14, 0.45);
-  transform: rotate(-2deg) scale(0.92) translateY(12px);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #2a1c0c;
+  opacity: 0;
+  transition: opacity 0.35s ease 0.62s;
 }
 
-.proclamation.is-shown .proclamation__card {
-  transform: rotate(-2deg) scale(1) translateY(0);
+.proclamation.is-shown .decree__content {
+  opacity: 1;
 }
 
-.proclamation__kicker {
+.decree__kicker {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 2px;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  color: #7a5a2c;
+  margin-bottom: 12px;
 }
 
-.proclamation__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
-  line-height: 1.1;
-  margin-bottom: 8px;
+.decree__title {
+  font-family: var(--font-decree);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.6rem);
+  line-height: 1.05;
+  margin-bottom: 12px;
 }
 
-.proclamation__body {
-  font-size: 1rem;
-  margin-bottom: 20px;
+.decree__body {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  margin-bottom: 22px;
 }
 
-.proclamation__cta {
+.decree__cta {
   display: inline-block;
   font-family: var(--font-mono);
   font-weight: 600;
   font-size: 0.9375rem;
-  color: var(--black);
+  color: #2a1c0c;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
-.proclamation__close {
+.decree__close {
   position: absolute;
-  top: 6px;
-  right: 12px;
+  top: -42px;
+  right: -4px;
   background: none;
   border: none;
-  color: inherit;
-  font-size: 1.5rem;
+  color: var(--parchment);
+  font-size: 1.75rem;
   line-height: 1;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 4px 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.7s;
+}
+
+.proclamation.is-shown .decree__close {
+  opacity: 1;
 }
 
 /* Heraldic confetti: the castle and crossed-swords marks thrown across
-   the screen when the decree lands. Purely decorative, so it is built
-   only when motion is on and removed when the decree closes. */
+   the screen when the decree unrolls. A child of .proclamation, so it
+   falls in front of the dimmed page but behind the scroll without
+   needing a z-index that competes with the header. Purely decorative, so
+   it is built only when motion is on and removed when the decree
+   closes. */
 .seal-confetti {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 89;
+  z-index: 1;
   pointer-events: none;
   overflow: hidden;
 }
@@ -1455,9 +1533,16 @@ body.menu-open {
 
 html[data-motion="off"] .proclamation,
 html.no-anim .proclamation,
-html[data-motion="off"] .proclamation__card,
-html.no-anim .proclamation__card {
+html[data-motion="off"] .decree,
+html.no-anim .decree,
+html[data-motion="off"] .decree__sheet,
+html.no-anim .decree__sheet,
+html[data-motion="off"] .decree__content,
+html.no-anim .decree__content,
+html[data-motion="off"] .decree__close,
+html.no-anim .decree__close {
   transition-duration: 0.01ms;
+  transition-delay: 0s;
 }
 
 /* Reusable background-image treatment: add alongside any section's own

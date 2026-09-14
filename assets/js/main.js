@@ -443,7 +443,7 @@
       if (clickCount < 3) return;
       clickCount = 0;
       proclamation.classList.add("is-shown");
-      throwConfetti(badge);
+      throwConfetti(proclamation);
     });
   });
 
@@ -451,40 +451,44 @@
   // across the screen. Decorative only, so it is skipped entirely when
   // motion is off, and it cleans itself up rather than leaving a few
   // hundred nodes parked in the DOM.
-  function throwConfetti(badge) {
+  function throwConfetti(proclamation) {
     if (isMotionOff()) return;
-    var existing = document.querySelector(".seal-confetti");
+    var existing = proclamation.querySelector(".seal-confetti");
     if (existing) existing.remove();
 
     var layer = document.createElement("div");
     layer.className = "seal-confetti";
     layer.setAttribute("aria-hidden", "true");
 
-    var origin = badge.getBoundingClientRect();
-    var originPct = ((origin.left + origin.width / 2) / window.innerWidth) * 100;
-
-    for (var i = 0; i < 44; i++) {
+    // Spread across the whole width. This used to scatter around the
+    // badge, which put nearly all of it down the right-hand side, since
+    // that is where the seal sits — it read as a leak rather than a
+    // celebration. Columns with a jittered offset rather than pure
+    // random, so no stretch of the screen is left bare by chance.
+    var count = 64;
+    for (var i = 0; i < count; i++) {
       var bit = document.createElement("span");
       bit.className =
         "seal-confetti__bit seal-confetti__bit--" + (i % 2 ? "swords" : "castle");
-      // Cluster near the badge, then scatter outward, so the burst reads
-      // as coming from the seal rather than from the whole window.
-      var spread = (Math.random() - 0.5) * 140;
-      bit.style.left = Math.max(-4, Math.min(104, originPct + spread)) + "%";
+      var column = (i / count) * 106 - 3;
+      bit.style.left = (column + (Math.random() - 0.5) * 3.4).toFixed(2) + "%";
       bit.style.setProperty("--spin", (Math.random() * 900 - 450).toFixed(0) + "deg");
       var scale = 0.6 + Math.random() * 0.9;
       bit.style.width = (22 * scale).toFixed(1) + "px";
       bit.style.height = (22 * scale).toFixed(1) + "px";
       bit.style.animationDuration = (2.4 + Math.random() * 2.2).toFixed(2) + "s";
-      bit.style.animationDelay = (Math.random() * 0.7).toFixed(2) + "s";
+      bit.style.animationDelay = (Math.random() * 1.1).toFixed(2) + "s";
       bit.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
       layer.appendChild(bit);
     }
 
-    document.body.appendChild(layer);
+    // Into the proclamation rather than the body: that puts it in the
+    // same stacking context as the scrim and the scroll, so it falls in
+    // front of the dimmed page and behind the parchment.
+    proclamation.insertBefore(layer, proclamation.querySelector(".decree"));
     setTimeout(function () {
       if (layer.parentNode) layer.remove();
-    }, 6000);
+    }, 7000);
   }
 
   // Esc closes the decree, the one convention people reach for on
@@ -503,11 +507,14 @@
     });
   });
 
-  // Clicking the backdrop closes it too — but only the backdrop itself,
-  // never a click that landed inside the card (the mailto lives there).
+  // Clicking away closes it too — but only on the padding around the
+  // scroll or the scrim itself, never on a click that landed on the
+  // parchment, which holds the mailto.
   document.querySelectorAll("[data-proclamation]").forEach(function (p) {
     p.addEventListener("click", function (e) {
-      if (e.target === p) p.classList.remove("is-shown");
+      if (e.target === p || e.target.classList.contains("proclamation__scrim")) {
+        p.classList.remove("is-shown");
+      }
     });
   });
 
