@@ -372,10 +372,9 @@
   // doubles as an easter-egg trigger. Text-on-path is generated here
   // rather than hardcoded in the HTML so the copy only lives in one place
   // and the radius always matches the badge's actual rendered size.
-  // Placeholder copy/glyph until the real castle/pencil/sword mark lands —
-  // swap SEAL_TEXT and the center glyph then, nothing else should need to
-  // change.
-  var SEAL_TEXT = "PRINCIPAL PRODUCT DESIGNER • JACKSONVILLE, FL • ";
+  // The copy lives here and nowhere else; the center mark is painted by
+  // .seal-badge__center in style.css.
+  var SEAL_TEXT = "SENIOR PRODUCT DESIGNER • JACKSONVILLE, FL • ";
   document.querySelectorAll(".seal-badge").forEach(function (badge, badgeIndex) {
     var size = 128;
     var r = size / 2 - 14;
@@ -406,15 +405,27 @@
     text.setAttribute("font-size", "8.6");
     text.setAttribute("font-family", "var(--font-mono)");
     text.setAttribute("font-weight", "600");
-    text.setAttribute("letter-spacing", "0.5");
     var textPath = document.createElementNS(svgNS, "textPath");
     textPath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + pathId);
     textPath.setAttribute("href", "#" + pathId);
-    textPath.textContent = SEAL_TEXT.repeat(3);
+    textPath.textContent = SEAL_TEXT;
     text.appendChild(textPath);
     svg.appendChild(text);
 
     badge.insertBefore(svg, badge.firstChild);
+
+    // Fit the phrase to exactly one lap of the ring. Repeating the string
+    // and letting the path clip whatever didn't fit was what put a second,
+    // half-finished "PRINCIPAL" next to the first one: the phrase's natural
+    // width has no reason to divide evenly into the circumference. Pinning
+    // textLength to the path's own length instead means it always closes
+    // the loop on itself and reads once, cleanly, at any badge size.
+    // lengthAdjust "spacing" opens the gaps between letters and leaves the
+    // letterforms alone — "spacingAndGlyphs" would stretch the type itself.
+    // (The trailing space in SEAL_TEXT is what keeps the final bullet off
+    // the leading "P" where the ring meets.)
+    text.setAttribute("textLength", path.getTotalLength());
+    text.setAttribute("lengthAdjust", "spacing");
 
     // Easter egg: a few clicks on the seal raises the proclamation banner.
     // Gated at 3 clicks so a single curious tap doesn't immediately spam a

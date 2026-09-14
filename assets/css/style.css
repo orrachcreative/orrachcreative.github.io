@@ -1062,11 +1062,21 @@ body.menu-open {
   }
 }
 
+/* Anthony's castle/pencil logomark at the middle of the seal, inside the
+   ring of rotating text. Painted as a background rather than an <img> on
+   purpose: the lightbox on gallery pages adopts every <img> inside
+   <main>, so an image element here would join the gallery and hijack the
+   badge's own click handler. A background keeps the mark's real greens,
+   which a currentColor mask would flatten to one tone. */
 .seal-badge__center {
   position: relative;
   z-index: 1;
-  font-size: 1.75rem;
-  line-height: 1;
+  height: 68px;
+  aspect-ratio: 231 / 449;
+  background-image: url("/assets/images/logo/AOC-Logomark.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 /* Marquee band — a full-bleed scrolling strip of repeating text, the
@@ -1109,16 +1119,45 @@ body.menu-open {
   flex: none;
 }
 
-/* The crown/sword glyphs between phrases render visually smaller than
-   the bold condensed text at the same font-size (emoji cap-height reads
-   shorter than Big Shoulders Text's), so they get their own larger size
-   to actually match the surrounding text's height rather than the same
-   nominal font-size. */
+/* The marks between phrases are Anthony's own castle/pencil and crossed
+   swords icons, painted as masks rather than dropped in as <img>. The
+   mask takes its color from the band's text, so the icons can never
+   drift from the words beside them, and one cached file serves all the
+   repeats the scrolling track needs.
+
+   Each icon gets its own box size because the two files ink differently
+   inside their square canvases — the swords fill 78% of theirs, the
+   castle 90%. Equal boxes would render the castle visibly taller, so
+   the sizes below are set to land both on the same ink height as the
+   text rather than on the same nominal size. */
 .marquee-band__icon {
-  display: inline-flex;
-  align-items: center;
-  font-size: 2rem;
-  line-height: 1;
+  display: inline-block;
+  /* content-box so the shared 24px item padding stays spacing and does
+     not eat into the icon's own width — under the global border-box it
+     would clamp the box to the padding and squash the mark. */
+  box-sizing: content-box;
+  width: var(--icon-box, 1em);
+  height: var(--icon-box, 1em);
+  align-self: center;
+  background-color: currentColor;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.marquee-band__icon--castle {
+  --icon-box: 1.35em;
+  -webkit-mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+  mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+}
+
+.marquee-band__icon--swords {
+  --icon-box: 1.55em;
+  -webkit-mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+  mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
 }
 
 /* Device mockup — stages a real screenshot inside a simple laptop bezel
