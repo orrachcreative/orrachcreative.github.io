@@ -1880,9 +1880,10 @@ html.no-anim .decree__close {
        does reach under it, the z-index below keeps the type on top and
        fully legible. */
     left: auto;
-    right: -118px;
-    /* High enough that the circle finishes above the headline. */
-    top: -32px;
+    /* Down 50 and left 100 from where the clearance solve had put it
+       (top -32, right -118). */
+    right: -18px;
+    top: 18px;
     width: 180px;
     height: 180px;
     /* Behind the words. Out of the flow it lands right across the
