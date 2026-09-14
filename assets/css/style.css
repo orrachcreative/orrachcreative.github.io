@@ -2132,6 +2132,21 @@ a.work-card.is-tilting .work-card__body {
   justify-content: space-between;
 }
 
+/* Once the card stacks, that 345px stops being a column measure and just
+   keeps the panel from reaching the card's edges — too narrow on a wide
+   tablet, leaving a strip of the page showing through beside the copy,
+   and too wide on a small phone, where it overhung the card by 10px.
+
+   This has to sit after the rule above, not up with the flex-direction
+   switch where it belongs logically: both selectors carry the same
+   specificity, so the later one wins and an override placed earlier in
+   the file silently loses. */
+@media (max-width: 900px) {
+  .work-card--horizontal .work-card__body {
+    width: 100%;
+  }
+}
+
 .work-card--vertical .work-card__body {
   width: 100%;
   gap: 32px;
