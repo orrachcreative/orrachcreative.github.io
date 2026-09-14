@@ -374,7 +374,11 @@
   // and the radius always matches the badge's actual rendered size.
   // The copy lives here and nowhere else; the center mark is painted by
   // .seal-badge__center in style.css.
-  var SEAL_TEXT = "SENIOR PRODUCT DESIGNER • JACKSONVILLE, FL • ";
+  // Non-breaking spaces around the bullets, not plain ones: SVG collapses
+  // regular whitespace, and the trailing one at the seam gets trimmed
+  // outright, which is what butted the closing bullet against the opening
+  // "S" where the ring wraps.
+  var SEAL_TEXT = "SENIOR PRODUCT DESIGNER • JACKSONVILLE, FL • ";
   document.querySelectorAll(".seal-badge").forEach(function (badge, badgeIndex) {
     var size = 128;
     var r = size / 2 - 14;
@@ -427,22 +431,68 @@
     text.setAttribute("textLength", path.getTotalLength());
     text.setAttribute("lengthAdjust", "spacing");
 
-    // Easter egg: a few clicks on the seal raises the proclamation banner.
-    // Gated at 3 clicks so a single curious tap doesn't immediately spam a
-    // full-width banner over the page.
+    // Easter egg: a few clicks on the seal knights you. Gated at 3 clicks
+    // so a single curious tap doesn't immediately throw a decree over the
+    // page. No auto-dismiss timer any more — there's a mailto in the card
+    // now, and yanking it away mid-read would be its own small betrayal.
     var proclamation = document.querySelector("[data-proclamation]");
     if (!proclamation) return;
     var clickCount = 0;
-    var hideTimer = null;
     badge.addEventListener("click", function () {
       clickCount += 1;
       if (clickCount < 3) return;
       clickCount = 0;
       proclamation.classList.add("is-shown");
-      clearTimeout(hideTimer);
-      hideTimer = setTimeout(function () {
-        proclamation.classList.remove("is-shown");
-      }, 4000);
+      throwConfetti(badge);
+    });
+  });
+
+  // Heraldic confetti behind the decree — Anthony's two marks, flung
+  // across the screen. Decorative only, so it is skipped entirely when
+  // motion is off, and it cleans itself up rather than leaving a few
+  // hundred nodes parked in the DOM.
+  function throwConfetti(badge) {
+    if (isMotionOff()) return;
+    var existing = document.querySelector(".seal-confetti");
+    if (existing) existing.remove();
+
+    var layer = document.createElement("div");
+    layer.className = "seal-confetti";
+    layer.setAttribute("aria-hidden", "true");
+
+    var origin = badge.getBoundingClientRect();
+    var originPct = ((origin.left + origin.width / 2) / window.innerWidth) * 100;
+
+    for (var i = 0; i < 44; i++) {
+      var bit = document.createElement("span");
+      bit.className =
+        "seal-confetti__bit seal-confetti__bit--" + (i % 2 ? "swords" : "castle");
+      // Cluster near the badge, then scatter outward, so the burst reads
+      // as coming from the seal rather than from the whole window.
+      var spread = (Math.random() - 0.5) * 140;
+      bit.style.left = Math.max(-4, Math.min(104, originPct + spread)) + "%";
+      bit.style.setProperty("--spin", (Math.random() * 900 - 450).toFixed(0) + "deg");
+      var scale = 0.6 + Math.random() * 0.9;
+      bit.style.width = (22 * scale).toFixed(1) + "px";
+      bit.style.height = (22 * scale).toFixed(1) + "px";
+      bit.style.animationDuration = (2.4 + Math.random() * 2.2).toFixed(2) + "s";
+      bit.style.animationDelay = (Math.random() * 0.7).toFixed(2) + "s";
+      bit.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
+      layer.appendChild(bit);
+    }
+
+    document.body.appendChild(layer);
+    setTimeout(function () {
+      if (layer.parentNode) layer.remove();
+    }, 6000);
+  }
+
+  // Esc closes the decree, the one convention people reach for on
+  // anything that covers the page.
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll("[data-proclamation].is-shown").forEach(function (p) {
+      p.classList.remove("is-shown");
     });
   });
 
@@ -450,6 +500,14 @@
     btn.addEventListener("click", function () {
       var proclamation = btn.closest("[data-proclamation]");
       if (proclamation) proclamation.classList.remove("is-shown");
+    });
+  });
+
+  // Clicking the backdrop closes it too — but only the backdrop itself,
+  // never a click that landed inside the card (the mailto lives there).
+  document.querySelectorAll("[data-proclamation]").forEach(function (p) {
+    p.addEventListener("click", function (e) {
+      if (e.target === p) p.classList.remove("is-shown");
     });
   });
 

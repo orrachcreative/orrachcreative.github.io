@@ -1,0 +1,18 @@
+{%- comment -%}
+  The seal's easter egg. Hidden until someone clicks the badge three
+  times (see the seal block in main.js), which also throws a burst of
+  the castle and crossed-swords marks across the screen.
+
+  Lives in one include rather than pasted into all 11 pages, so the copy
+  has a single home — same reason the ring's wording sits in one
+  SEAL_TEXT string instead of in the markup.
+{%- endcomment -%}
+<div class="proclamation" data-proclamation role="status" aria-live="polite">
+  <div class="proclamation__card">
+    <p class="proclamation__kicker">By royal decree</p>
+    <p class="proclamation__title">Thou hast clicked the seal thrice.</p>
+    <p class="proclamation__body">Consider thyself knighted. Now go forth and hire one.</p>
+    <a class="proclamation__cta" href="mailto:orrachcreative@gmail.com">orrachcreative@gmail.com</a>
+    <button type="button" class="proclamation__close" data-proclamation-close aria-label="Dismiss">&times;</button>
+  </div>
+</div>

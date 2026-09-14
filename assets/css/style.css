@@ -843,11 +843,18 @@ body.menu-open {
 .hero__name {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
-  line-height: 1.1;
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
+  line-height: 1.15;
   letter-spacing: -0.25px;
+  max-width: 24ch;
   margin-top: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+/* The greeting carries the name, so the name itself gets the accent —
+   the sentence around it stays quiet enough not to rival the headline. */
+.hero__name-self {
+  color: var(--accent);
 }
 
 .hero-shell .hero__name {
@@ -1030,16 +1037,28 @@ body.menu-open {
   background: var(--dark-forest);
   border: 1px solid rgba(254, 245, 234, 0.18);
   cursor: pointer;
-  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  /* Sits cocked a few degrees like a stamp pressed by hand, and pulls
+     itself straight when you point at it. Rotation and scale go through
+     their own custom properties so hover and :active can each change one
+     without having to restate the other — a plain transform on :active
+     would drop the tilt the moment you pressed it on a touch screen,
+     where there is no hover to hold it at zero. */
+  --seal-rot: -7deg;
+  --seal-scale: 1;
+  transform: rotate(var(--seal-rot)) scale(var(--seal-scale));
+  transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--motion-fast) ease;
 }
 
-.seal-badge:hover {
+.seal-badge:hover,
+.seal-badge:focus-visible {
   border-color: var(--emerald);
-  transform: scale(1.04);
+  --seal-rot: 0deg;
+  --seal-scale: 1.04;
 }
 
 .seal-badge:active {
-  transform: scale(0.97);
+  --seal-scale: 0.97;
 }
 
 .seal-badge svg.seal-badge__ring {
@@ -1071,7 +1090,7 @@ body.menu-open {
 .seal-badge__center {
   position: relative;
   z-index: 1;
-  height: 68px;
+  height: 76px;
   aspect-ratio: 231 / 449;
   background-image: url("/assets/images/logo/AOC-Logomark.svg");
   background-position: center;
@@ -1203,33 +1222,142 @@ body.menu-open {
 /* Easter egg: clicking the seal badge a few times raises this banner.
    Themed to the castle/sword brand direction; swap the copy once the
    real brand voice/assets exist. */
+/* The seal's easter egg: a decree that drops into the middle of the
+   screen, rather than the thin top banner this used to be. Kept as a
+   centered card so the payoff for finding it feels like an event.
+
+   Not a real modal on purpose — it never traps focus or blocks the page
+   underneath, because it is a joke someone stumbled into, not a task
+   they have to finish. Pointer events are off while hidden so it can
+   never swallow a click on the page behind it. */
 .proclamation {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   z-index: 90;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: 22px 24px;
-  background: var(--emerald);
-  color: var(--black);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.25rem;
-  text-align: center;
-  transform: translateY(-100%);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-med) ease;
 }
 
 .proclamation.is-shown {
-  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.proclamation__card {
+  position: relative;
+  max-width: 460px;
+  width: 100%;
+  padding: 40px 36px 34px;
+  text-align: center;
+  color: var(--black);
+  background: var(--emerald);
+  border: 2px solid var(--black);
+  box-shadow: 14px 14px 0 rgba(20, 17, 14, 0.45);
+  transform: rotate(-2deg) scale(0.92) translateY(12px);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proclamation.is-shown .proclamation__card {
+  transform: rotate(-2deg) scale(1) translateY(0);
+}
+
+.proclamation__kicker {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.proclamation__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.proclamation__body {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.proclamation__cta {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.proclamation__close {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* Heraldic confetti: the castle and crossed-swords marks thrown across
+   the screen when the decree lands. Purely decorative, so it is built
+   only when motion is on and removed when the decree closes. */
+.seal-confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 89;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.seal-confetti__bit {
+  position: absolute;
+  top: -60px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--emerald);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: seal-confetti-fall linear forwards;
+}
+
+.seal-confetti__bit--castle {
+  -webkit-mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+  mask-image: url("/assets/images/icons/Icon-castle_pencil.svg");
+}
+
+.seal-confetti__bit--swords {
+  -webkit-mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+  mask-image: url("/assets/images/icons/Icon-crossed_swords.svg");
+}
+
+@keyframes seal-confetti-fall {
+  to {
+    transform: translateY(105vh) rotate(var(--spin, 540deg));
+    opacity: 0;
+  }
 }
 
 html[data-motion="off"] .proclamation,
-html.no-anim .proclamation {
+html.no-anim .proclamation,
+html[data-motion="off"] .proclamation__card,
+html.no-anim .proclamation__card {
   transition-duration: 0.01ms;
 }
 
