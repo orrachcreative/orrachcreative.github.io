@@ -944,7 +944,11 @@ body.menu-open {
   font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
   line-height: 1.15;
   letter-spacing: -0.25px;
-  max-width: 24ch;
+  /* No narrow cap: 24ch was sized for the old short greeting and turns
+     the longer introduction into a column of stubs. The shell's own
+     content-max bounds it instead, which lands it on one line at desktop
+     and two as the viewport narrows. */
+  max-width: 100%;
   margin-top: 8px;
   margin-bottom: 6px;
 }
@@ -1849,10 +1853,15 @@ html.no-anim .decree__close {
        The inset moves in by the same 10 the box loses (right -38 + 10,
        top 18 + 10) so the shrink happens around the seal's centre
        instead of pulling it off the corner it was placed on. */
+    /* Shrunk from the top-right corner, not around the centre. Holding
+       the centre pushed the seal down into the headline's band, and the
+       headline has no reserved column — so no amount of padding on the
+       greeting could clear it. Anchored here, the smaller badge simply
+       occupies less of the corner. */
     right: -28px;
     top: 28px;
-    width: 160px;
-    height: 160px;
+    width: 118px;
+    height: 118px;
     /* Behind the words. Out of the flow it lands right across the
        greeting and the headline, and it was covering his own name —
        which is the one thing the greeting exists to say. Sitting under
@@ -1875,9 +1884,15 @@ html.no-anim .decree__close {
      them. Nudging the badge's offset per breakpoint was the wrong tool —
      it fixed one width and broke three, since what the circle collides
      with depends on how the copy happens to rewrap. */
+  /* Reserves the seal's corner. 56 rather than the old 76: the badge is
+     smaller now, and the supplied greeting is about three times longer
+     than the copy this was first tuned against, so a wide reserve turns
+     it into a column of stubs. At this width a line or two still passes
+     behind the seal at some viewports — acceptable, because the badge
+     sits under the type (z-index below) and the words stay legible. */
   .home-hero__top .eyebrow,
   .home-hero .hero__name {
-    padding-right: 76px;
+    padding-right: 56px;
   }
 }
 
@@ -2523,6 +2538,17 @@ html.no-anim .cta__email {
    on this page are made up" right inside the Outcome section — see
    design-critic review). Grouped instead as one clearly-internal note at
    the end of the case content. */
+/* Copy that is still waiting on a real number or fact. Deliberately
+   loud: a placeholder that blends in is a placeholder that ships. */
+.draft-mark {
+  background: rgba(231, 198, 66, 0.18);
+  color: var(--gold);
+  border-bottom: 1px dashed var(--gold);
+  padding: 0 4px;
+  border-radius: 2px;
+  font-style: italic;
+}
+
 .verify-list {
   margin: 8px 0 44px;
   padding: 16px 20px;
