@@ -1880,12 +1880,14 @@ html.no-anim .decree__close {
        does reach under it, the z-index below keeps the type on top and
        fully legible. */
     left: auto;
-    /* Down 50 and left 100 from where the clearance solve had put it
-       (top -32, right -118). */
-    right: -18px;
-    top: 18px;
-    width: 180px;
-    height: 180px;
+    /* 20px further right, and 10px smaller on every side.
+       The inset moves in by the same 10 the box loses (right -38 + 10,
+       top 18 + 10) so the shrink happens around the seal's centre
+       instead of pulling it off the corner it was placed on. */
+    right: -28px;
+    top: 28px;
+    width: 160px;
+    height: 160px;
     /* Behind the words. Out of the flow it lands right across the
        greeting and the headline, and it was covering his own name —
        which is the one thing the greeting exists to say. Sitting under
