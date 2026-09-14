@@ -491,9 +491,9 @@ a.work-card--horizontal:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 4px;
+  width: 44px;
+  height: 44px;
+  padding: 2px;
   border-radius: 999px;
   background: var(--bg-raised);
   color: var(--ink-strong);
@@ -502,37 +502,136 @@ a.work-card--horizontal:focus-visible {
 }
 
 .motion-toggle svg {
-  /* Up from 16px: the knight's silhouette needs the extra room to still
-     read as a knight rather than a smudge at this size. */
-  width: 22px;
-  height: 22px;
+  /* Sized to sit with the 48px menu button beside it. A mounted knight
+     carries far more detail than the single figure that used to live
+     here, and below about 34px the horse, rider and sword collapse into
+     one smudge — so the button grew to fit the icon rather than the icon
+     being shrunk to fit the button. */
+  width: 40px;
+  height: 40px;
+  /* Rearing swings the figure past the viewBox, and an SVG clips to its
+     viewBox by default — which lopped off the tail and the tip of the
+     sword. The rear is shifted back inside below; this is the guarantee
+     that nothing ever gets cut whatever the pose. */
+  overflow: visible;
 }
 
-/* The knight prances while site motion is on and stands still when it's
-   off — the control demonstrating the thing it controls. Gated exactly
-   like every other animation here: the OS preference first, then the
-   in-page toggle, so turning motion off genuinely stops him. */
+/* The knight rides while site motion is on, rears onto his hind legs
+   when you point at him, and stands still once motion is off — the
+   control demonstrating the thing it controls.
+
+   Two nested groups per leg: .mtk-swing carries the walk, .mtk-leg the
+   hover tuck. They cannot be the same element, because a running
+   animation beats a plain transform on that element and the tuck would
+   simply never show. */
+.mtk-fig,
+.mtk-body,
+.mtk-leg,
+.mtk-swing {
+  transform-box: view-box;
+}
+
+.mtk-fig {
+  transform-origin: 11px 35px; /* the hind hoof he pivots on */
+  transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mtk-leg {
+  transition: transform var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Each leg turns about its own hip/shoulder, not the icon's center. */
+.mtk-leg--hf { transform-origin: 11.5px 24.5px; }
+.mtk-leg--hn { transform-origin: 13.6px 25.2px; }
+.mtk-leg--ff { transform-origin: 22.6px 25.4px; }
+.mtk-leg--fn { transform-origin: 24.8px 25px; }
+.mtk-swing { transform-origin: inherit; }
+
+/* Gated exactly like every other animation here: the OS preference
+   first, then the in-page toggle, so turning motion off genuinely
+   halts him rather than just hiding the movement. */
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="off"]) .motion-toggle__knight {
-    transform-box: view-box;
-    transform-origin: 12px 20.4px;
-    animation: knight-prance 1s ease-in-out infinite;
+  /* Diagonal pairs move together, which is what a real walk looks like
+     — legs swinging in unison reads as a rocking horse. */
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--hf .mtk-swing,
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--fn .mtk-swing {
+    animation: mtk-stride-a 0.8s ease-in-out infinite;
   }
 
-  /* Bobs in place rather than travelling: a looping translate across the
-     box would just read as the piece sliding back to where it started. */
-  @keyframes knight-prance {
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--hn .mtk-swing,
+  html:not([data-motion="off"]) .motion-toggle .mtk-leg--ff .mtk-swing {
+    animation: mtk-stride-b 0.8s ease-in-out infinite;
+  }
+
+  /* Half the stride's duration: the body dips once per step, not once
+     per full cycle. */
+  html:not([data-motion="off"]) .motion-toggle .mtk-body {
+    animation: mtk-bob 0.4s ease-in-out infinite;
+  }
+
+  @keyframes mtk-stride-a {
     0%,
     100% {
-      transform: translateY(0) rotate(0deg);
+      transform: rotate(14deg);
     }
-    30% {
-      transform: translateY(-1.6px) rotate(-5deg);
-    }
-    60% {
-      transform: translateY(-0.4px) rotate(2deg);
+    50% {
+      transform: rotate(-14deg);
     }
   }
+
+  @keyframes mtk-stride-b {
+    0%,
+    100% {
+      transform: rotate(-14deg);
+    }
+    50% {
+      transform: rotate(14deg);
+    }
+  }
+
+  @keyframes mtk-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.4px);
+    }
+  }
+}
+
+/* Rearing up. The whole figure pivots on the hind hoof while the front
+   legs tuck, and the walk pauses for as long as he's up — a horse on two
+   legs is not mid-stride. Kept on :hover and :focus-visible together so
+   it is reachable from the keyboard as well as the cursor. */
+/* Pivoting on the hind hoof alone throws him up and to the left, well
+   outside the icon's box. The scale and nudge put him back inside it, so
+   he rears in place instead of climbing out of his own button. */
+.motion-toggle:hover .mtk-fig,
+.motion-toggle:focus-visible .mtk-fig {
+  transform: translateX(5.2px) rotate(-24deg) scale(0.9);
+}
+
+.motion-toggle:hover .mtk-leg--ff,
+.motion-toggle:focus-visible .mtk-leg--ff {
+  transform: rotate(-36deg);
+}
+
+.motion-toggle:hover .mtk-leg--fn,
+.motion-toggle:focus-visible .mtk-leg--fn {
+  transform: rotate(-52deg);
+}
+
+/* These carry the full html:not([data-motion]) prefix, and name .mtk-leg
+   on the way down, purely to outrank the walk rules above. Those use the
+   `animation` shorthand, which resets animation-play-state to running, so
+   a lower-specificity `paused` here is silently overruled — he reared but
+   kept walking in mid-air. */
+html:not([data-motion="off"]) .motion-toggle:hover .mtk-leg .mtk-swing,
+html:not([data-motion="off"]) .motion-toggle:focus-visible .mtk-leg .mtk-swing,
+html:not([data-motion="off"]) .motion-toggle:hover .mtk-body,
+html:not([data-motion="off"]) .motion-toggle:focus-visible .mtk-body {
+  animation-play-state: paused;
 }
 
 .motion-toggle:hover {
@@ -1030,8 +1129,8 @@ body.menu-open {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 128px;
-  height: 128px;
+  width: 170px;
+  height: 170px;
   flex: none;
   border-radius: 50%;
   background: var(--dark-forest);
@@ -1090,7 +1189,7 @@ body.menu-open {
 .seal-badge__center {
   position: relative;
   z-index: 1;
-  height: 76px;
+  height: 101px;
   aspect-ratio: 231 / 449;
   background-image: url("/assets/images/logo/AOC-Logomark.svg");
   background-position: center;
