@@ -1870,12 +1870,19 @@ html.no-anim .decree__close {
 
   .home-hero__top .seal-badge {
     position: absolute;
-    left: 0;
-    /* 92.5, not 82: the badge is rotated, so its rendered box is taller
-       than the element and grew again with the 6%. Offsetting by a flat
-       30 moved it only 20 on screen — this is the value that actually
-       lands the visible edge 30px lower. */
-    top: 92.5px;
+    /* Anchored to the right and allowed to run off the edge.
+       Measured, not guessed: the hero's text column runs the full
+       content width, so a 180px seal cannot clear every line box at
+       every phone width without being ~80% off-screen — chasing that
+       with per-width offsets fixed one size and broke three others.
+       This offset keeps it off the greeting and the headline at common
+       widths and reads as a seal bleeding off the corner; where a line
+       does reach under it, the z-index below keeps the type on top and
+       fully legible. */
+    left: auto;
+    right: -118px;
+    /* High enough that the circle finishes above the headline. */
+    top: -32px;
     width: 180px;
     height: 180px;
     /* Behind the words. Out of the flow it lands right across the
@@ -1892,6 +1899,17 @@ html.no-anim .decree__close {
   .home-hero .hero-proof {
     position: relative;
     z-index: 1;
+  }
+
+  /* Reserve the seal's column instead of trying to dodge it. Only the
+     two elements that sit in its band wrap short; the headline and
+     everything below keep the full width, because the badge ends above
+     them. Nudging the badge's offset per breakpoint was the wrong tool —
+     it fixed one width and broke three, since what the circle collides
+     with depends on how the copy happens to rewrap. */
+  .home-hero__top .eyebrow,
+  .home-hero .hero__name {
+    padding-right: 76px;
   }
 }
 
