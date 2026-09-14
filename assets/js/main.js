@@ -491,6 +491,93 @@
     }, 7000);
   }
 
+  // Archery range in the closing CTA: click anywhere in the panel and an
+  // arrow flies in and sticks where you aimed. Hit the target and it
+  // jumps somewhere new.
+  //
+  // Decorative throughout — the range is aria-hidden, built only when
+  // motion is on, and every listener steps aside for real controls, so
+  // the section's actual job (that mailto) is never blocked by a game.
+  document.querySelectorAll(".cta").forEach(function (cta) {
+    if (isMotionOff()) return;
+
+    var range = document.createElement("div");
+    range.className = "cta__range";
+    range.setAttribute("aria-hidden", "true");
+
+    var target = document.createElement("div");
+    target.className = "cta__target";
+    range.appendChild(target);
+
+    var score = document.createElement("p");
+    score.className = "cta__score";
+    score.textContent = "Take a shot";
+    range.appendChild(score);
+
+    cta.insertBefore(range, cta.firstChild);
+
+    var hits = 0;
+    var shots = 0;
+    var arrows = [];
+
+    function placeTarget() {
+      target.style.left = (10 + Math.random() * 80).toFixed(1) + "%";
+      target.style.top = (16 + Math.random() * 64).toFixed(1) + "%";
+    }
+    placeTarget();
+
+    cta.addEventListener("click", function (e) {
+      if (isMotionOff()) return;
+      // Never swallow a click meant for something real.
+      if (e.target.closest("a, button, input, textarea")) return;
+
+      var box = cta.getBoundingClientRect();
+      var x = e.clientX - box.left;
+      var y = e.clientY - box.top;
+
+      var arrow = document.createElement("span");
+      arrow.className = "cta__arrow";
+      arrow.style.left = x + "px";
+      arrow.style.top = y + "px";
+      // Loosed from off the lower-left, with enough jitter that repeated
+      // shots don't all trace the same line.
+      var fx = -(220 + Math.random() * 120);
+      var fy = 150 + Math.random() * 120;
+      arrow.style.setProperty("--fx", fx.toFixed(0) + "px");
+      arrow.style.setProperty("--fy", fy.toFixed(0) + "px");
+      arrow.style.setProperty(
+        "--angle",
+        ((Math.atan2(-fy, -fx) * 180) / Math.PI).toFixed(1) + "deg"
+      );
+      range.appendChild(arrow);
+
+      // Cap the quiver so a determined clicker can't pile up nodes.
+      arrows.push(arrow);
+      while (arrows.length > 14) {
+        var old = arrows.shift();
+        if (old.parentNode) old.remove();
+      }
+
+      shots += 1;
+
+      var t = target.getBoundingClientRect();
+      var dx = x - (t.left + t.width / 2 - box.left);
+      var dy = y - (t.top + t.height / 2 - box.top);
+      var hit = Math.sqrt(dx * dx + dy * dy) <= t.width / 2;
+
+      if (hit) {
+        hits += 1;
+        target.classList.add("is-hit");
+        setTimeout(function () {
+          target.classList.remove("is-hit");
+          placeTarget();
+        }, 320);
+      }
+
+      score.textContent = hits + (hits === 1 ? " hit" : " hits") + " / " + shots;
+    });
+  });
+
   // Esc closes the decree, the one convention people reach for on
   // anything that covers the page.
   document.addEventListener("keydown", function (e) {

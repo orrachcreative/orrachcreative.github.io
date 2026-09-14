@@ -1355,17 +1355,17 @@ body.menu-open {
 .proclamation__scrim {
   position: absolute;
   inset: 0;
-  background: rgba(12, 14, 12, 0.72);
+  background: rgba(12, 14, 12, 0.82);
 }
 
 .decree {
   position: relative;
   z-index: 2;
-  width: min(520px, 100%);
+  width: min(680px, 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: rotate(-1.2deg) scale(0.96);
+  transform: rotate(-1.2deg) scale(0.88);
   transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1380,8 +1380,8 @@ body.menu-open {
   height: 13px;
   flex: none;
   border-radius: 999px;
-  background: linear-gradient(180deg, #6b4b2a 0%, #3d2a16 55%, #241708 100%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(180deg, var(--gold) 0%, #b9992c 55%, #7c661c 100%);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
 }
 
 /* The unroll. grid-template-rows 0fr -> 1fr animates to the content's
@@ -1395,16 +1395,16 @@ body.menu-open {
   background:
     repeating-linear-gradient(
       180deg,
-      rgba(120, 88, 46, 0.045) 0px,
-      rgba(120, 88, 46, 0.045) 1px,
+      rgba(20, 40, 18, 0.05) 0px,
+      rgba(20, 40, 18, 0.05) 1px,
       transparent 1px,
-      transparent 5px
+      transparent 6px
     ),
-    linear-gradient(180deg, #f3e4c4 0%, #efdcb6 42%, #e7d0a4 100%);
-  box-shadow: inset 0 10px 14px -10px rgba(88, 60, 26, 0.55),
-    inset 0 -10px 14px -10px rgba(88, 60, 26, 0.55),
-    0 18px 40px rgba(0, 0, 0, 0.45);
-  transition: grid-template-rows 0.75s cubic-bezier(0.22, 1, 0.28, 1) 0.18s;
+    linear-gradient(180deg, #6ed86a 0%, var(--emerald) 45%, #46b344 100%);
+  box-shadow: inset 0 12px 16px -12px rgba(14, 40, 12, 0.6),
+    inset 0 -12px 16px -12px rgba(14, 40, 12, 0.6),
+    0 26px 60px rgba(0, 0, 0, 0.55);
+  transition: grid-template-rows 0.95s cubic-bezier(0.22, 1, 0.28, 1) 0.2s;
 }
 
 .proclamation.is-shown .decree__sheet {
@@ -1419,9 +1419,9 @@ body.menu-open {
 /* Held back until the parchment has most of the way unrolled, so the
    words appear on the scroll rather than stretching open with it. */
 .decree__content {
-  padding: 34px 30px 30px;
+  padding: 52px 40px 46px;
   text-align: center;
-  color: #2a1c0c;
+  color: var(--black);
   opacity: 0;
   transition: opacity 0.35s ease 0.62s;
 }
@@ -1433,37 +1433,37 @@ body.menu-open {
 .decree__kicker {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 3px;
+  font-size: 0.8rem;
+  letter-spacing: 5px;
   text-transform: uppercase;
-  color: #7a5a2c;
-  margin-bottom: 12px;
+  color: rgba(34, 30, 31, 0.72);
+  margin-bottom: 18px;
 }
 
 .decree__title {
   font-family: var(--font-decree);
   font-weight: 400;
-  font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.6rem);
-  line-height: 1.05;
-  margin-bottom: 12px;
+  font-size: clamp(2.4rem, 1.7rem + 3.4vw, 4rem);
+  line-height: 0.98;
+  margin-bottom: 18px;
 }
 
 .decree__body {
   font-family: var(--font-accent);
   font-style: italic;
-  font-size: 1.0625rem;
-  line-height: 1.45;
-  margin-bottom: 22px;
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  line-height: 1.4;
+  margin-bottom: 30px;
 }
 
 .decree__cta {
   display: inline-block;
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 0.9375rem;
-  color: #2a1c0c;
+  font-size: 1.0625rem;
+  color: var(--black);
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 5px;
 }
 
 .decree__close {
@@ -2060,58 +2060,37 @@ a.work-card--horizontal:hover .work-card__cta {
    CTA
    ========================================================================== */
 
-/* The last thing on every page, so it is built as a destination rather
-   than a footer strip: a panel tall enough to land on, that opens up a
-   little further once you actually reach it.
-
-   The growth is small on purpose. This sits directly above the footer,
-   so expanding it pushes the page's own bottom downward — overdo it and
-   a reader scrolling toward the end feels the end moving away from them.
-   A step of roughly 10vh registers without ever fighting the scroll. */
+/* The last thing on every page, and the one that matters, so it gets
+   real estate: a panel that opens out to most of the screen once you
+   reach it. It is also an archery range — see the block in main.js. */
 .cta {
+  position: relative;
+  /* Arrows and the target are absolutely placed inside, and a stray shot
+     near an edge would otherwise lengthen the page. */
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 34vh;
+  min-height: 68vh;
   padding-top: 24px;
   padding-bottom: 24px;
   background: #1e221e;
   text-align: center;
   transition: min-height var(--motion-med) cubic-bezier(0.16, 1, 0.3, 1);
-  /* The theme nod: a sword follows you across the panel. SVG cursors are
-     ignored by some browsers (Safari among them), which is why a plain
-     keyword is kept as the fallback rather than being the only styling
-     carrying the effect. */
-  cursor: url("/assets/images/icons/cursor-sword.svg") 3 3, default;
 }
 
-/* Desktop: it opens on hover, since there is a pointer to open it with. */
+/* Desktop opens it on hover, since there is a pointer to open it with. */
 @media (min-width: 901px) and (hover: hover) {
   .cta:hover {
-    min-height: 44vh;
+    min-height: 80vh;
   }
 }
 
-/* Tablet and phone: no hover to rely on, so reaching it is the trigger —
-   the shared scroll-reveal observer adds .is-revealed when it comes into
-   view. */
+/* Tablet and phone have no hover, so arriving is the trigger — the
+   shared scroll-reveal observer adds .is-revealed when it comes in. */
 @media (max-width: 900px) {
-  .cta {
-    min-height: 52vh;
-  }
-
   .cta.is-revealed {
-    min-height: 64vh;
-  }
-}
-
-@media (max-width: 640px) {
-  .cta {
-    min-height: 54vh;
-  }
-
-  .cta.is-revealed {
-    min-height: 68vh;
+    min-height: 80vh;
   }
 }
 
@@ -2120,7 +2099,108 @@ html.no-anim .cta {
   transition-duration: 0.01ms;
 }
 
+/* The range: target, arrows and the prompt. Sits under the words, so a
+   shot can never land on top of the email address. */
+.cta__range {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  cursor: crosshair;
+}
+
+/* No range at all when motion is off — a target you cannot shoot at is
+   worse than no target. */
+html[data-motion="off"] .cta__range,
+html.no-anim .cta__range {
+  display: none;
+}
+
+.cta__target {
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  margin: -38px 0 0 -38px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      var(--gold) 0 16%,
+      var(--parchment) 16% 34%,
+      var(--emerald) 34% 56%,
+      var(--parchment) 56% 76%,
+      var(--emerald) 76% 100%);
+  opacity: 0.5;
+  transition: left 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    top 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cta__target.is-hit {
+  transform: scale(1.22);
+  opacity: 0.92;
+}
+
+.cta__arrow {
+  position: absolute;
+  width: 46px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  transform-origin: 100% 50%;
+  animation: cta-arrow-fly 0.42s cubic-bezier(0.3, 0.9, 0.4, 1) forwards;
+}
+
+/* Head and fletching, so it reads as an arrow rather than a dash. */
+.cta__arrow::before {
+  content: "";
+  position: absolute;
+  right: -7px;
+  top: -3.5px;
+  border-left: 9px solid var(--gold);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.cta__arrow::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -4px;
+  width: 11px;
+  height: 11px;
+  background: var(--parchment);
+  clip-path: polygon(0 0, 100% 50%, 0 100%, 34% 50%);
+}
+
+@keyframes cta-arrow-fly {
+  from {
+    transform: translate(calc(-100% + var(--fx)), calc(-50% + var(--fy)))
+      rotate(var(--angle));
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: translate(-100%, -50%) rotate(var(--angle));
+    opacity: 1;
+  }
+}
+
+.cta__score {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 26px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(245, 236, 222, 0.42);
+}
+
 .cta__inner {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2147,12 +2227,6 @@ html.no-anim .cta {
   text-decoration: underline;
 }
 
-/* Keeps the sword over the address itself — inheriting the panel's
-   cursor would otherwise be fine, but the fallback needs to be `pointer`
-   here rather than `default`, since this one is actually clickable. */
-.cta__email {
-  cursor: url("/assets/images/icons/cursor-sword.svg") 3 3, pointer;
-}
 
 /* Home / Work page closing CTA row */
 .closing-cta {
