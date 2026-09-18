@@ -1035,10 +1035,6 @@ body.menu-open {
 }
 
 @media (max-width: 640px) {
-  .home-hero {
-    padding: 56px 0 40px;
-  }
-
   .hero-proof {
     gap: 20px;
   }
@@ -1076,6 +1072,16 @@ body.menu-open {
 @media (max-width: 640px) {
   .hero {
     padding: 32px 0 0;
+  }
+
+  /* Must come after the .hero rule above, not before it. This used to sit
+     up with the other .home-hero rules, where it lost to that generic
+     .hero padding on equal specificity and simply never applied — so the
+     home hero ran at 32px top and ZERO bottom, and the proof strip butted
+     straight into the section beneath it. The bottom padding is the whole
+     point of the rule. */
+  .home-hero {
+    padding: 56px 0 48px;
   }
 }
 
@@ -1192,7 +1198,14 @@ body.menu-open {
 .seal-badge__center {
   position: relative;
   z-index: 1;
-  height: 101px;
+  /* Proportional, not a fixed 101px. The badge is resized at several
+     breakpoints but the mark never followed, so it kept its desktop size
+     inside a smaller disc and crept out over the ring text — at the old
+     118px phone badge it already filled 86% of the disc and covered the
+     "FL · SENIO" and "GNER" arcs. 60% lands within ~1.4px of the 101px
+     the desktop badge has always rendered at, so the big seal is
+     unchanged to the eye and every smaller one now matches it. */
+  height: 60%;
   aspect-ratio: 231 / 449;
   background-image: url("/assets/images/logo/AOC-Logomark.svg");
   background-position: center;
@@ -1819,84 +1832,66 @@ html.no-anim .decree__close {
   min-width: 0;
 }
 
-/* On a phone the seal drops below the eyebrow and takes a whole row of
-   its own, pushing the greeting and headline down the page. Lifting it
-   out of the flow hands that row back: the badge keeps the same spot it
-   already occupied, 30px lower, and grows 6%.
+/* The eyebrow/seal row. These were inline styles on the element until the
+   seal became load-bearing for this row's layout at mobile, which needs to
+   override align-items — impossible against an inline style without
+   !important. */
+.home-hero__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  /* Safety valve only: the eyebrow is three words and the seal is 96px, so
+     they share one row down to 320px. If either grows, the seal drops to its
+     own line rather than squashing the eyebrow. */
+  flex-wrap: wrap;
+}
 
-   The size change is width/height rather than a transform scale, so the
-   ring text scales with it and the tap target grows too — a scaled
-   transform would leave a 170px hit area on a 180px badge. It also stays
-   clear of --seal-scale, which the hover and press states own.
+/* The seal sits in the top row on a phone, beside the eyebrow, rather
+   than being lifted out of the flow and overlapped with the copy.
 
-   Deliberate consequence: the hero tightens up by roughly the badge's
-   height, and the badge now overlays whatever sits beneath it rather
-   than reserving space. */
+   It was absolute before for a good reason: the eyebrow used to read
+   "Product design · Jacksonville, FL — open to remote", which filled the
+   row on its own and pushed the seal onto a line of its own, costing a
+   whole badge-height of vertical space. Taking it out of the flow bought
+   that space back — but the badge then landed across the greeting, and
+   the greeting had to be capped at 75% width to dodge it. That cap is
+   what made the hero feel cramped: at 320px it wrapped a 75-character
+   sentence into five short lines inside a 210px column.
+
+   The eyebrow is three words now, so the original problem is gone: the
+   eyebrow and a 96px seal share one row at every width down to 320px,
+   the greeting gets the full column back, and nothing overlaps, so no
+   dodging is needed anywhere. */
 @media (max-width: 900px) {
+  /* The seal is the tall thing in this row and the eyebrow is one small
+     line, so centring the eyebrow against the disc reads as a deliberate
+     masthead. Aligned to the top instead, the eyebrow sits alone above
+     ~80px of empty column while the seal fills the right. */
   .home-hero__top {
-    position: relative;
+    align-items: center;
   }
 
   .home-hero__top .seal-badge {
-    position: absolute;
-    /* Anchored to the right and allowed to run off the edge.
-       Measured, not guessed: the hero's text column runs the full
-       content width, so a 180px seal cannot clear every line box at
-       every phone width without being ~80% off-screen — chasing that
-       with per-width offsets fixed one size and broke three others.
-       This offset keeps it off the greeting and the headline at common
-       widths and reads as a seal bleeding off the corner; where a line
-       does reach under it, the z-index below keeps the type on top and
-       fully legible. */
-    left: auto;
-    /* 20px further right, and 10px smaller on every side.
-       The inset moves in by the same 10 the box loses (right -38 + 10,
-       top 18 + 10) so the shrink happens around the seal's centre
-       instead of pulling it off the corner it was placed on. */
-    /* Shrunk from the top-right corner, not around the centre. Holding
-       the centre pushed the seal down into the headline's band, and the
-       headline has no reserved column — so no amount of padding on the
-       greeting could clear it. Anchored here, the smaller badge simply
-       occupies less of the corner. */
-    right: -28px;
-    top: 28px;
-    width: 118px;
-    height: 118px;
-    /* Behind the words. Out of the flow it lands right across the
-       greeting and the headline, and it was covering his own name —
-       which is the one thing the greeting exists to say. Sitting under
-       the type it reads as a medallion watermarked into the hero
-       instead. */
-    z-index: 0;
+    width: 96px;
+    height: 96px;
+    flex: none;
+    /* The badge is rotated a few degrees (it's a hand-pressed stamp), so
+       its painted box is ~107px across while its layout box is 96 — the
+       ~5.5px overhang each side. justify-content pins the LAYOUT box to
+       the content edge, which let the paint spill into the 20px gutter
+       and sit closer to the screen edge than the eyebrow does on the
+       left. This pulls it back by the overhang so both sides read as the
+       same margin. */
+    margin-right: 6px;
   }
 
-  .home-hero .hero__name,
-  .home-hero .hero__title,
-  .home-hero .hero__subtitle,
-  .home-hero .hero-proof {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Reserve the seal's column instead of trying to dodge it. Only the
-     two elements that sit in its band wrap short; the headline and
-     everything below keep the full width, because the badge ends above
-     them. Nudging the badge's offset per breakpoint was the wrong tool —
-     it fixed one width and broke three, since what the circle collides
-     with depends on how the copy happens to rewrap. */
-  /* Reserves the seal's corner on the eyebrow, which sits above it. */
-  .home-hero__top .eyebrow {
-    padding-right: 56px;
-  }
-
-  /* The greeting stops at three quarters of the hero instead. A padding
-     reserve had to be retuned every time the badge or the copy changed;
-     a proportional measure holds on its own, and it keeps the line clear
-     of the seal at every width in this range rather than at the couple I
-     happened to test. */
-  .home-hero .hero__name {
-    max-width: 75%;
-    padding-right: 0;
+  /* The headline sets the hero's pace and carries four to five lines on
+     a phone. 1.05 is display leading — right for the one or two lines it
+     takes on a desktop, too tight stacked five deep on a 390px screen,
+     where it reads as a block rather than as lines. */
+  .home-hero .kinetic-title {
+    line-height: 1.14;
   }
 }
 
