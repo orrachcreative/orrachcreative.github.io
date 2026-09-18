@@ -2418,20 +2418,34 @@ html.no-anim .cta__email {
   align-items: center;
 }
 
-/* REVISIT: temporary home for the motion toggle, parked next to the
-   theme toggle. The knight needs about 34px to stay legible while the
-   theme chip is 24px to match the social icons, so the two are visibly
-   mismatched — see the note in footer.html. */
+/* The two footer toggles are one cluster of controls, so they share a
+   36px round footprint and a 10px gap. 36px is set by the knight, which
+   stops reading below about 34px — the horse, rider and sword fuse into
+   one smudge — so the theme chip grows to meet it rather than the knight
+   shrinking to the 24px the chip used to be. The pair deliberately runs
+   larger than the 24px social icons beside them: those are links out,
+   these change how the site behaves. */
 .site-footer__controls {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .site-footer__motion-toggle {
   width: 36px;
   height: 36px;
   padding: 1px;
+  /* Pinned, not inherited. The base .motion-toggle takes its ink and fill
+     from the theme tokens, but the footer is #000000 in BOTH themes — so
+     in light theme the knight was --ink-strong (#000000) on a near-clear
+     --bg-raised, i.e. black on black and completely invisible. These are
+     the footer's own colors and hold whichever theme is on. */
+  background: rgba(255, 250, 243, 0.08);
+  color: #FFFAF3;
+}
+
+.site-footer__motion-toggle:hover {
+  background: rgba(255, 250, 243, 0.16);
 }
 
 .site-footer__motion-toggle svg {
@@ -2440,11 +2454,16 @@ html.no-anim .cta__email {
 }
 
 .site-footer__theme-toggle {
-  /* Base .theme-toggle is a 24px chip sized for the header; the footer's
-     own icons (.site-footer__social) run 24px too, so this matches them
-     rather than reusing the header's sizing by coincidence. */
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+}
+
+/* The chip's fill grew with it, so the glyph grows too — an 18px icon
+   in a 36px circle reads as a dot with a speck in it. */
+.site-footer__theme-toggle svg {
+  width: 22px;
+  height: 22px;
 }
 
 .site-footer__copy {
@@ -2498,10 +2517,6 @@ html.no-anim .cta__email {
   }
 
   .site-footer__controls {
-    justify-self: start;
-  }
-
-  .site-footer__theme-toggle {
     justify-self: start;
   }
 
