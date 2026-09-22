@@ -982,13 +982,24 @@ body.menu-open {
 
 .home-hero {
   gap: 24px;
-  padding: 96px 0 64px;
+  padding: 64px 0 64px;
+}
+
+/* Figma moves the home hero's supporting line off parchment onto gray-3,
+   so it sits back from the headline instead of competing with it. Scoped
+   to .home-hero on purpose — .hero-shell .hero__subtitle also dresses the
+   About hero and the case-study heroes, which keep parchment. */
+.home-hero .hero__subtitle {
+  color: #bababa;
 }
 
 .kinetic-title {
-  max-width: 920px;
+  /* Measure and leading come from the Figma hero: 864px column, 110%
+     leading at every width. The clamp is unchanged — it already resolves
+     to ~88 / 67 / 48px at 1440 / 834 / 390, which is the spec. */
+  max-width: 864px;
   font-size: clamp(2.75rem, 2rem + 4.2vw, 5.5rem);
-  line-height: 1.05;
+  line-height: 1.10;
 }
 
 .kinetic-title-inner {
@@ -999,7 +1010,15 @@ body.menu-open {
   display: inline-block;
 }
 
-.kinetic-word--accent {
+/* The headline's two emerald spans (the name, the city) are set in the
+   accent serif, upright at 600. Deliberately NOT .accent-word — that one
+   is italic and is used on nine other pages; this treatment is the home
+   hero's alone. */
+.kinetic-accent {
+  font-family: var(--font-accent);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
   color: var(--emerald);
 }
 
@@ -1035,10 +1054,6 @@ body.menu-open {
 }
 
 @media (max-width: 640px) {
-  .home-hero {
-    padding: 56px 0 40px;
-  }
-
   .hero-proof {
     gap: 20px;
   }
@@ -1064,6 +1079,11 @@ body.menu-open {
   .kinetic-word:nth-child(5) { --i: 5; }
   .kinetic-word:nth-child(6) { --i: 6; }
   .kinetic-word:nth-child(7) { --i: 7; }
+  /* The headline is ten words now. Without these the last three inherit
+     --i: 0 and all land together on the first beat. */
+  .kinetic-word:nth-child(8) { --i: 8; }
+  .kinetic-word:nth-child(9) { --i: 9; }
+  .kinetic-word:nth-child(10) { --i: 10; }
 
   @keyframes kinetic-word-in {
     to {
@@ -1076,6 +1096,16 @@ body.menu-open {
 @media (max-width: 640px) {
   .hero {
     padding: 32px 0 0;
+  }
+
+  /* Must come after the .hero rule above, not before it. This used to sit
+     up with the other .home-hero rules, where it lost to that generic
+     .hero padding on equal specificity and simply never applied — so the
+     home hero ran at 32px top and ZERO bottom, and the proof strip butted
+     straight into the section beneath it. The bottom padding is the whole
+     point of the rule. */
+  .home-hero {
+    padding: 64px 0 64px;
   }
 }
 
@@ -1192,7 +1222,14 @@ body.menu-open {
 .seal-badge__center {
   position: relative;
   z-index: 1;
-  height: 101px;
+  /* Proportional, not a fixed 101px. The badge is resized at several
+     breakpoints but the mark never followed, so it kept its desktop size
+     inside a smaller disc and crept out over the ring text — at the old
+     118px phone badge it already filled 86% of the disc and covered the
+     "FL · SENIO" and "GNER" arcs. 60% lands within ~1.4px of the 101px
+     the desktop badge has always rendered at, so the big seal is
+     unchanged to the eye and every smaller one now matches it. */
+  height: 60%;
   aspect-ratio: 231 / 449;
   background-image: url("/assets/images/logo/AOC-Logomark.svg");
   background-position: center;
@@ -1819,85 +1856,77 @@ html.no-anim .decree__close {
   min-width: 0;
 }
 
-/* On a phone the seal drops below the eyebrow and takes a whole row of
-   its own, pushing the greeting and headline down the page. Lifting it
-   out of the flow hands that row back: the badge keeps the same spot it
-   already occupied, 30px lower, and grows 6%.
+/* The eyebrow/seal row. These were inline styles on the element until the
+   seal became load-bearing for this row's layout at mobile, which needs to
+   override align-items — impossible against an inline style without
+   !important. */
+.home-hero__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  /* Safety valve only: the eyebrow is three words and the seal is 96px, so
+     they share one row down to 320px. If either grows, the seal drops to its
+     own line rather than squashing the eyebrow. */
+  flex-wrap: wrap;
+}
 
-   The size change is width/height rather than a transform scale, so the
-   ring text scales with it and the tap target grows too — a scaled
-   transform would leave a 170px hit area on a 180px badge. It also stays
-   clear of --seal-scale, which the hover and press states own.
+/* The seal sits in the top row on a phone, beside the eyebrow, rather
+   than being lifted out of the flow and overlapped with the copy.
 
-   Deliberate consequence: the hero tightens up by roughly the badge's
-   height, and the badge now overlays whatever sits beneath it rather
-   than reserving space. */
+   It was absolute before for a good reason: the eyebrow used to read
+   "Product design · Jacksonville, FL — open to remote", which filled the
+   row on its own and pushed the seal onto a line of its own, costing a
+   whole badge-height of vertical space. Taking it out of the flow bought
+   that space back — but the badge then landed across the greeting, and
+   the greeting had to be capped at 75% width to dodge it. That cap is
+   what made the hero feel cramped: at 320px it wrapped a 75-character
+   sentence into five short lines inside a 210px column.
+
+   The eyebrow is three words now, so the original problem is gone: the
+   eyebrow and a 96px seal share one row at every width down to 320px,
+   the greeting gets the full column back, and nothing overlaps, so no
+   dodging is needed anywhere. */
 @media (max-width: 900px) {
+  /* The seal is the tall thing in this row and the eyebrow is one small
+     line, so centring the eyebrow against the disc reads as a deliberate
+     masthead. Aligned to the top instead, the eyebrow sits alone above
+     ~80px of empty column while the seal fills the right. */
   .home-hero__top {
-    position: relative;
+    align-items: center;
+  }
+
+  /* "Open to remote & hybrid work" renders ~268px here — wider than the
+     245px Figma measures — so eyebrow + gap + seal overran the column.
+     With flex-wrap: wrap the container answered that by dropping the seal
+     onto its own row at every phone width, including the 430 the mobile
+     frame is drawn at. nowrap forces the overflow into the eyebrow
+     instead, which shrinks and wraps its own text, keeping the pair on one
+     row as the design shows. min-width: 0 is what actually permits the
+     shrink — a flex item won't go below its min-content width without it. */
+  .home-hero__top {
+    flex-wrap: nowrap;
+  }
+
+  .home-hero__top .eyebrow {
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
   .home-hero__top .seal-badge {
-    position: absolute;
-    /* Anchored to the right and allowed to run off the edge.
-       Measured, not guessed: the hero's text column runs the full
-       content width, so a 180px seal cannot clear every line box at
-       every phone width without being ~80% off-screen — chasing that
-       with per-width offsets fixed one size and broke three others.
-       This offset keeps it off the greeting and the headline at common
-       widths and reads as a seal bleeding off the corner; where a line
-       does reach under it, the z-index below keeps the type on top and
-       fully legible. */
-    left: auto;
-    /* 20px further right, and 10px smaller on every side.
-       The inset moves in by the same 10 the box loses (right -38 + 10,
-       top 18 + 10) so the shrink happens around the seal's centre
-       instead of pulling it off the corner it was placed on. */
-    /* Shrunk from the top-right corner, not around the centre. Holding
-       the centre pushed the seal down into the headline's band, and the
-       headline has no reserved column — so no amount of padding on the
-       greeting could clear it. Anchored here, the smaller badge simply
-       occupies less of the corner. */
-    right: -28px;
-    top: 28px;
-    width: 118px;
-    height: 118px;
-    /* Behind the words. Out of the flow it lands right across the
-       greeting and the headline, and it was covering his own name —
-       which is the one thing the greeting exists to say. Sitting under
-       the type it reads as a medallion watermarked into the hero
-       instead. */
-    z-index: 0;
+    width: 96px;
+    height: 96px;
+    flex: none;
+    /* The badge is rotated a few degrees (it's a hand-pressed stamp), so
+       its painted box is ~107px across while its layout box is 96 — the
+       ~5.5px overhang each side. justify-content pins the LAYOUT box to
+       the content edge, which let the paint spill into the 20px gutter
+       and sit closer to the screen edge than the eyebrow does on the
+       left. This pulls it back by the overhang so both sides read as the
+       same margin. */
+    margin-right: 6px;
   }
 
-  .home-hero .hero__name,
-  .home-hero .hero__title,
-  .home-hero .hero__subtitle,
-  .home-hero .hero-proof {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Reserve the seal's column instead of trying to dodge it. Only the
-     two elements that sit in its band wrap short; the headline and
-     everything below keep the full width, because the badge ends above
-     them. Nudging the badge's offset per breakpoint was the wrong tool —
-     it fixed one width and broke three, since what the circle collides
-     with depends on how the copy happens to rewrap. */
-  /* Reserves the seal's corner on the eyebrow, which sits above it. */
-  .home-hero__top .eyebrow {
-    padding-right: 56px;
-  }
-
-  /* The greeting stops at three quarters of the hero instead. A padding
-     reserve had to be retuned every time the badge or the copy changed;
-     a proportional measure holds on its own, and it keeps the line clear
-     of the seal at every width in this range rather than at the couple I
-     happened to test. */
-  .home-hero .hero__name {
-    max-width: 75%;
-    padding-right: 0;
-  }
 }
 
 /* Pointer tilt, shared by every card-shaped tile on the site: the work/
@@ -2418,20 +2447,34 @@ html.no-anim .cta__email {
   align-items: center;
 }
 
-/* REVISIT: temporary home for the motion toggle, parked next to the
-   theme toggle. The knight needs about 34px to stay legible while the
-   theme chip is 24px to match the social icons, so the two are visibly
-   mismatched — see the note in footer.html. */
+/* The two footer toggles are one cluster of controls, so they share a
+   36px round footprint and a 10px gap. 36px is set by the knight, which
+   stops reading below about 34px — the horse, rider and sword fuse into
+   one smudge — so the theme chip grows to meet it rather than the knight
+   shrinking to the 24px the chip used to be. The pair deliberately runs
+   larger than the 24px social icons beside them: those are links out,
+   these change how the site behaves. */
 .site-footer__controls {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .site-footer__motion-toggle {
   width: 36px;
   height: 36px;
   padding: 1px;
+  /* Pinned, not inherited. The base .motion-toggle takes its ink and fill
+     from the theme tokens, but the footer is #000000 in BOTH themes — so
+     in light theme the knight was --ink-strong (#000000) on a near-clear
+     --bg-raised, i.e. black on black and completely invisible. These are
+     the footer's own colors and hold whichever theme is on. */
+  background: rgba(255, 250, 243, 0.08);
+  color: #FFFAF3;
+}
+
+.site-footer__motion-toggle:hover {
+  background: rgba(255, 250, 243, 0.16);
 }
 
 .site-footer__motion-toggle svg {
@@ -2440,11 +2483,16 @@ html.no-anim .cta__email {
 }
 
 .site-footer__theme-toggle {
-  /* Base .theme-toggle is a 24px chip sized for the header; the footer's
-     own icons (.site-footer__social) run 24px too, so this matches them
-     rather than reusing the header's sizing by coincidence. */
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+}
+
+/* The chip's fill grew with it, so the glyph grows too — an 18px icon
+   in a 36px circle reads as a dot with a speck in it. */
+.site-footer__theme-toggle svg {
+  width: 22px;
+  height: 22px;
 }
 
 .site-footer__copy {
@@ -2498,10 +2546,6 @@ html.no-anim .cta__email {
   }
 
   .site-footer__controls {
-    justify-self: start;
-  }
-
-  .site-footer__theme-toggle {
     justify-self: start;
   }
 

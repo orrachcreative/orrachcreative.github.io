@@ -1,6 +1,8 @@
 # Open work
 
 Written 2026-09-14, after the redesign merged to `main` and went live.
+Last updated 2026-09-18: the hero eyebrow and the footer toggle pair are
+closed, so the old items 4 and 5 are gone and item 6 is now item 4.
 
 Excluded from the Jekyll build (see `_config.yml`), so it never becomes a
 page on the site. It is still visible in the public repo — nothing below
@@ -74,50 +76,7 @@ full lineup".
 
 ---
 
-## 4. Home hero — the eyebrow now repeats the greeting
-
-`index.html`. The eyebrow reads:
-
-> Product design · Jacksonville, FL — open to remote
-
-directly above:
-
-> Hi, I'm Anthony Orrach, a product and brand designer based in Jacksonville, FL.
-
-Both the discipline and the city are said twice. Trim the eyebrow to
-"Open to remote", or drop it.
-
-If it stays, keep its right padding below 900px — it reserves the seal's
-corner (`.home-hero__top .eyebrow` in `assets/css/style.css`).
-
-**Done when:** the hero says each thing once.
-
----
-
-## 5. Motion toggle — temporary home in the footer
-
-The mounted-knight motion toggle was moved out of the header and parked
-next to the theme toggle. The two are visibly mismatched: the knight
-needs roughly 34px to stay legible (below that the horse, rider and sword
-fuse into one smudge), while the theme toggle is a 24px chip sized to
-match the social icons.
-
-Relevant: `.site-footer__controls`, `.site-footer__motion-toggle` and
-`.site-footer__theme-toggle` in `assets/css/style.css`, and the REVISIT
-note in `_includes/footer.html`.
-
-The desktop footer is a three-column grid that places by source order, so
-the wrapper must stay a single direct child or the layout wraps.
-
-Options: grow both to a shared size; give the knight its own spot; make
-the footer controls their own sized cluster; or simplify the artwork so
-it survives at 24px (probably loses the horse).
-
-**Done when:** the pair looks deliberate, and the REVISIT note is gone.
-
----
-
-## 6. Second visual direction — "psychedelic cat" branch
+## 4. Second visual direction — "psychedelic cat" branch
 
 Anthony flagged a reference he liked — a psychedelic cat in purple and
 black line work — and explicitly did not want it copied. Parked for a
@@ -139,7 +98,8 @@ getting right from the actual source rather than from a description.
       grep -rn 'draft-flag\|verify-list\|draft-mark' --include=*.html . | grep -v _site
 
   Today that returns High5 only, which is item 1 above.
-- Local preview: build, then serve `_site`.
+- Local preview: `bundle install` first on a fresh checkout (the gems are
+  not vendored), then build and serve `_site`.
 
       bundle exec ruby /opt/rbenv/versions/3.3.6/lib/ruby/gems/3.3.0/gems/jekyll-4.4.1/exe/jekyll build
       cd _site && python3 -m http.server 8899
