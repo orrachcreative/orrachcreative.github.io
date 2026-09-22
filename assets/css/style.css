@@ -982,13 +982,24 @@ body.menu-open {
 
 .home-hero {
   gap: 24px;
-  padding: 96px 0 64px;
+  padding: 64px 0 64px;
+}
+
+/* Figma moves the home hero's supporting line off parchment onto gray-3,
+   so it sits back from the headline instead of competing with it. Scoped
+   to .home-hero on purpose — .hero-shell .hero__subtitle also dresses the
+   About hero and the case-study heroes, which keep parchment. */
+.home-hero .hero__subtitle {
+  color: #bababa;
 }
 
 .kinetic-title {
-  max-width: 920px;
+  /* Measure and leading come from the Figma hero: 864px column, 110%
+     leading at every width. The clamp is unchanged — it already resolves
+     to ~88 / 67 / 48px at 1440 / 834 / 390, which is the spec. */
+  max-width: 864px;
   font-size: clamp(2.75rem, 2rem + 4.2vw, 5.5rem);
-  line-height: 1.05;
+  line-height: 1.10;
 }
 
 .kinetic-title-inner {
@@ -999,7 +1010,15 @@ body.menu-open {
   display: inline-block;
 }
 
-.kinetic-word--accent {
+/* The headline's two emerald spans (the name, the city) are set in the
+   accent serif, upright at 600. Deliberately NOT .accent-word — that one
+   is italic and is used on nine other pages; this treatment is the home
+   hero's alone. */
+.kinetic-accent {
+  font-family: var(--font-accent);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
   color: var(--emerald);
 }
 
@@ -1060,6 +1079,11 @@ body.menu-open {
   .kinetic-word:nth-child(5) { --i: 5; }
   .kinetic-word:nth-child(6) { --i: 6; }
   .kinetic-word:nth-child(7) { --i: 7; }
+  /* The headline is ten words now. Without these the last three inherit
+     --i: 0 and all land together on the first beat. */
+  .kinetic-word:nth-child(8) { --i: 8; }
+  .kinetic-word:nth-child(9) { --i: 9; }
+  .kinetic-word:nth-child(10) { --i: 10; }
 
   @keyframes kinetic-word-in {
     to {
@@ -1081,7 +1105,7 @@ body.menu-open {
      straight into the section beneath it. The bottom padding is the whole
      point of the rule. */
   .home-hero {
-    padding: 56px 0 48px;
+    padding: 64px 0 64px;
   }
 }
 
@@ -1872,6 +1896,23 @@ html.no-anim .decree__close {
     align-items: center;
   }
 
+  /* "Open to remote & hybrid work" renders ~268px here — wider than the
+     245px Figma measures — so eyebrow + gap + seal overran the column.
+     With flex-wrap: wrap the container answered that by dropping the seal
+     onto its own row at every phone width, including the 430 the mobile
+     frame is drawn at. nowrap forces the overflow into the eyebrow
+     instead, which shrinks and wraps its own text, keeping the pair on one
+     row as the design shows. min-width: 0 is what actually permits the
+     shrink — a flex item won't go below its min-content width without it. */
+  .home-hero__top {
+    flex-wrap: nowrap;
+  }
+
+  .home-hero__top .eyebrow {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
   .home-hero__top .seal-badge {
     width: 96px;
     height: 96px;
@@ -1886,13 +1927,6 @@ html.no-anim .decree__close {
     margin-right: 6px;
   }
 
-  /* The headline sets the hero's pace and carries four to five lines on
-     a phone. 1.05 is display leading — right for the one or two lines it
-     takes on a desktop, too tight stacked five deep on a 390px screen,
-     where it reads as a block rather than as lines. */
-  .home-hero .kinetic-title {
-    line-height: 1.14;
-  }
 }
 
 /* Pointer tilt, shared by every card-shaped tile on the site: the work/
