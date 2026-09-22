@@ -16,6 +16,8 @@ sass:
 
 exclude:
   - Gemfile
+  - tools
+  - _preview
   - Gemfile.lock
   - README.md
   - TODO.md
